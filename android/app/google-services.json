@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "164214698719",
+    "firebase_url": "https://aspen-weather-test.firebaseio.com",
+    "project_id": "aspen-weather-test",
+    "storage_bucket": "aspen-weather-test.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:164214698719:android:ee5686bc4d08706619ef6a",
+        "android_client_info": {
+          "package_name": "com.summit.aspenweathertest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "164214698719-qikf0abp7gkeac8u8gjrk225r0g75es4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAiukcISM6JS7LT6d7SaheB83cBei0GK1o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "164214698719-qikf0abp7gkeac8u8gjrk225r0g75es4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "164214698719-7bqii8j4piai4i2b2snralgpcg8im93t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.summit.aspenweathertest"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

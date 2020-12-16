@@ -1,0 +1,52 @@
+name: aspen_weather
+description: Aspen Weather
+
+# The following line prevents the package from being accidentally published to
+# pub.dev using `pub publish`. This is preferred for private packages.
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
+
+version: 0.0.11+11
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.0
+  page_transition: ^1.1.5
+  oktoast: ^2.3.1
+  shared_preferences: ^0.5.7
+  intl: ^0.16.1
+  http: ^0.12.1
+  google_fonts: ^1.1.1
+  circular_check_box: ^1.0.4
+  persistent_bottom_nav_bar: ^2.1.0
+  fab_circular_menu: ^1.0.0
+  charcode: ^1.1.3
+  flutter_calendar_carousel: ^1.5.1
+  dio: ^3.0.10
+  charts_flutter: ^0.9.0
+  flutter_mjpeg: ^1.2.9
+  google_sign_in: ^4.5.1
+  flutter_facebook_login: ^3.0.0
+  pin_code_fields: ^2.4.0
+  firebase_auth:
+  empty_widget: ^0.0.1-dev.1 # such as version, you need use the latest version of pub.
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+#flutter_icons:
+#  image_path: 'assets/images/icon.png'
+#  android: false
+#  ios: true
+
+# The following section is specific to Flutter.
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
