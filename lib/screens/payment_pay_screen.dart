@@ -10,6 +10,7 @@ import 'package:aspen_weather/utils/utils.dart';
 import 'package:aspen_weather/utils/views.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class PayNowScreen extends StatefulWidget {
   static const routeName = '/pay-now-screen';
@@ -186,20 +187,31 @@ class _PayNowScreenState extends State<PayNowScreen> {
                         ),
                         SizedBox(height: 15),
                         TextFormField(
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            WhitelistingTextInputFormatter.digitsOnly,
+                            new LengthLimitingTextInputFormatter(16),
+                            new CardNumberInputFormatter()
+                          ],
                           focusNode: cardNumberFocus,
                           decoration: InputDecoration(
                               labelText: 'Card Number',
                               hintText: '4513 1246 45564 3255'),
-                          validator: validateField,
+                          // validator: validateField,
+                          validator: validateCardNum,
+
                           autofocus: false,
                           textInputAction: TextInputAction.next,
                           onFieldSubmitted: (v) {
                             FocusScope.of(context)
                                 .requestFocus(cardExpiryFocus);
                           },
-                          keyboardType: TextInputType.text,
+                          // keyboardType: TextInputType.text,
                           onSaved: (text) {
-                            cardNumber = text;
+                            print('onSaved = $text');
+                            // print('Num controller has = ${numberController.text}');
+                            cardNumber = getCleanedNumber(text);
+                            // cardNumber = text;
                           },
                           onChanged: (text) {
                             cardNumber = text;
@@ -239,6 +251,10 @@ class _PayNowScreenState extends State<PayNowScreen> {
                                 flex: 2,
                                 child: Container(
                                   child: TextFormField(
+                                    inputFormatters: [
+                                      WhitelistingTextInputFormatter.digitsOnly,
+                                      new LengthLimitingTextInputFormatter(4),
+                                    ],
                                     decoration: InputDecoration(
                                         labelText: 'CVC', hintText: '****'),
                                     validator: validateField,

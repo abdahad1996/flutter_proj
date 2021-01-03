@@ -11,6 +11,7 @@ import 'package:aspen_weather/screens/summer_home_screen.dart';
 import 'package:aspen_weather/screens/winter_home_screen.dart';
 import 'package:aspen_weather/service/webservices.dart';
 import 'package:aspen_weather/service/webservices.dart';
+import 'package:aspen_weather/utils/CachedImage.dart';
 import 'package:aspen_weather/utils/Dialogs.dart';
 import 'package:aspen_weather/utils/const.dart';
 import 'package:aspen_weather/utils/prefs.dart';
@@ -22,14 +23,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class SignupScreen extends StatefulWidget {
-  static const routeName = '/signup-screen';
+class UpdateProfileScreen extends StatefulWidget {
+  static const routeName = '/UpdateProfileScreen-screen';
 
   @override
-  _SignupScreenState createState() => _SignupScreenState();
+  UpdateProfileScreenState createState() => UpdateProfileScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class UpdateProfileScreenState extends State<UpdateProfileScreen> {
   String weatherType;
   bool checkedValue = false;
   User user;
@@ -37,6 +38,7 @@ class _SignupScreenState extends State<SignupScreen> {
   bool passwordNotVisible = true;
   bool confirmPasswordNotVisible = true;
   File _image;
+  String accessToken = '';
 
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   final FocusNode _emailFocus = FocusNode();
@@ -46,20 +48,85 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   void initState() {
     super.initState();
+    Prefs.getAccessToken((String accessToken) async {
+      print(accessToken);
+      this.accessToken = accessToken;
+      // apiCallForAd(accessToken);
+    });
 
     Prefs.getWeatherType((String weather) {
       setState(() {
         weatherType = weather;
       });
     });
+
+    Prefs.getUser((User userModel) async {
+      setState(() {
+        user = userModel;
+        // print("user is ${user.details.image_url}");
+      });
+    });
   }
 
   void load() async {}
 
+  _imgFromCamera() async {
+    final pickedFile = await ImagePicker().getImage(source: ImageSource.camera);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
+  void _showPicker(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return SafeArea(
+            child: Container(
+              child: new Wrap(
+                children: <Widget>[
+                  new ListTile(
+                      leading: new Icon(Icons.photo_library),
+                      title: new Text('Photo Library'),
+                      onTap: () {
+                        _imgFromGallery();
+                        Navigator.of(context).pop();
+                      }),
+                  new ListTile(
+                    leading: new Icon(Icons.photo_camera),
+                    title: new Text('Camera'),
+                    onTap: () {
+                      _imgFromCamera();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  _imgFromGallery() async {
+    final pickedFile =
+        await ImagePicker().getImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    String ImageUrl = 'https://i.stack.imgur.com/Dw6f7.png';
-
     return Scaffold(
       resizeToAvoidBottomPadding: true,
       backgroundColor: Colors.transparent,
@@ -97,7 +164,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         image:
                             AssetImage('assets/images/login_bottom_card.png'),
                         fit: BoxFit.fill)),
-                height: MediaQuery.of(context).size.height*0.6,
+                height: 450,
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
                   child: Form(
@@ -118,7 +185,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   child: _image != null
                                       ? ClipRRect(
                                           borderRadius:
-                                              BorderRadius.circular(50),
+                                              BorderRadius.circular(55),
                                           child: Image.file(
                                             _image,
                                             width: 100,
@@ -126,27 +193,41 @@ class _SignupScreenState extends State<SignupScreen> {
                                             fit: BoxFit.cover,
                                           ),
                                         )
-                                      : Container(
-                                          decoration: BoxDecoration(
-                                              color: Colors.grey[200],
-                                              borderRadius:
-                                                  BorderRadius.circular(50)),
-                                          width: 100,
-                                          height: 100,
-                                          child: Icon(
-                                            Icons.camera_alt,
-                                            color: Colors.grey[800],
-                                          ),
-                                        ),
+                                      : (user.details.image_url != null)
+                                          ? Cached_Image(
+                                              height: 80,
+                                              width: 80,
+                                              imageURL:
+                                                  user?.details?.image_url ??
+                                                      "",
+                                              shape: BoxShape.circle,
+                                              retry: (status) {
+                                                print("RETRYINGGG");
+                                              },
+                                            )
+                                          : Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.grey[200],
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          50)),
+                                              width: 100,
+                                              height: 100,
+                                              child: Icon(
+                                                Icons.camera_alt,
+                                                color: Colors.grey[800],
+                                              ),
+                                            ),
                                 ),
                               ),
                             ),
                           ),
                           SizedBox(height: 50),
                           TextFormField(
+                            initialValue: (user != null) ? user.name : "",
                             decoration: InputDecoration(
                                 hintText: 'Enter your username',
-                                labelText: 'Username'),
+                                labelText: "Username"),
                             validator: validateName,
                             autofocus: false,
                             textInputAction: TextInputAction.next,
@@ -163,9 +244,10 @@ class _SignupScreenState extends State<SignupScreen> {
                           ),
                           SizedBox(height: 15),
                           TextFormField(
+                            initialValue: (user != null) ? user.email : "",
                             decoration: InputDecoration(
                                 hintText: 'Enter your email',
-                                labelText: 'Email'),
+                                labelText: "Email"),
                             validator: validateEmail,
                             autofocus: false,
                             textInputAction: TextInputAction.next,
@@ -182,39 +264,39 @@ class _SignupScreenState extends State<SignupScreen> {
                             },
                           ),
                           SizedBox(height: 15),
-                          TextFormField(
-                            decoration: InputDecoration(
-                                hintText: 'Enter your password',
-                                labelText: 'Password'),
-                            validator: validatePassword,
-                            obscureText: passwordNotVisible,
-                            autofocus: false,
-                            focusNode: _passwordFocus,
-                            textInputAction: TextInputAction.done,
-                            onSaved: (text) {
-                              _password = text;
-                            },
-                            onChanged: (text) {
-                              _password = text;
-                            },
-                          ),
+                          // TextFormField(
+                          //   decoration: InputDecoration(
+                          //       hintText: 'Enter your password',
+                          //       labelText: 'Password'),
+                          //   validator: validatePassword,
+                          //   obscureText: passwordNotVisible,
+                          //   autofocus: false,
+                          //   focusNode: _passwordFocus,
+                          //   textInputAction: TextInputAction.done,
+                          //   onSaved: (text) {
+                          //     _password = text;
+                          //   },
+                          //   onChanged: (text) {
+                          //     _password = text;
+                          //   },
+                          // ),
                           SizedBox(height: 15),
-                          TextFormField(
-                            decoration: InputDecoration(
-                                labelText: 'Confirm Password',
-                                hintText: 'Enter your confirm password'),
-                            validator: validateConfirmPassword,
-                            textInputAction: TextInputAction.done,
-                            focusNode: _confirmPasswordFocus,
-                            obscureText: confirmPasswordNotVisible,
-                            onFieldSubmitted: (v) {},
-                            onSaved: (text) {
-                              _confirmPassword = text;
-                            },
-                            onChanged: (text) {
-                              _confirmPassword = text;
-                            },
-                          ),
+                          // TextFormField(
+                          //   decoration: InputDecoration(
+                          //       labelText: 'Confirm Password',
+                          //       hintText: 'Enter your confirm password'),
+                          //   validator: validateConfirmPassword,
+                          //   textInputAction: TextInputAction.done,
+                          //   focusNode: _confirmPasswordFocus,
+                          //   obscureText: confirmPasswordNotVisible,
+                          //   onFieldSubmitted: (v) {},
+                          //   onSaved: (text) {
+                          //     _confirmPassword = text;
+                          //   },
+                          //   onChanged: (text) {
+                          //     _confirmPassword = text;
+                          //   },
+                          // ),
                           SizedBox(
                             height: 30,
                           ),
@@ -227,18 +309,19 @@ class _SignupScreenState extends State<SignupScreen> {
                                   side: BorderSide(color: Color(0xff3D73FF))),
                               onPressed: () {
                                 if (_formKey.currentState.validate()) {
-                                  if (_password != _confirmPassword) {
-                                    toast(
-                                        'Password and Confirm Password must be same.');
-                                  } else {
-                                    _formKey.currentState.save();
-                                    apiCallForSignUp();
-                                  }
+                                  // updateWithImage()
+                                  // if (_password != _confirmPassword) {
+                                  //   toast(
+                                  //       'Password and Confirm Password must be same.');
+                                  // } else {
+                                  //   _formKey.currentState.save();
+                                  apiCallForUpdate();
+                                  // }
                                 }
                               },
                               color: Color(0xff3D73FF),
                               textColor: Colors.white,
-                              child: Text("Sign up",
+                              child: Text("Update",
                                   style: TextStyle(fontSize: 17)),
                             ),
                           ),
@@ -258,147 +341,13 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  void _showPicker(context) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return SafeArea(
-            child: Container(
-              child: new Wrap(
-                children: <Widget>[
-                  new ListTile(
-                      leading: new Icon(Icons.photo_library),
-                      title: new Text('Photo Library'),
-                      onTap: () {
-                        _imgFromGallery();
-                        Navigator.of(context).pop();
-                      }),
-                  new ListTile(
-                    leading: new Icon(Icons.photo_camera),
-                    title: new Text('Camera'),
-                    onTap: () {
-                      _imgFromCamera();
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-  _imgFromCamera() async {
-    final pickedFile = await ImagePicker().getImage(source: ImageSource.camera);
-
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      } else {
-        print('No image selected.');
-      }
-    });
-  }
-
-  _imgFromGallery() async {
-    final pickedFile =
-        await ImagePicker().getImage(source: ImageSource.gallery);
-
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      } else {
-        print('No image selected.');
-      }
-    });
-  }
-
-  uploadImage() async {
-    // final _storage = FirebaseStorage.instance;
-    // final _picker = ImagePicker();
-    // PickedFile image;
-
-    // //Check Permissions
-    // await Permission.photos.request();
-
-    // var permissionStatus = await Permission.photos.status;
-
-    // if (permissionStatus.isGranted){
-    //   //Select Image
-    //   image = await _picker.getImage(source: ImageSource.gallery);
-    //   var file = File(image.path);
-
-    //   if (image != null){
-    //     //Upload to Firebase
-    //     var snapshot = await _storage.ref()
-    //     .child('folderName/imageName')
-    //     .putFile(file)
-    //     .onComplete;
-
-    //     var downloadUrl = await snapshot.ref.getDownloadURL();
-
-    //     setState(() {
-    //       imageUrl = downloadUrl;
-    //     });
-    //   } else {
-    //     print('No Path Received');
-    //   }
-
-    // } else {
-    //   print('Grant Permissions and try again');
-    // }
-
-    // }
-  }
-
-  Future<void> apiCallForSignUp() async {
-    if (Platform.isIOS) {
-      _deviceType = "ios";
-    } else if (Platform.isAndroid) {
-      _deviceType = "android";
-    }
-    Prefs.getFCMToken((pushtoken) {
-      if (pushtoken == null) {
-        _deviceToken = "123";
-      } else {
-        _deviceToken = pushtoken;
-      }
-    });
-
-    if (_image == null) {
-      toast("please select an image");
-      return;
-    }
-    Dialogs.showLoadingDialog(context);
-    registerWithImage(_name, _email, _password, _confirmPassword, _deviceType,
-        _deviceToken, _image);
-    // onSuccess: (BaseModel baseModel) {
-    //   Dialogs.hideDialog(context); //toast(baseModel.message);
-
-    //   if (baseModel.data != null) {
-    //     UserAuthModel userAuthModel =
-    //         UserAuthModel.fromJson(baseModel.data);
-    //     user = userAuthModel.user;
-
-    //     Prefs.setAccessToken(user.access_token);
-    //     Prefs.setUser(user);
-
-    //     apiCallForAd(user.access_token);
-    //   }
-    // },
-    // onError: (String error, BaseModel baseModel) {
-    //   Dialogs.hideDialog(context);
-    //   toast(error);
-    // });
-  }
-
-  void registerWithImage(
+  void updateWithImage(
     @required String name,
     @required String email,
-    @required String password,
-    @required String confirmPassword,
-    @required String deviceType,
-    @required String deviceToken,
+    String password,
+    String confirmPassword,
+    String deviceType,
+    String deviceToken,
     @required dynamic image,
   ) async {
     // request.files.add(new http.MultipartFile.fromBytes('file',  image, contentType: new MediaType('image', 'jpeg')))
@@ -412,28 +361,25 @@ class _SignupScreenState extends State<SignupScreen> {
       // "client_id": client_id,
       "name": name,
       "email": email,
-      "password": password,
-      "password_confirmation": confirmPassword,
+      // "password": password,
+      // "password_confirmation": confirmPassword,
       //important),
-      "device_token": deviceToken,
-      "device_type": deviceType,
+      // "device_token": deviceToken,
+      // "device_type": deviceType,
       "image": await MultipartFile.fromFile(image.path, filename: fileName),
 
       // "expires_at": expires_at,
     });
     print("FORM DATA ${formData.fields}");
     print("image path ${image.path}");
-
     try {
-      BaseOptions options = new BaseOptions(
-          baseUrl: "https://kanztainer.com/aspen-weather/api/v1",
-          receiveDataWhenStatusError: true,
-          connectTimeout: 60000, // 60 seconds
-          receiveTimeout: 60000 // 60 seconds
-          );
-
-      dynamic response = await Dio(options).post("/register",
-          options: Options(contentType: 'multipart/form-data'), data: formData);
+      Dio dio = new Dio();
+      // dio.options.headers['content-Type'] = 'application/json';
+      dio.options.headers["authorization"] = "Bearer ${this.accessToken}";
+      dynamic response = await dio.post(
+          "https://kanztainer.com/aspen-weather/api/v1/users/update-profile/${user.id}",
+          options: Options(contentType: 'multipart/form-data'),
+          data: formData);
       Dialogs.hideDialog(context);
 
       //
@@ -450,57 +396,42 @@ class _SignupScreenState extends State<SignupScreen> {
         print("sucesss");
         if (baseModel.data != null) {
           toast(baseModel.message);
-          UserAuthModel userAuthModel = UserAuthModel.fromJson(baseModel.data);
+          print("base model is ${baseModel.data}");
+          // UserAuthModel userAuthModel = UserAuthModel.fromJson(baseModel.data);
 
-          user = userAuthModel.user;
-          Prefs.setAccessToken(user.access_token);
-          Prefs.setUser(user);
-          apiCallForAd(user.access_token);
+          // user = userAuthModel.user;
+          // Prefs.setAccessToken(user.access_token);
+          // Prefs.setUser(user);
+          // apiCallForAd(user.access_token);
         }
       } else {
         print("error response:, ${response}");
         toast(baseModel.message);
         // throw Exception(response);
       }
-    } on DioError catch (ex) {
+    } catch (error) {
       Dialogs.hideDialog(context);
-
-      if (ex.type == DioErrorType.CONNECT_TIMEOUT ||
-          ex.type == DioErrorType.SEND_TIMEOUT ||
-          ex.type == DioErrorType.RECEIVE_TIMEOUT) {
-        toast("Connection Timeout");
-
-        // throw Exception("Connection  Timeout Exception");
-      } else if (ex.type == DioErrorType.RESPONSE) {
-        dynamic responsebody = ex.response.data;
-        print(" responsebody:, ${responsebody}");
-        final baseModel = BaseModel.fromJson(responsebody);
-        toast(baseModel.message);
-      } else if (ex.type == DioErrorType.DEFAULT) {
-        dynamic responsebody = ex.response.data;
-        print(" responsebody:, ${responsebody}");
-        final baseModel = BaseModel.fromJson(responsebody);
-        toast(baseModel.message);
-        // toast(ex.message);
-      } else if (ex.type == DioErrorType.CANCEL) {
-        toast(ex.message);
-      }
+      toast(error.response.message);
+      print("error is ${error.response}");
+      print("error is ${error.response?.statusCode}");
     }
-    // } catch (error) {
-    //   Dialogs.hideDialog(context);
+  }
 
-    //   if (error.response == null || error.response == "") {
-    //     toast(error.message);
-    //   } else {
-    //     toast(error.response.data.message);
-    //   }
-    //   // if (err.response == null ||  err.response == ""){
-    //   // toast(err.message);
-    //   // }
-    //   //  toast(error.message);
-    //   // print("error is ${error}");
-    //   // print("error is ${error.response}");
-    //   // print("error is ${error.response?.statusCode}");
+  Future<void> apiCallForUpdate() async {
+    if (Platform.isIOS) {
+      _deviceType = "ios";
+    } else if (Platform.isAndroid) {
+      _deviceType = "android";
+    }
+    _deviceToken = "123";
+
+    if (_image == null) {
+      toast("please select an image");
+      return;
+    }
+    Dialogs.showLoadingDialog(context);
+    updateWithImage(_name, _email, _password, _confirmPassword, _deviceType,
+        _deviceToken, _image);
   }
 
   Future<void> apiCallForAd(String accessToken) async {
@@ -534,3 +465,5 @@ class _SignupScreenState extends State<SignupScreen> {
         });
   }
 }
+
+class Final {}

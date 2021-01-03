@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:aspen_weather/screens/Notification_Screen.dart';
 import 'package:aspen_weather/screens/about_screen.dart';
 import 'package:aspen_weather/screens/change_password_screen.dart';
 import 'package:aspen_weather/screens/cumulative_snow.dart';
@@ -17,17 +18,31 @@ import 'package:aspen_weather/screens/splash_screen.dart';
 import 'package:aspen_weather/screens/summer_home_screen.dart';
 import 'package:aspen_weather/screens/terms_screen.dart';
 import 'package:aspen_weather/screens/thunder_screen.dart';
+import 'package:aspen_weather/screens/updateProfile_Screen.dart';
 import 'package:aspen_weather/screens/verify_reset_code_screen.dart';
 import 'package:aspen_weather/screens/why_join_screen.dart';
 import 'package:aspen_weather/screens/winter_home_screen.dart';
+import 'package:aspen_weather/service/pushServices.dart';
 import 'package:aspen_weather/utils/views.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
-void main() => runApp(MyApp());
+// void main() => runApp(
+//   MyApp());
+void main() => runApp(
+      DevicePreview(
+        // enabled: !kReleaseMode,
+                enabled: false,
+
+        builder: (context) => MyApp(), // Wrap your app
+      ),
+    );
 
 DateTime currentBackPressTime;
 
@@ -53,6 +68,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   static final navigatorKey = GlobalKey<NavigatorState>();
+  static final _firebaseMessaging = FirebaseMessaging();
 
   @override
   void initState() {
@@ -71,9 +87,13 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    final pushNotificationService = PushNotificationService(_firebaseMessaging);
+    pushNotificationService.initialise();
     return OKToast(
         child: WillPopScope(
             child: MaterialApp(
+              locale: DevicePreview.locale(context), // Add the locale here
+              builder: DevicePreview.appBuilder,
               title: 'Aspen Weather',
               theme: themeData,
               debugShowCheckedModeBanner: false,
@@ -146,9 +166,7 @@ class _MyAppState extends State<MyApp> {
         break;
 
       case PayNowScreen.routeName:
-        return setTransition(PayNowScreen(
-          arguments['packageId']
-        ));
+        return setTransition(PayNowScreen(arguments['packageId']));
         break;
 
       case ThunderScreen.routeName:
@@ -179,6 +197,12 @@ class _MyAppState extends State<MyApp> {
         return setTransition(SnowCalendarScreen());
         break;
 
+      case UpdateProfileScreen.routeName:
+        return setTransition(UpdateProfileScreen());
+        break;
+      case NotificationScreen.routeName:
+        return setTransition(NotificationScreen());
+        break;
       default:
         return null;
     }
@@ -193,7 +217,8 @@ class _MyAppState extends State<MyApp> {
   Future<bool> onWillPop() {
     DateTime now = DateTime.now();
 
-    if (currentBackPressTime == null || now.difference(currentBackPressTime) > Duration(seconds: 2)) {
+    if (currentBackPressTime == null ||
+        now.difference(currentBackPressTime) > Duration(seconds: 2)) {
       currentBackPressTime = now;
       toast('Press again to exit!');
       return Future.value(false);

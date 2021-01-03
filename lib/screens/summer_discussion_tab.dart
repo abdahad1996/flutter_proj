@@ -21,6 +21,7 @@ class _SummerDiscussTabScreenState extends State<SummerDiscussTabScreen> {
   bool checkedValue = false;
   User user;
   DateTime selectedDate = DateTime.now();
+  var isDatePicked = false;
   String title = '';
   String content = '';
   String contentFull = '';
@@ -150,13 +151,14 @@ class _SummerDiscussTabScreenState extends State<SummerDiscussTabScreen> {
               onDateTimeChanged: (picked) {
                 if (picked != null && picked != selectedDate)
                   setState(() {
+                    isDatePicked = true;
                     selectedDate = picked;
                     dateStr = DateFormat('yyyy-MM-dd').format(selectedDate);
                     print(dateStr);
                     loadByDate();
                   });
               },
-              initialDateTime: DateTime.now(),
+              initialDateTime: isDatePicked ? selectedDate : DateTime.now(),
               minimumYear: 2000,
               maximumYear: 2021,
             ),
@@ -190,14 +192,12 @@ class _SummerDiscussTabScreenState extends State<SummerDiscussTabScreen> {
               packagesList.add(model);
             }
             if (packagesList.isNotEmpty) {
-
-              for(var model in packagesList){
-                contentFull += model.title + "\n" + model.content+ "\n\n";
+              for (var model in packagesList) {
+                contentFull += model.title + "\n" + model.content + "\n\n";
               }
 
               title = packagesList[0].title;
               content = packagesList[0].content;
-
             } else {
               title = "";
               content = "";

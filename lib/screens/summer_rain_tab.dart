@@ -77,7 +77,9 @@ class _SummerRainTabScreenState extends State<SummerRainTabScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Container(
+        child:stormList.length == 0
+                ? Center(child: Text("No Records Found"))
+                : Container(
           child: ListView(
             padding: EdgeInsets.only(left: 5),
             scrollDirection: Axis.vertical,

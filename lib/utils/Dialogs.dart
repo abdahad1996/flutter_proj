@@ -6,7 +6,6 @@ import '../main.dart';
 import 'views.dart';
 
 class Dialogs {
-
   static Future<void> showLoadingDialog(BuildContext context) async {
     return showDialog<void>(
         context: context,
@@ -15,7 +14,7 @@ class Dialogs {
           return new WillPopScope(
             onWillPop: () async => false,
             child: SimpleDialog(
-              backgroundColor: Colors.black54,
+              backgroundColor: Colors.white,
               children: <Widget>[
                 Center(
                   child: Padding(
@@ -25,13 +24,14 @@ class Dialogs {
                         SizedBox(
                           width: 15,
                         ),
-                        CircularProgressIndicator(),
+                        CupertinoActivityIndicator(),
+                        // CircularProgressIndicator(backgroundColor: Colors.blue,),
                         SizedBox(
                           width: 30,
                         ),
                         Text(
                           "Please Wait....",
-                          style: TextStyle(color: accentColor),
+                          // style: TextStyle(color: accentColor),
                         )
                       ],
                     ),

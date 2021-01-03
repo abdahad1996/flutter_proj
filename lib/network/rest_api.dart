@@ -16,15 +16,24 @@ enum Method { Get, Post, Put, Multipart }
 
 Future<BaseModel> get(String endPoint, {String authToken}) async {
   Map<String, String> headers = {"Authorization": 'Bearer $authToken'};
+  print(" URL $baseUrl + endPoint");
+  print(" headers $headers");
   http.Response response = await http.get(baseUrl + endPoint, headers: headers);
-  int statusCode = response.statusCode;
+  print(" response $response");
+int statusCode = response.statusCode;
+  String responsebody = response.body;
+  var jsonBody = json.decode(responsebody);
+  print("response: ${jsonBody}");
+  // int statusCode = response.statusCode;
   if (statusCode == 200) {
     String body = response.body;
     var jsonBody = json.decode(body);
     print(body);
     return BaseModel.fromJson(jsonBody);
   } else {
-    throw Exception(response.reasonPhrase);
+    print("error response:, ${response.body}");
+    return BaseModel.fromJson(jsonBody);
+    // throw Exception(response.reasonPhrase);
   }
 }
 
@@ -34,7 +43,6 @@ Future<BaseModel> postFormData(String endPoint, Map<String, dynamic> body,
   print("end point : $endPoint");
   print("end body : $body");
 
-   
   http.Response response =
       await http.post(baseUrl + endPoint, headers: headers, body: body);
   int statusCode = response.statusCode;
@@ -47,7 +55,6 @@ Future<BaseModel> postFormData(String endPoint, Map<String, dynamic> body,
   } else {
     print("error response:, ${response.body}");
     return BaseModel.fromJson(jsonBody);
-     
   }
 }
 
@@ -99,7 +106,7 @@ Future<void> invokeAsync(
       if (method == Method.Get)
         baseModel = await get(endPoint, authToken: authToken);
       else if (method == Method.Post || method == Method.Put) {
-        print("auth token $authToken ");
+        // print("auth token $authToken ");
         baseModel = await postFormData(endPoint, body, authToken: authToken);
       } else
         baseModel = await postMultiPart("POST", endPoint, body, files,

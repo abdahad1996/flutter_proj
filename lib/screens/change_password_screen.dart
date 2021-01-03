@@ -1,4 +1,5 @@
 import 'package:aspen_weather/network/base_model.dart';
+import 'package:aspen_weather/screens/Notification_Screen.dart';
 import 'package:aspen_weather/service/webservices.dart';
 import 'package:aspen_weather/utils/Dialogs.dart';
 import 'package:aspen_weather/utils/prefs.dart';
@@ -76,11 +77,16 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 alignment: Alignment.center,
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                  child: Image.asset(
-                    'assets/images/three_forecast_head.png',
-                    width: 130,
-                    height: 50,
-                  ),
+                  child: Text("Change Password",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xff042C5C),
+                          fontSize: 20)),
+                  // Image.asset(
+                  //   'assets/images/three_forecast_head.png',
+                  //   width: 130,
+                  //   height: 50,
+                  // ),
                 ),
               ),
               Align(
@@ -89,10 +95,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.pop(context);
+                      // Navigator.pop(context);
+                      Navigator.pushNamed(
+                          context, NotificationScreen.routeName);
                     },
                     child: Image.asset(
-                      'assets/images/ic_info.png',
+                      'assets/images/ic_notification.png',
                       width: 25,
                       height: 20,
                     ),

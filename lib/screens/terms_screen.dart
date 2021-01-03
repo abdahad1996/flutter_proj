@@ -89,11 +89,11 @@ class _TermsScreenState extends State<TermsScreen> {
                 alignment: Alignment.center,
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                  child: Image.asset(
-                    'assets/images/about_head.png',
-                    width: 100,
-                    height: 50,
-                  ),
+                  child: Text("Terms & Conditions",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xff222222),
+                          fontSize: 16)),
                 ),
               ),
               Align(

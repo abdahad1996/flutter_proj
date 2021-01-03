@@ -10,6 +10,17 @@ class Prefs {
     return PreferencesHelper.setString(Const.WEATHER_TYPE, weatherType);
   }
 
+  static Future setThemeUrl(String setThemeUrl) {
+    return PreferencesHelper.setString(Const.THEME_BACKGROUND_URL, setThemeUrl);
+  }
+
+  static Future<void> getThemeUrl(Function(String) success) async {
+    String string = await PreferencesHelper.getString(Const.THEME_BACKGROUND_URL);
+    if (string != null)
+      return success(string);
+    else
+      return success(Const.WEATHER_TYPE_SUMMER); // default - summer weather
+  }
   static Future<void> getWeatherType(Function(String) success) async {
     String string = await PreferencesHelper.getString(Const.WEATHER_TYPE);
     if (string != null)

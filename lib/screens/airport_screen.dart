@@ -34,7 +34,8 @@ class _AirportScreenState extends State<AirportScreen> {
 
   void load() async {
     currentTime =
-        DateFormat.yMMMd().format(new DateTime.now());
+    DateFormat.yMd() .format(new DateTime.now());
+        // DateFormat.yMMMd().format(new DateTime.now());
   }
 
   @override

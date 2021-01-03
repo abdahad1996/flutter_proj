@@ -1,5 +1,9 @@
+import 'package:aspen_weather/models/user_model_response.dart';
+import 'package:aspen_weather/screens/Notification_Screen.dart';
 import 'package:aspen_weather/screens/change_password_screen.dart';
 import 'package:aspen_weather/screens/splash_screen.dart';
+import 'package:aspen_weather/screens/updateProfile_Screen.dart';
+import 'package:aspen_weather/utils/CachedImage.dart';
 import 'package:aspen_weather/utils/const.dart';
 import 'package:aspen_weather/utils/prefs.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,7 +19,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   String weatherType;
   String bannerImageUrl = '';
-
+  User user;
   @override
   void initState() {
     super.initState();
@@ -29,6 +33,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Prefs.getWeatherType((String weather) {
       setState(() {
         weatherType = weather;
+      });
+    });
+
+    Prefs.getUser((User userModel) async {
+      setState(() {
+        user = userModel;
+        // print("user is ${user.details.image_url}");
       });
     });
   }
@@ -80,7 +91,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.pop(context);
+                      // Navigator.pop(context);
+                      Navigator.pushNamed(
+                          context, NotificationScreen.routeName);
                     },
                     child: Image.asset(
                       'assets/images/ic_notification.png',
@@ -99,16 +112,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
             padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
             child: Column(
               children: [
-                Image.asset(
-                  'assets/images/test_profile_pic.png',
-                  width: 80,
+                Cached_Image(
                   height: 80,
+                  width: 80,
+                  imageURL: user?.details?.image_url ?? "",
+                  shape: BoxShape.circle,
+                  retry: (status) {
+                    print("RETRYINGGG");
+                  },
                 ),
+                // (user.details.image_url == null)
+                //     ? Image.asset(
+                //         'assets/images/test_profile_pic.png',
+                //         width: 80,
+                //         height: 80,
+                //       )
+                //     : Container(
+                //         decoration: BoxDecoration(
+                //             image: DecorationImage(
+                //                 image: NetworkImage(user.details.image_url),
+                //                 fit: BoxFit.fill))),
                 SizedBox(
                   height: 3,
                 ),
                 Text(
-                  'John Smith',
+                  user?.name ?? "",
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Color(0xff042C5C),
@@ -118,7 +146,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   height: 3,
                 ),
                 Text(
-                  'johnsmith@gmail.com',
+                  user?.email ?? "",
                   style: TextStyle(
                       fontWeight: FontWeight.normal,
                       color: Color(0xff77869E),
@@ -127,20 +155,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SizedBox(
                   height: 12,
                 ),
-                Image.asset('assets/images/cell_profile.png'),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, UpdateProfileScreen.routeName);
+                  },
+                  child: Image.asset('assets/images/cell_profile.png'),
+                ),
                 SizedBox(height: 6),
                 GestureDetector(
-                  onTap: (){
-                    Navigator.pushNamed(
-                        context, ChangePasswordScreen.routeName);
-                  },
+                    onTap: () {
+                      Navigator.pushNamed(
+                          context, ChangePasswordScreen.routeName);
+                    },
                     child: Image.asset('assets/images/cell_privacy.png')),
                 SizedBox(height: 6),
-                Image.asset('assets/images/cell_notification.png'),
+                GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(
+                          context, NotificationScreen.routeName);
+                    },
+                    child: Image.asset('assets/images/cell_notification.png')),
                 SizedBox(height: 6),
                 GestureDetector(
                   onTap: () {
-                    showAlertDialog(context);
+                    // showAlertDialog(context);
                   },
                   child: Image.asset(weatherType == Const.WEATHER_TYPE_SUMMER
                       ? 'assets/images/cell_theme_summer.png'

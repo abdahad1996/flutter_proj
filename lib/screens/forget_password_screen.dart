@@ -72,7 +72,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                         image:
                             AssetImage('assets/images/login_bottom_card.png'),
                         fit: BoxFit.fill)),
-                height: 350,
+                height: MediaQuery.of(context).size.height * 0.5,
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
                   child: Form(

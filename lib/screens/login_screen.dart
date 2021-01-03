@@ -129,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         image:
                             AssetImage('assets/images/login_bottom_card.png'),
                         fit: BoxFit.fill)),
-                height: 400,
+                height: MediaQuery.of(context).size.height*0.6,
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
                   child: Form(
@@ -334,8 +334,14 @@ class _LoginScreenState extends State<LoginScreen> {
     _password = "123456";
     _deviceType = "android";
     _deviceToken = "123";*/
-
     _deviceToken = "123";
+    Prefs.getFCMToken((pushtoken) {
+      if (pushtoken == null) {
+        _deviceToken = "123";
+      } else {
+        _deviceToken = pushtoken;
+      }
+    });
 
     login(
         email: _email,
@@ -348,12 +354,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 UserAuthModel.fromJson(baseModel.data);
 
             user = userAuthModel.user;
+            print("user is $user");
             Prefs.setAccessToken(user.access_token);
             Prefs.setUser(user);
+            // print("user image  is ${user.details}");
+
             apiCallForAd(user.access_token);
           }
         },
         onError: (String error, BaseModel baseModel) {
+          print("login error is $error");
+          print("login baseModel is $baseModel");
           Dialogs.hideDialog(context);
           toast(error);
         });
@@ -376,8 +387,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Navigator.pushNamed(context, PackagesScreen.routeName);
             } else {
               if (!user.payment_status) {
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    PackagesScreen.routeName, (Route<dynamic> route) => false);
+                Navigator.pushNamed(context, PackagesScreen.routeName);
               } else {
                 if (weatherType == Const.WEATHER_TYPE_SUMMER) {
                   Navigator.of(context).pushNamedAndRemoveUntil(
@@ -418,7 +428,13 @@ class _LoginScreenState extends State<LoginScreen> {
     } else if (Platform.isAndroid) {
       _deviceType = "android";
     }
-
+    Prefs.getFCMToken((pushtoken) {
+      if (pushtoken == null) {
+        _deviceToken = "123";
+      } else {
+        _deviceToken = pushtoken;
+      }
+    });
     dynamic pngFile = await urlToPngFile(imageUrl);
 
     uploadFile(
@@ -428,7 +444,7 @@ class _LoginScreenState extends State<LoginScreen> {
       userName,
       email,
       pngFile,
-      "12345",
+      _deviceToken,
       _deviceType,
       expiresAt,
     );

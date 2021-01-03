@@ -52,8 +52,6 @@ void socialLogin(
         "device_type": device_type,
         "expires_at": expires_at
       },
-
-
       onSuccess: (BaseModel baseModel) {
         onSuccess(baseModel);
       },
@@ -320,6 +318,25 @@ Future<BaseModel> getDiscussions(
       method: Method.Get,
       endPoint: '/discussions-by-date/$currentDate',
       authToken: authToken);
+}
+
+Future<BaseModel> getTheme({@required String authToken, String currentDate}) {
+  return invoke(
+      method: Method.Get, endPoint: '/current-theme', authToken: authToken);
+}
+
+Future<BaseModel> getNotification(
+    {@required String authToken, String currentDate}) {
+  return invoke(
+      method: Method.Get,
+      endPoint: '/notifications/get-user-notification',
+      authToken: authToken);
+}
+
+Future<BaseModel> getIndicator(
+    {@required String authToken, String currentDate}) {
+  return invoke(
+      method: Method.Get, endPoint: '/daily-indicators', authToken: authToken);
 }
 
 void chargePayment(
