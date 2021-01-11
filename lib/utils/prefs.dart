@@ -15,12 +15,14 @@ class Prefs {
   }
 
   static Future<void> getThemeUrl(Function(String) success) async {
-    String string = await PreferencesHelper.getString(Const.THEME_BACKGROUND_URL);
+    String string =
+        await PreferencesHelper.getString(Const.THEME_BACKGROUND_URL);
     if (string != null)
       return success(string);
     else
       return success(Const.WEATHER_TYPE_SUMMER); // default - summer weather
   }
+
   static Future<void> getWeatherType(Function(String) success) async {
     String string = await PreferencesHelper.getString(Const.WEATHER_TYPE);
     if (string != null)
@@ -30,6 +32,9 @@ class Prefs {
   }
 
   static Future setUser(User user) {
+    print("user.payment_status");
+    print(user.payment_status.package.status);
+    print(user.toMap());
     return PreferencesHelper.setString(Const.USER, json.encode(user.toMap()));
   }
 
@@ -69,6 +74,14 @@ class Prefs {
       return success(null);
   }
 
+  static Future<dynamic> getFCMTokenAwait() async {
+    String string = await PreferencesHelper.getString(Const.FCM_TOKEN);
+    if (string != null)
+      return string;
+    else
+      return null;
+  }
+
   static Future setNotificationClicked(String isClicked) {
     return PreferencesHelper.setString(
         Const.IS_NOTIFICATION_CLICKED, isClicked);
@@ -85,9 +98,15 @@ class Prefs {
 
   static Future<void> getUser(Function(User) success) async {
     String string = await PreferencesHelper.getString(Const.USER);
-    if (string != null)
-      return success(User.fromJson(json.decode(string)));
-    else
+    print("user from sharedpref");
+    print(string);
+    if (string != null) {
+      var decode = User.fromJson(json.decode(string));
+      print("decoded");
+      print(decode.payment_status.package.status);
+
+      return success(decode);
+    } else
       return success(null);
   }
 

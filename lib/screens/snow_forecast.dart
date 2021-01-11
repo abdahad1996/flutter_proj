@@ -113,7 +113,7 @@ class _SnowForecastScreenState extends State<SnowForecastScreen> {
                       Navigator.pop(context);
                     },
                     child: Image.asset(
-                      'assets/images/ic_info.png',
+                      '',
                       width: 25,
                       height: 20,
                     ),

@@ -126,7 +126,7 @@ class _ThunderScreenState extends State<ThunderScreen> {
                       Navigator.pop(context);
                     },
                     child: Image.asset(
-                      'assets/images/ic_info.png',
+                      '',
                       width: 25,
                       height: 20,
                     ),

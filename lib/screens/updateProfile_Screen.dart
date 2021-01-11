@@ -244,6 +244,7 @@ class UpdateProfileScreenState extends State<UpdateProfileScreen> {
                           ),
                           SizedBox(height: 15),
                           TextFormField(
+                            readOnly :true,
                             initialValue: (user != null) ? user.email : "",
                             decoration: InputDecoration(
                                 hintText: 'Enter your email',
@@ -378,7 +379,7 @@ class UpdateProfileScreenState extends State<UpdateProfileScreen> {
       dio.options.headers["authorization"] = "Bearer ${this.accessToken}";
       dynamic response = await dio.post(
           "https://kanztainer.com/aspen-weather/api/v1/users/update-profile/${user.id}",
-          options: Options(contentType: 'multipart/form-data'),
+          // options: Options(contentType: 'multipart/form-data'),
           data: formData);
       Dialogs.hideDialog(context);
 
@@ -397,12 +398,67 @@ class UpdateProfileScreenState extends State<UpdateProfileScreen> {
         if (baseModel.data != null) {
           toast(baseModel.message);
           print("base model is ${baseModel.data}");
+          UpdateProfileModel userAuthModel =
+              UpdateProfileModel.fromJson(baseModel.data);
+
+          // user = userAuthModel.user;
+          // print("user is $user");
+          // print("useraccess_token is ${user.access_token}");
+          // print("user status is ${user}");
+          // Prefs.getUser((User userModel) async {
+          //   userModel.name = user.name;
+          //   userModel.email = user.email;
+          //   userModel.details.image_url = user.details.image_url;
+          //   Prefs.setUser(user);
+          // });
+
+          print("user.name");
+          print(userAuthModel.name);
+
+          print(user.name);
+
+          print("user.email");
+          print(userAuthModel.email);
+
+          print(user.email);
+
+          user.name = userAuthModel.name;
+          user.email = userAuthModel.email;
+          user.details.image_url = userAuthModel.details.image_url;
+
+          print(user.name);
+          Prefs.setUser(user);
+
+          if (!user.payment_status.package.status) {
+            toast(
+                'You need to buy package first to access application features.');
+            // Prefs.clearPackageId();
+            // Navigator.pushNamed(context, PackagesScreen.routeName);
+          } else {
+            if (weatherType == Const.WEATHER_TYPE_SUMMER) {
+              Navigator.pushReplacementNamed(
+                  context, SummerHomeScreen.routeName,
+                  arguments: {
+                    'user': user,
+                  });
+            } else {
+              Navigator.pushReplacementNamed(
+                  context, WinterHomeScreen.routeName,
+                  arguments: {
+                    'user': user,
+                  });
+            }
+          }
+
+          // Prefs.setAccessToken(user.access_token);
+
           // UserAuthModel userAuthModel = UserAuthModel.fromJson(baseModel.data);
 
           // user = userAuthModel.user;
           // Prefs.setAccessToken(user.access_token);
           // Prefs.setUser(user);
-          // apiCallForAd(user.access_token);
+          // apiCallForAd( this.accessToken);
+
         }
       } else {
         print("error response:, ${response}");
@@ -439,10 +495,10 @@ class UpdateProfileScreenState extends State<UpdateProfileScreen> {
         authToken: accessToken,
         onSuccess: (BaseModel baseModel) {
           if (baseModel.data != null) {
-            AdsModel adModel = AdsModel.fromJson(baseModel.data);
-            Prefs.setAdsUrl(adModel.attachment_url);
+            // AdsModel adModel = AdsModel.fromJson(baseModel.data);
+            // Prefs.setAdsUrl(adModel.attachment_url);
 
-            if (!user.payment_status) {
+            if (!user.payment_status.package.status) {
               toast(
                   'You need to buy package first to access application features.');
               Prefs.clearPackageId();

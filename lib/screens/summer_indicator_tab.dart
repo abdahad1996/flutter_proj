@@ -177,7 +177,11 @@ class _SummerIndicatorTabScreenState extends State<SummerIndicatorTabScreen>
                       bottomOpacity: 1,
                     )),
                 body: TabBarView(
-                  children: indicators.map((model) => ui(model)).toList(),
+                  children: indicators.map((model) {
+                    
+                      return ui(model);
+                    
+                  }).toList(),
 
                   // children: [
                   //   ui(Color.fromRGBO(164, 255, 179, 1), "LOW", 0.5),
@@ -246,96 +250,38 @@ class _SummerIndicatorTabScreenState extends State<SummerIndicatorTabScreen>
                     height: 30,
                     width: 30,
                     // color: Colors.red,
-                    decoration: BoxDecoration(
+                    decoration: (model.selected == "low") ? BoxDecoration(
                         color: Color.fromRGBO(164, 255, 179, 1),
                         shape: BoxShape.rectangle,
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(8.0),
                             topRight: Radius.circular(8.0),
                             bottomRight: Radius.circular(8.0),
-                            bottomLeft: Radius.circular(8.0))),
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Text(
-                    "low",
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(model.low)
-            ],
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                      height: 30,
-                      width: 30,
-                      decoration: BoxDecoration(
+                            bottomLeft: Radius.circular(8.0)))
+                            :
+                           (model.selected == "medium") ? BoxDecoration(
                           color: Color.fromRGBO(254, 245, 84, 1),
                           shape: BoxShape.rectangle,
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(8.0),
                               topRight: Radius.circular(8.0),
                               bottomRight: Radius.circular(8.0),
-                              bottomLeft: Radius.circular(8.0)))),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Text(
-                    "Medium",
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(model.medium)
-            ],
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                      height: 30,
-                      width: 30,
-                      decoration: BoxDecoration(
+                              bottomLeft: Radius.circular(8.0)))
+                              :
+                              BoxDecoration(
                           color: Color.fromRGBO(255, 55, 66, 1),
                           shape: BoxShape.rectangle,
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(8.0),
                               topRight: Radius.circular(8.0),
                               bottomRight: Radius.circular(8.0),
-                              bottomLeft: Radius.circular(8.0)))),
+                              bottomLeft: Radius.circular(8.0))),
+                  ),
                   SizedBox(
                     width: 20,
                   ),
                   Text(
-                    "High",
+                    model.selected,
                     style: TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
@@ -347,13 +293,89 @@ class _SummerIndicatorTabScreenState extends State<SummerIndicatorTabScreen>
               SizedBox(
                 height: 20,
               ),
-              Text(model.high),
-              SizedBox(
-                height: 20,
-              ),
-              // Text("Chats Tab Bar View"),
+              Text((model.selected == "low ") ? model.low : (model.selected == "medium") ? model.medium : model.high)
             ],
           ),
+          SizedBox(
+            height: 20,
+          ),
+          // Column(
+          //   crossAxisAlignment: CrossAxisAlignment.start,
+          //   children: [
+          //     Row(
+          //       children: [
+          //         Container(
+          //             height: 30,
+          //             width: 30,
+          //             decoration: BoxDecoration(
+          //                 color: Color.fromRGBO(254, 245, 84, 1),
+          //                 shape: BoxShape.rectangle,
+          //                 borderRadius: BorderRadius.only(
+          //                     topLeft: Radius.circular(8.0),
+          //                     topRight: Radius.circular(8.0),
+          //                     bottomRight: Radius.circular(8.0),
+          //                     bottomLeft: Radius.circular(8.0)))),
+          //         SizedBox(
+          //           width: 20,
+          //         ),
+          //         Text(
+          //           "Medium",
+          //           style: TextStyle(
+          //             fontSize: 25,
+          //             fontWeight: FontWeight.bold,
+          //             color: Colors.black,
+          //           ),
+          //         )
+          //       ],
+          //     ),
+          //     SizedBox(
+          //       height: 20,
+          //     ),
+          //     Text(model.medium)
+          //   ],
+          // ),
+          SizedBox(
+            height: 20,
+          ),
+          // Column(
+          //   crossAxisAlignment: CrossAxisAlignment.start,
+          //   children: [
+          //     Row(
+          //       children: [
+          //         Container(
+          //             height: 30,
+          //             width: 30,
+          //             decoration: BoxDecoration(
+          //                 color: Color.fromRGBO(255, 55, 66, 1),
+          //                 shape: BoxShape.rectangle,
+          //                 borderRadius: BorderRadius.only(
+          //                     topLeft: Radius.circular(8.0),
+          //                     topRight: Radius.circular(8.0),
+          //                     bottomRight: Radius.circular(8.0),
+          //                     bottomLeft: Radius.circular(8.0)))),
+          //         SizedBox(
+          //           width: 20,
+          //         ),
+          //         Text(
+          //           "High",
+          //           style: TextStyle(
+          //             fontSize: 25,
+          //             fontWeight: FontWeight.bold,
+          //             color: Colors.black,
+          //           ),
+          //         )
+          //       ],
+          //     ),
+          //     SizedBox(
+          //       height: 20,
+          //     ),
+          //     Text(model.high),
+          //     SizedBox(
+          //       height: 20,
+          //     ),
+          //     // Text("Chats Tab Bar View"),
+          //   ],
+          // ),
         ],
       ),
     );

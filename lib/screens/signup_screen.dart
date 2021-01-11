@@ -97,7 +97,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         image:
                             AssetImage('assets/images/login_bottom_card.png'),
                         fit: BoxFit.fill)),
-                height: MediaQuery.of(context).size.height*0.6,
+                height: MediaQuery.of(context).size.height * 0.6,
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
                   child: Form(
@@ -357,13 +357,19 @@ class _SignupScreenState extends State<SignupScreen> {
     } else if (Platform.isAndroid) {
       _deviceType = "android";
     }
-    Prefs.getFCMToken((pushtoken) {
-      if (pushtoken == null) {
-        _deviceToken = "123";
-      } else {
-        _deviceToken = pushtoken;
-      }
-    });
+    // Prefs.getFCMToken((pushtoken) {
+    //   if (pushtoken == null) {
+    //     _deviceToken = "123";
+    //   } else {
+    //     _deviceToken = pushtoken;
+    //   }
+    // });
+    _deviceToken = await Prefs.getFCMTokenAwait();
+    if (_deviceToken == null) {
+      _deviceToken = "123";
+    } else {
+      _deviceToken = _deviceToken;
+    }
 
     if (_image == null) {
       toast("please select an image");
@@ -454,7 +460,10 @@ class _SignupScreenState extends State<SignupScreen> {
 
           user = userAuthModel.user;
           Prefs.setAccessToken(user.access_token);
-          Prefs.setUser(user);
+          if (user.payment_status != null) {
+            Prefs.setUser(user);
+          }
+
           apiCallForAd(user.access_token);
         }
       } else {
@@ -511,7 +520,7 @@ class _SignupScreenState extends State<SignupScreen> {
             AdsModel adModel = AdsModel.fromJson(baseModel.data);
             Prefs.setAdsUrl(adModel.attachment_url);
 
-            if (!user.payment_status) {
+            if (user.payment_status == null) {
               toast(
                   'You need to buy package first to access application features.');
               Prefs.clearPackageId();

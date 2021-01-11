@@ -165,7 +165,7 @@ class _SnowCalendarScreenState extends State<SnowCalendarScreen> {
                       Navigator.pop(context);
                     },
                     child: Image.asset(
-                      'assets/images/ic_info.png',
+                      '',
                       width: 25,
                       height: 20,
                     ),
@@ -287,7 +287,8 @@ class _SnowCalendarScreenState extends State<SnowCalendarScreen> {
                                                 Align(
                                                   alignment: Alignment.topLeft,
                                                   child: Text(snowMassDesc,
-                                                      overflow: TextOverflow.ellipsis,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                       maxLines: 4,
                                                       style: TextStyle(
                                                           fontWeight:
@@ -359,7 +360,8 @@ class _SnowCalendarScreenState extends State<SnowCalendarScreen> {
                                                 Align(
                                                   alignment: Alignment.topLeft,
                                                   child: Text(highlandsDesc,
-                                                      overflow: TextOverflow.ellipsis,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                       maxLines: 4,
                                                       style: TextStyle(
                                                           fontWeight:
@@ -431,7 +433,8 @@ class _SnowCalendarScreenState extends State<SnowCalendarScreen> {
                                                 Align(
                                                   alignment: Alignment.topLeft,
                                                   child: Text(butterMilkDesc,
-                                                      overflow: TextOverflow.ellipsis,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                       maxLines: 4,
                                                       style: TextStyle(
                                                           fontWeight:
@@ -503,7 +506,8 @@ class _SnowCalendarScreenState extends State<SnowCalendarScreen> {
                                                 Align(
                                                   alignment: Alignment.topLeft,
                                                   child: Text(ajaxDesc,
-                                                      overflow: TextOverflow.ellipsis,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                       maxLines: 4,
                                                       style: TextStyle(
                                                           fontWeight:
@@ -564,7 +568,6 @@ class _SnowCalendarScreenState extends State<SnowCalendarScreen> {
                 SnowForecastModel.fromJson(baseModel.data);
 
             setState(() {
-
               if (forecastModel.attributes != null) {
                 if (forecastModel.attributes.buttermilk != null)
                   butterMilkDesc =
@@ -579,7 +582,6 @@ class _SnowCalendarScreenState extends State<SnowCalendarScreen> {
 
                 if (forecastModel.attributes.ajax != null)
                   ajaxDesc = forecastModel.attributes.ajax.description;
-
               } else {
                 toast('No records found');
 

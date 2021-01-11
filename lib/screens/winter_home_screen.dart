@@ -178,8 +178,8 @@ class _WinterHomeScreenState extends State<WinterHomeScreen> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(8, 10, 0, 0),
+              Align(
+                alignment: Alignment.center,
                 child: ClipRRect(
                   // clipBehavior: Clip,
                   borderRadius: BorderRadius.circular(50),
@@ -215,23 +215,24 @@ class _WinterHomeScreenState extends State<WinterHomeScreen> {
                   ),
                 ),
               ),
-              GestureDetector(
-                onTap: () {},
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 40, 0, 0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.pushNamed(context, ThunderScreen.routeName);
-                    },
-                    child: Image.asset(
-                      "assets/images/side_menu_thunder.png",
-                      width: 200,
-                      height: 20,
-                    ),
-                  ),
-                ),
-              ),
+
+              // GestureDetector(
+              //   onTap: () {},
+              //   child: Padding(
+              //     padding: const EdgeInsets.fromLTRB(8, 40, 0, 0),
+              //     child: GestureDetector(
+              //       onTap: () {
+              //         Navigator.pop(context);
+              //         Navigator.pushNamed(context, ThunderScreen.routeName);
+              //       },
+              //       child: Image.asset(
+              //         "assets/images/side_menu_thunder.png",
+              //         width: 200,
+              //         height: 20,
+              //       ),
+              //     ),
+              //   ),
+              // ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(8, 70, 0, 0),
                 child: GestureDetector(
@@ -299,7 +300,7 @@ class _WinterHomeScreenState extends State<WinterHomeScreen> {
                     height: 25,
                   ),
                 ),
-              )
+              ),
             ],
           ),
         )),

@@ -18,6 +18,7 @@ class PackagesScreen extends StatefulWidget {
 class _PackagesScreenState extends State<PackagesScreen> {
   String weatherType;
   List<PackagesListModel> packagesList = List();
+  bool loading = false;
   String bannerImageUrl = '';
   String existingPackageId = '';
   @override
@@ -45,13 +46,17 @@ class _PackagesScreenState extends State<PackagesScreen> {
       print(accessToken);
 
       //check if current pacakge id Exist then show selected pacakge
+      loading = true;
 
       BaseModel baseModel =
           await getPackagesScreen(authToken: accessToken).catchError((error) {
+        loading = false;
         print(error);
       });
 
       setState(() {
+        loading = false;
+
         packagesList.clear();
         if (baseModel != null && baseModel.data != null) {
           List list = baseModel.data as List;
@@ -122,7 +127,7 @@ class _PackagesScreenState extends State<PackagesScreen> {
                       Navigator.pop(context);
                     },
                     child: Image.asset(
-                      'assets/images/ic_info.png',
+                      '',
                       width: 25,
                       height: 20,
                     ),
@@ -165,201 +170,212 @@ class _PackagesScreenState extends State<PackagesScreen> {
                     height: 10,
                   ),
                   Expanded(
-                    child: Container(
-                      height: 400,
-                      child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          padding: const EdgeInsets.all(8),
-                          itemCount: packagesList.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Container(
-                              width: 350,
-                              child: Card(
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(15, 0, 15, 0),
-                                  child: Column(
-                                    children: [
-                                      Expanded(
-                                        child: Column(
-                                          children: [
-                                            SizedBox(
-                                              height: 20,
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 28.0),
-                                              child: Text(
-                                                  packagesList[index].name,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Color(0xff31343D),
-                                                      fontSize: 20)),
-                                            ),
-                                            SizedBox(
-                                              height: 15,
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 28.0),
-                                              child: Text(
-                                                  "\$ ${packagesList[index].amount.toString()}",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Color(0xff31343D),
-                                                      fontSize: 23)),
-                                            ),
-                                            SizedBox(
-                                              height: Device.get().isIphoneX
-                                                  ? 25
-                                                  : 10,
-                                            ),
-                                            Text(
-                                                packagesList[index].description,
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                    color: Color(0xff77869E),
-                                                    fontSize: 17)),
-                                            SizedBox(
-                                              height: Device.get().isIphoneX
-                                                  ? 25
-                                                  : 10,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment:
-                                            FractionalOffset.bottomCenter,
-                                        child: (existingPackageId ==
-                                                packagesList[index]
-                                                    .id
-                                                    .toString())
-                                            ? Padding(
-                                                padding: EdgeInsets.only(
-                                                    bottom: 10.0),
-                                                child: Column(
-                                                  children: [
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        // Navigator.pushNamed(context,
-                                                        //     PayNowScreen.routeName,
-                                                        //     arguments: {
-                                                        //       'packageId':
-                                                        //           packagesList[index]
-                                                        //               .id
-                                                        //               .toString()
-                                                        //     });
-                                                      },
-                                                      child: Container(
-                                                        width: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .width,
+                    child: loading
+                        ? Center(child: CupertinoActivityIndicator())
+                        : (packagesList.length == 0)
+                            ? Center(child: Text("No Record Found"))
+                            : Container(
+                                height: 400,
+                                child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    padding: const EdgeInsets.all(8),
+                                    itemCount: packagesList.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return Container(
+                                        width: 350,
+                                        child: Card(
+                                          child: Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                15, 0, 15, 0),
+                                            child: Column(
+                                              children: [
+                                                Expanded(
+                                                  child: Column(
+                                                    children: [
+                                                      SizedBox(
+                                                        height: 20,
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                right: 28.0),
+                                                        child: Text(
+                                                            packagesList[index]
+                                                                .name,
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Color(
+                                                                    0xff31343D),
+                                                                fontSize: 20)),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 15,
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                right: 28.0),
+                                                        child: Text(
+                                                            "\$ ${packagesList[index].amount.toString()}",
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Color(
+                                                                    0xff31343D),
+                                                                fontSize: 23)),
+                                                      ),
+                                                      SizedBox(
                                                         height: Device.get()
                                                                 .isIphoneX
-                                                            ? 60
-                                                            : 40,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                                color: Colors
-                                                                    .green),
-                                                        child: Center(
-                                                            child: (Text(
-                                                                'Subscribed',
-                                                                style: TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .normal,
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontSize:
-                                                                        20)))),
+                                                            ? 25
+                                                            : 10,
                                                       ),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 20,
-                                                    ),
-                                                    /*Text('More details',
+                                                      Text(
+                                                          packagesList[index]
+                                                              .description,
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                              color: Color(
+                                                                  0xff77869E),
+                                                              fontSize: 17)),
+                                                      SizedBox(
+                                                        height: Device.get()
+                                                                .isIphoneX
+                                                            ? 25
+                                                            : 10,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Align(
+                                                  alignment: FractionalOffset
+                                                      .bottomCenter,
+                                                  child:
+                                                      (existingPackageId ==
+                                                              packagesList[
+                                                                      index]
+                                                                  .id
+                                                                  .toString())
+                                                          ? Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      bottom:
+                                                                          10.0),
+                                                              child: Column(
+                                                                children: [
+                                                                  GestureDetector(
+                                                                    onTap: () {
+                                                                      // Navigator.pushNamed(context,
+                                                                      //     PayNowScreen.routeName,
+                                                                      //     arguments: {
+                                                                      //       'packageId':
+                                                                      //           packagesList[index]
+                                                                      //               .id
+                                                                      //               .toString()
+                                                                      //     });
+                                                                    },
+                                                                    child:
+                                                                        Container(
+                                                                      width: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width,
+                                                                      height: Device.get()
+                                                                              .isIphoneX
+                                                                          ? 60
+                                                                          : 40,
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                              color: Colors.green),
+                                                                      child: Center(
+                                                                          child: (Text(
+                                                                              'Subscribed',
+                                                                              style: TextStyle(fontWeight: FontWeight.normal, color: Colors.white, fontSize: 20)))),
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height: 20,
+                                                                  ),
+                                                                  /*Text('More details',
                                                             style: TextStyle(
                                                                 fontWeight:
                                                                 FontWeight.normal,
                                                                 color: Color(
                                                                     0xffFF0000),
                                                                 fontSize: 17))*/
-                                                  ],
-                                                ),
-                                              )
-                                            : Padding(
-                                                padding: EdgeInsets.only(
-                                                    bottom: 10.0),
-                                                child: Column(
-                                                  children: [
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        Navigator.pushNamed(
-                                                            context,
-                                                            PayNowScreen
-                                                                .routeName,
-                                                            arguments: {
-                                                              'packageId':
-                                                                  packagesList[
-                                                                          index]
-                                                                      .id
-                                                                      .toString()
-                                                            });
-                                                      },
-                                                      child: Container(
-                                                        width: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .width,
-                                                        height: 60,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                                image:
-                                                                    DecorationImage(
-                                                          fit: BoxFit.fill,
-                                                          image: AssetImage(
-                                                              'assets/images/blue_button_bg.png'),
-                                                        )),
-                                                        child: Center(
-                                                            child: (Text(
-                                                                'Buy Now',
-                                                                style: TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .normal,
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontSize:
-                                                                        20)))),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 20,
-                                                    ),
-                                                    /*Text('More details',
+                                                                ],
+                                                              ),
+                                                            )
+                                                          : Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      bottom:
+                                                                          10.0),
+                                                              child: Column(
+                                                                children: [
+                                                                  GestureDetector(
+                                                                    onTap: () {
+                                                                      Navigator.pushNamed(
+                                                                          context,
+                                                                          PayNowScreen.routeName,
+                                                                          arguments: {
+                                                                            'packageId':
+                                                                                packagesList[index].id.toString()
+                                                                          });
+                                                                    },
+                                                                    child:
+                                                                        Container(
+                                                                      width: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width,
+                                                                      height: Device.get()
+                                                                              .isIphoneX
+                                                                          ? 60
+                                                                          : 40,
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                              image: DecorationImage(
+                                                                        fit: BoxFit
+                                                                            .fill,
+                                                                        image: AssetImage(
+                                                                            'assets/images/blue_button_bg.png'),
+                                                                      )),
+                                                                      child: Center(
+                                                                          child: (Text(
+                                                                              'Buy Now',
+                                                                              style: TextStyle(fontWeight: FontWeight.normal, color: Colors.white, fontSize: 20)))),
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height: 20,
+                                                                  ),
+                                                                  /*Text('More details',
                                                             style: TextStyle(
                                                                 fontWeight:
                                                                 FontWeight.normal,
                                                                 color: Color(
                                                                     0xffFF0000),
                                                                 fontSize: 17))*/
-                                                  ],
+                                                                ],
+                                                              ),
+                                                            ),
                                                 ),
-                                              ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }),
                               ),
-                            );
-                          }),
-                    ),
                   )
                 ]),
               ),

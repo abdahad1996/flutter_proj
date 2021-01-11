@@ -12,7 +12,6 @@ class AirportScreen extends StatefulWidget {
 
   @override
   _AirportScreenState createState() => _AirportScreenState();
-
 }
 
 class _AirportScreenState extends State<AirportScreen> {
@@ -33,9 +32,8 @@ class _AirportScreenState extends State<AirportScreen> {
   }
 
   void load() async {
-    currentTime =
-    DateFormat.yMd() .format(new DateTime.now());
-        // DateFormat.yMMMd().format(new DateTime.now());
+    currentTime = DateFormat.yMd().format(new DateTime.now());
+    // DateFormat.yMMMd().format(new DateTime.now());
   }
 
   @override
@@ -79,8 +77,8 @@ class _AirportScreenState extends State<AirportScreen> {
             ]),*/
         body: SafeArea(
             child: Container(
-          width: MediaQuery.of(context).size.width,
-          /*decoration: BoxDecoration(
+      width: MediaQuery.of(context).size.width,
+      /*decoration: BoxDecoration(
             image: DecorationImage(
               fit: BoxFit.fill,
               image: AssetImage(weatherType == Const.WEATHER_TYPE_SUMMER
@@ -89,57 +87,83 @@ class _AirportScreenState extends State<AirportScreen> {
             ),
           ),*/
 
-          child: Column(
-            children: [
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 20, 0, 0),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text(currentTime,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xff31343D),
-                              fontSize: 20)),
-                      ),
-                    ),
+      child: Column(
+        children: [
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 0, 0),
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(currentTime,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xff31343D),
+                            fontSize: 20)),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 20, 20, 0),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Image.asset(
-                        'assets/images/cross_black.png',
-                        width: 13,
-                        height: 13,
-                      ),
-                    ),
-                  )
-                ],
+                ),
               ),
-              SizedBox(
-                height: 20,
-              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 20, 20, 0),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Image.asset(
+                    'assets/images/cross_black.png',
+                    width: 13,
+                    height: 13,
+                  ),
+                ),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment:MainAxisAlignment.spaceBetween,
+            children: [
               Align(
                 alignment: Alignment.topLeft,
-                child: Image.asset(
+                child: 
+                Image.asset(
                   'assets/images/live_button.png',
                   width: 60,
                   height: 25,
                 ),
               ),
-              Expanded(
-                child: Mjpeg(
-                  isLive: true,
-                    stream: 'http://96.66.94.26:442/wps-cgi/video.cgi?camera=1&resolution=640x480&format=MPEG%20&username=Web1Web1&password=W3atherGod123',
+              Align(
+                alignment: Alignment.topRight,
+                child: ClipRRect(
+                  // clipBehavior: Clip,
+                  borderRadius: BorderRadius.circular(50),
+
+                  // decoration: BoxDecoration(shape: BoxShape.circle),
+                  child: Image.asset(
+                    (weatherType != null)
+                        ? (weatherType == Const.WEATHER_TYPE_SUMMER)
+                            ? 'assets/images/summer.png'
+                            : 'assets/images/winter.png'
+                        : 'assets/images/summer.png',
+                    height: 60,
+                    width: 60,
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ),
             ],
           ),
-        )));
+          Expanded(
+            child: Mjpeg(
+              isLive: true,
+              stream:
+                  'http://96.66.94.26:442/wps-cgi/video.cgi?camera=1&resolution=640x480&format=MPEG%20&username=Web1Web1&password=W3atherGod123',
+            ),
+          ),
+        ],
+      ),
+    )));
   }
 }

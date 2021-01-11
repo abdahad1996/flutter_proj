@@ -36,7 +36,8 @@ class _SplashScreenState extends State<SplashScreen> {
 //Get the physical device size
     // print(Device.size);
 //Quick methods to access the physical device width and height
-    print("physical Device Width: ${Device.width}, Device Height: ${Device.height}");
+    print(
+        "physical Device Width: ${Device.width}, Device Height: ${Device.height}");
 
 //To get the actual screen size (Which is same as what MediaQuery gives)
     // print(Device.screenSize);
@@ -143,7 +144,8 @@ class _SplashScreenState extends State<SplashScreen> {
                                 context, LoginScreen.routeName);
                           } else {
                             Prefs.getUser((User userModel) async {
-                              if (!userModel.payment_status) {
+                              user = userModel;
+                              if ((user == null) || (user.payment_status == null)) {
                                 Prefs.clearPackageId();
                                 Navigator.pushNamed(
                                     context, PackagesScreen.routeName);

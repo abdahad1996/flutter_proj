@@ -25,6 +25,7 @@ class PayNowScreen extends StatefulWidget {
 class _PayNowScreenState extends State<PayNowScreen> {
   String weatherType;
   String accessToken;
+  bool loading = false;
   String cardName, cardNumber, cardExpiry, cardCVC;
   final FocusNode cardNumberFocus = FocusNode();
   final FocusNode cardExpiryFocus = FocusNode();
@@ -111,7 +112,7 @@ class _PayNowScreenState extends State<PayNowScreen> {
                           Navigator.pop(context);
                         },
                         child: Image.asset(
-                          'assets/images/ic_info.png',
+                          '',
                           width: 25,
                           height: 20,
                         ),
@@ -368,8 +369,12 @@ class _PayNowScreenState extends State<PayNowScreen> {
           Dialogs.hideDialog(context);
 
           if (baseModel.data != null) {
-            User user = User.fromJson(baseModel.data);
-            Prefs.setUser(user);
+            try {
+              User user = User.fromJson(baseModel.data);
+              Prefs.setUser(user);
+            } catch (e) {
+              toast(e);
+            }
 
             toast(message);
 

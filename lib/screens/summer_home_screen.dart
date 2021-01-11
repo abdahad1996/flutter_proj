@@ -157,156 +157,159 @@ class _SummerHomeScreenState extends State<SummerHomeScreen> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         drawer: Drawer(
-            child: Column(
+            child: SingleChildScrollView(
+              child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              height: 50,
-            ),
-            Align(
-              alignment: Alignment.topRight,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Image.asset(
-                    "assets/images/ic_cross_black.png",
-                    width: 20,
-                    height: 20,
+              SizedBox(
+                height: 50,
+              ),
+              Align(
+                alignment: Alignment.topRight,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Image.asset(
+                      "assets/images/ic_cross_black.png",
+                      width: 20,
+                      height: 20,
+                    ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 10, 0, 0),
-              child: ClipRRect(
-                // clipBehavior: Clip,
-                borderRadius: BorderRadius.circular(50),
+             Align(
+                alignment: Alignment.center,
+             
+                child: ClipRRect(
+                  // clipBehavior: Clip,
+                  borderRadius: BorderRadius.circular(50),
 
-                // decoration: BoxDecoration(shape: BoxShape.circle),
-                child: Image.asset(
-                  (weatherType != null)
-                      ? (weatherType == Const.WEATHER_TYPE_SUMMER)
-                          ? 'assets/images/summer.png'
-                          : 'assets/images/winter.png'
-                      : 'assets/images/summer.png',
-                  height: 100,
-                  width: 100,
-                  fit: BoxFit.fill,
+                  // decoration: BoxDecoration(shape: BoxShape.circle),
+                  child: Image.asset(
+                    (weatherType != null)
+                        ? (weatherType == Const.WEATHER_TYPE_SUMMER)
+                            ? 'assets/images/summer.png'
+                            : 'assets/images/winter.png'
+                        : 'assets/images/summer.png',
+                    height: 100,
+                    width: 100,
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            GestureDetector(
-              onTap: () {},
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(8, 40, 0, 0),
+              SizedBox(
+                height: 20,
+              ),
+              GestureDetector(
+                onTap: () {},
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 40, 0, 0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, PackagesScreen.routeName);
+                    },
+                    child: Image.asset(
+                      "assets/images/side_menu_package.png",
+                      width: 150,
+                      height: 25,
+                    ),
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {},
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 40, 0, 0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, ThunderScreen.routeName);
+                    },
+                    child: Image.asset(
+                      "assets/images/side_menu_thunder.png",
+                      width: 200,
+                      height: 20,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8, 70, 0, 0),
                 child: GestureDetector(
                   onTap: () {
                     Navigator.pop(context);
-                    Navigator.pushNamed(context, PackagesScreen.routeName);
+                    Navigator.pushNamed(context, TermsScreen.routeName);
                   },
                   child: Image.asset(
-                    "assets/images/side_menu_package.png",
-                    width: 150,
+                    "assets/images/side_menu_terms.png",
+                    width: 240,
                     height: 25,
                   ),
                 ),
               ),
-            ),
-            GestureDetector(
-              onTap: () {},
-              child: Padding(
+              Padding(
                 padding: const EdgeInsets.fromLTRB(8, 40, 0, 0),
                 child: GestureDetector(
                   onTap: () {
                     Navigator.pop(context);
-                    Navigator.pushNamed(context, ThunderScreen.routeName);
+                    Navigator.pushNamed(context, WhyJoin.routeName);
                   },
                   child: Image.asset(
-                    "assets/images/side_menu_thunder.png",
+                    "assets/images/side_menu_join.png",
                     width: 200,
-                    height: 20,
+                    height: 25,
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 70, 0, 0),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, TermsScreen.routeName);
-                },
-                child: Image.asset(
-                  "assets/images/side_menu_terms.png",
-                  width: 240,
-                  height: 25,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, AboutScreen.routeName);
+                  },
+                  child: Image.asset(
+                    "assets/images/side_menu_about.png",
+                    width: 188,
+                    height: 25,
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 40, 0, 0),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, WhyJoin.routeName);
-                },
-                child: Image.asset(
-                  "assets/images/side_menu_join.png",
-                  width: 200,
-                  height: 25,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 70, 0, 0),
+                child: GestureDetector(
+                  onTap: () {},
+                  child: Image.asset(
+                    "assets/images/side_menu_rate.png",
+                    width: 195,
+                    height: 25,
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, AboutScreen.routeName);
-                },
-                child: Image.asset(
-                  "assets/images/side_menu_about.png",
-                  width: 188,
-                  height: 25,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 70, 0, 0),
-              child: GestureDetector(
-                onTap: () {},
-                child: Image.asset(
-                  "assets/images/side_menu_rate.png",
-                  width: 195,
-                  height: 25,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 35, 0, 0),
-              child: GestureDetector(
-                onTap: () {
-                  logOut(context);
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 35, 0, 0),
+                child: GestureDetector(
+                  onTap: () {
+                    logOut(context);
 
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      LoginScreen.routeName, (Route<dynamic> route) => false);
-                },
-                child: Image.asset(
-                  "assets/images/side_menu_sign_out.png",
-                  width: 140,
-                  height: 25,
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        LoginScreen.routeName, (Route<dynamic> route) => false);
+                  },
+                  child: Image.asset(
+                    "assets/images/side_menu_sign_out.png",
+                    width: 140,
+                    height: 25,
+                  ),
                 ),
-              ),
-            )
+              )
           ],
-        )),
+        ),
+            )),
         body: SafeArea(
           child: Column(
             children: [

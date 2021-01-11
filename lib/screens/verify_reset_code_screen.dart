@@ -108,7 +108,7 @@ class _VerifyResetCodeScreenState extends State<VerifyResetCodeScreen> {
                               Navigator.pop(context);
                             },
                             child: Image.asset(
-                              'assets/images/ic_info.png',
+                              '',
                               width: 25,
                               height: 20,
                             ),
@@ -207,11 +207,7 @@ class _VerifyResetCodeScreenState extends State<VerifyResetCodeScreen> {
           //toast(baseModel.message);
 
           Navigator.pushNamed(context, ResetPasswordScreen.routeName,
-              arguments: {
-            'email': widget.email,
-            'code': _code
-          });
-
+              arguments: {'email': widget.email, 'code': _code});
         },
         onError: (String error, BaseModel baseModel) {
           Dialogs.hideDialog(context);

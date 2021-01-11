@@ -104,7 +104,7 @@ class _CumulativeSnowScreenState extends State<CumulativeSnowScreen> {
                       Navigator.pop(context);
                     },
                     child: Image.asset(
-                      'assets/images/ic_info.png',
+                      '',
                       width: 25,
                       height: 20,
                     ),
@@ -130,8 +130,8 @@ class _CumulativeSnowScreenState extends State<CumulativeSnowScreen> {
                 SizedBox(
                   height: 50,
                 ),
-                  BarChartGraph(
-                    data: dataGraph,
+                BarChartGraph(
+                  data: dataGraph,
                 ),
               ]),
             ),
@@ -186,11 +186,10 @@ class _CumulativeSnowScreenState extends State<CumulativeSnowScreen> {
                   financial: ajaxValue,
                   color: charts.ColorUtil.fromDartColor(Color(0xFFAAC2FF)));
 
-              dataGraph.add(butterMilkModel);
               dataGraph.add(highLandModel);
               dataGraph.add(snowMassModel);
               dataGraph.add(ajaxModel);
-
+              dataGraph.add(butterMilkModel);
             });
           }
         },

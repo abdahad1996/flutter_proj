@@ -96,22 +96,22 @@ class _WhyJoinState extends State<WhyJoin> {
                           fontSize: 16)),
                 ),
               ),
-              Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Image.asset(
-                      'assets/images/ic_info.png',
-                      width: 25,
-                      height: 20,
-                    ),
-                  ),
-                ),
-              )
+              // Align(
+              //   alignment: Alignment.topRight,
+              //   child: Padding(
+              //     padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+              //     child: GestureDetector(
+              //       onTap: () {
+              //         Navigator.pop(context);
+              //       },
+              //       child: Image.asset(
+              //         'assets/images/.png',
+              //         width: 25,
+              //         height: 20,
+              //       ),
+              //     ),
+              //   ),
+              // )
             ],
           ),
           SizedBox(

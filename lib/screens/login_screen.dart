@@ -98,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: true,
+      resizeToAvoidBottomPadding: false,
       backgroundColor: Colors.transparent,
       body: Container(
           child: SafeArea(
@@ -129,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         image:
                             AssetImage('assets/images/login_bottom_card.png'),
                         fit: BoxFit.fill)),
-                height: MediaQuery.of(context).size.height*0.6,
+                height: MediaQuery.of(context).size.height * 0.6,
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
                   child: Form(
@@ -334,14 +334,21 @@ class _LoginScreenState extends State<LoginScreen> {
     _password = "123456";
     _deviceType = "android";
     _deviceToken = "123";*/
-    _deviceToken = "123";
-    Prefs.getFCMToken((pushtoken) {
-      if (pushtoken == null) {
-        _deviceToken = "123";
-      } else {
-        _deviceToken = pushtoken;
-      }
-    });
+    // _deviceToken = "123";
+    // Prefs.getFCMToken((pushtoken) {
+    //   if (pushtoken == null) {
+    //     _deviceToken = "123";
+    //   } else {
+    //     _deviceToken = pushtoken;
+    //   }
+    // });
+    _deviceToken = await Prefs.getFCMTokenAwait();
+    if (_deviceToken == null) {
+      _deviceToken = "123";
+    } else {
+      _deviceToken = _deviceToken;
+    }
+    print("device token");
 
     login(
         email: _email,
@@ -350,16 +357,28 @@ class _LoginScreenState extends State<LoginScreen> {
         deviceToken: _deviceToken,
         onSuccess: (BaseModel baseModel) {
           if (baseModel.data != null) {
-            UserAuthModel userAuthModel =
-                UserAuthModel.fromJson(baseModel.data);
+            try {
+              UserAuthModel userAuthModel =
+                  UserAuthModel.fromJson(baseModel.data);
 
-            user = userAuthModel.user;
-            print("user is $user");
-            Prefs.setAccessToken(user.access_token);
+              user = userAuthModel.user;
+              print("user is $user");
+              print("useraccess_token is ${user.access_token}");
+              print("user payment status is ${user.payment_status.amount}");
+
+              Prefs.setAccessToken(user.access_token);
+                 if (user.payment_status != null) {
             Prefs.setUser(user);
+          }
+             
+              apiCallForAd(user.access_token);
+            } catch (e) {
+              print("parsing error");
+              print(e);
+            }
+
             // print("user image  is ${user.details}");
 
-            apiCallForAd(user.access_token);
           }
         },
         onError: (String error, BaseModel baseModel) {
@@ -377,16 +396,16 @@ class _LoginScreenState extends State<LoginScreen> {
           if (baseModel.data != null) {
             AdsModel adModel = AdsModel.fromJson(baseModel.data);
             Prefs.setAdsUrl(adModel.attachment_url);
-
+            Prefs.savePackageId(user.payment_status.package.id.toString());
             Dialogs.hideDialog(context);
 
-            if (!user.payment_status) {
+            if ((user == null) || (user.payment_status == null)) {
               toast(
                   'You need to buy package first to access application features.');
               Prefs.clearPackageId();
               Navigator.pushNamed(context, PackagesScreen.routeName);
             } else {
-              if (!user.payment_status) {
+              if (!user.payment_status.package.status) {
                 Navigator.pushNamed(context, PackagesScreen.routeName);
               } else {
                 if (weatherType == Const.WEATHER_TYPE_SUMMER) {
@@ -428,13 +447,19 @@ class _LoginScreenState extends State<LoginScreen> {
     } else if (Platform.isAndroid) {
       _deviceType = "android";
     }
-    Prefs.getFCMToken((pushtoken) {
-      if (pushtoken == null) {
-        _deviceToken = "123";
-      } else {
-        _deviceToken = pushtoken;
-      }
-    });
+    // Prefs.getFCMToken((pushtoken) {
+    //   if (pushtoken == null) {
+    //     _deviceToken = "123";
+    //   } else {
+    //     _deviceToken = pushtoken;
+    //   }
+    // });
+    _deviceToken = await Prefs.getFCMTokenAwait();
+    if (_deviceToken == null) {
+      _deviceToken = "123";
+    } else {
+      _deviceToken = _deviceToken;
+    }
     dynamic pngFile = await urlToPngFile(imageUrl);
 
     uploadFile(
@@ -550,8 +575,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
           user = userAuthModel.user;
           Prefs.setAccessToken(user.access_token);
-          Prefs.setUser(user);
-          apiCallForAd(user.access_token);
+             if (user.payment_status != null) {
+            Prefs.setUser(user);
+          }
+           apiCallForAd(user.access_token);
         }
       } else {
         print("error response:, ${response}");
