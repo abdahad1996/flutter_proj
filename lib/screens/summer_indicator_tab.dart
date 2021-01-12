@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_device_type/flutter_device_type.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class SummerIndicatorTabScreen extends StatefulWidget {
   static const routeName = '/summer-tab-indicator-screen';
@@ -202,34 +203,70 @@ class _SummerIndicatorTabScreenState extends State<SummerIndicatorTabScreen>
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              CircularPercentIndicator(
-                radius: 150.0,
-                lineWidth: 20.0,
-                // backgroundWidth: 20,
-                percent: (model.selected == "high")
-                    ? 0.9
+               SfRadialGauge(
+          axes: <RadialAxis>[
+            RadialAxis(minimum: 0, maximum: 1,
+            ranges: <GaugeRange>[
+                            GaugeRange(startValue: (model.selected == "high")
+                    ? 0.7
                     : (model.selected == "low")
-                        ? 0.5
-                        : 0.7,
-                startAngle: 270,
-                center: Text(
-                  model.selected,
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      decoration: TextDecoration.underline),
-                ),
-                // fillColor: Colors.white,
-                // arcType: ArcType.HALF,
-                backgroundColor: Color.fromRGBO(240, 240, 240, 1),
-                progressColor: (model.selected == "high")
+                        ? 0.0
+                        : 0.3,endValue:  (model.selected == "high")
+                    ? 1
+                    : (model.selected == "low")
+                        ? 0.3
+                        : 0.7,color: (model.selected == "high")
                     ? Color.fromRGBO(255, 55, 66, 1)
                     : (model.selected == "low")
                         ? Color.fromRGBO(164, 255, 179, 1)
-                        : Color.fromRGBO(254, 245, 84, 1),
-                circularStrokeCap: CircularStrokeCap.round,
-              ),
+                        : Color.fromRGBO(254, 245, 84, 1),),
+
+               
+              // GaugeRange(startValue: 0, endValue: 50, color:Colors.green),
+              // GaugeRange(startValue: 0.5,endValue: 0.75,color: Colors.orange),
+              // GaugeRange(startValue: 0.75,endValue: 1,color: Colors.red)
+              ],
+            pointers: <GaugePointer>[
+              NeedlePointer(value: (model.selected == "high")
+                    ? 1
+                    : (model.selected == "low")
+                        ? 0.3
+                        : 0.7,)],
+            annotations: <GaugeAnnotation>[
+              GaugeAnnotation(widget: Container(child: 
+                 Text(model.selected,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold))),
+                 angle: 90, positionFactor: 0.5
+              )]
+          )]),
+              // CircularPercentIndicator(
+              //   radius: 150.0,
+              //   lineWidth: 20.0,
+              //   // backgroundWidth: 20,
+              //   percent: (model.selected == "high")
+              //       ? 0.9
+              //       : (model.selected == "low")
+              //           ? 0.5
+              //           : 0.7,
+              //   startAngle: 270,
+              //   center: Text(
+              //     model.selected,
+              //     style: TextStyle(
+              //         fontSize: 20,
+              //         fontWeight: FontWeight.bold,
+              //         color: Colors.black,
+              //         decoration: TextDecoration.underline),
+              //   ),
+              //   // fillColor: Colors.white,
+              //   // arcType: ArcType.HALF,
+              //   backgroundColor: Color.fromRGBO(240, 240, 240, 1),
+              //   progressColor: (model.selected == "high")
+              //       ? Color.fromRGBO(255, 55, 66, 1)
+              //       : (model.selected == "low")
+              //           ? Color.fromRGBO(164, 255, 179, 1)
+              //           : Color.fromRGBO(254, 245, 84, 1),
+              //   circularStrokeCap: CircularStrokeCap.round,
+              // ),
+
               Expanded(child: list(model))
             ]));
   }
