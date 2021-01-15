@@ -17,10 +17,11 @@ class _SnowForecastScreenState extends State<SnowForecastScreen> {
   String weatherType;
   List<ThreeDaysForeCastModel> packagesList = List();
   String bannerImageUrl = '';
-
+  bool isLoading = false;
   @override
   void initState() {
     super.initState();
+    isLoading = true;
     load();
   }
 
@@ -40,6 +41,7 @@ class _SnowForecastScreenState extends State<SnowForecastScreen> {
       });
 
       setState(() {
+        isLoading = false;
         packagesList.clear();
 
         if (baseModel != null && baseModel.data != null) {
@@ -69,162 +71,189 @@ class _SnowForecastScreenState extends State<SnowForecastScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
-            child: Container(
-      width: MediaQuery.of(context).size.width,
-      color: Color(0xffF8F9FF),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Align(
-                alignment: Alignment.topLeft,
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                    child: Image.asset(
-                      'assets/images/back_arrow.png',
-                      width: 20,
-                      height: 15,
-                    ),
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.center,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                  child: Image.asset(
-                    'assets/images/three_forecast_head.png',
-                    width: 130,
-                    height: 50,
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Image.asset(
-                      '',
-                      width: 25,
-                      height: 20,
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Expanded(
-            child: Container(
-              width: double.infinity,
-              color: Color(0xffF5F5FA),
-              child: ListView.builder(
-                padding: const EdgeInsets.all(8),
-                itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                    height: 100,
-                    child: packagesList.length == 0
-                        ? Center(child: Text("No Records Found"))
-                        : Card(
-                            color: Colors.white,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Image.network(
-                                  packagesList[index].icon_url,
-                                  width: 70,
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Expanded(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Text(
-                                                packagesList[index]
-                                                    .date_formatted,
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color(0xff222222),
-                                                    fontSize: 15)),
-                                          ),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Text(
-                                                packagesList[index].exerpt,
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                    color: Color(0xff222222),
-                                                    fontSize: 14)),
-                                          ),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Text(
-                                                packagesList[index].description,
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                    color: Color(0xff222222),
-                                                    fontSize: 9)),
-                                          ),
-                                        ],
-                                      )
-                                    ],
+            child: isLoading
+                ? Center(child: CupertinoActivityIndicator())
+                : Container(
+                    width: MediaQuery.of(context).size.width,
+                    color: Color(0xffF8F9FF),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                  child: Image.asset(
+                                    'assets/images/back_arrow.png',
+                                    width: 25,
+                                    height: 25,
                                   ),
-                                )
-                              ],
+                                ),
+                              ),
+                            ),
+                            // Align(
+                            //   alignment: Alignment.center,
+                            //   child: Container(
+                            //       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                            //       child: Text("Aspen Snowmass 6 day snowfall",
+                            //           style: TextStyle(
+                            //               fontWeight: FontWeight.bold,
+                            //               color: Color(0xff222222),
+                            //               fontSize: 20))
+                            //       // Image.asset(
+                            //       //   'assets/images/three_forecast_head.png',
+                            //       //   width: 130,
+                            //       //   height: 50,
+                            //       // ),
+                            //       ),
+                            // ),
+                            Align(
+                              alignment: Alignment.center,
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                child: Image.asset(
+                                  'assets/images/three_forecast_head.png',
+                                  width: 130,
+                                  height: 50,
+                                ),
+                              ),
+                            ),
+
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Image.asset(
+                                    '',
+                                    width: 40,
+                                    height: 40,
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Expanded(
+                          child: Container(
+                            width: double.infinity,
+                            color: Color(0xffF5F5FA),
+                            child: ListView.builder(
+                              padding: const EdgeInsets.all(8),
+                              itemBuilder: (BuildContext context, int index) {
+                                return ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                      maxHeight: 500, minHeight: 100),
+                                  child: packagesList.length == 0
+                                      ? Center(child: Text("No Records Found"))
+                                      : Card(
+                                          color: Colors.white,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Image.network(
+                                                packagesList[index].icon_url,
+                                                width: 70,
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Flexible(
+                                                // child: Row(
+                                                //   mainAxisAlignment: MainAxisAlignment.start,
+                                                //   crossAxisAlignment:
+                                                //       CrossAxisAlignment.start,
+                                                //   children: [
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    SizedBox(
+                                                      height: 15,
+                                                    ),
+                                                    Text(
+                                                        packagesList[index]
+                                                            .date_formatted,
+                                                        maxLines: null,
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Color(
+                                                                0xff222222),
+                                                            fontSize: 15)),
+                                                    SizedBox(
+                                                      height: 5,
+                                                    ),
+                                                    Text(
+                                                        packagesList[index]
+                                                            .exerpt,
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .normal,
+                                                            color: Color(
+                                                                0xff222222),
+                                                            fontSize: 14)),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Expanded(
+                                                      // alignment: Alignment.topLeft,
+                                                      child: Text(
+                                                          packagesList[index]
+                                                              .description,
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                              color: Color(
+                                                                  0xff222222),
+                                                              fontSize: 12)),
+                                                    ),
+                                                  ],
+                                                ),
+                                                //   ],
+                                                // ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                );
+                              },
+                              itemCount: packagesList.length,
+                              shrinkWrap: true,
                             ),
                           ),
-                  );
-                },
-                itemCount: packagesList.length,
-                shrinkWrap: true,
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Image.network(bannerImageUrl,
-                height: 100, width: MediaQuery.of(context).size.width),
-          ),
-        ],
-      ),
-    )));
+                        ),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Image.network(bannerImageUrl,
+                              height: 100,
+                              width: MediaQuery.of(context).size.width),
+                        ),
+                      ],
+                    ),
+                  )));
   }
 }

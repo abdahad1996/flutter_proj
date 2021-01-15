@@ -332,19 +332,21 @@ class _WinterHomeScreenState extends State<WinterHomeScreen> {
                                 height: 40,
                               ),
                             ),
-                            Align(
-                              alignment: Alignment.center,
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                child: _currentIndex == 0
-                                    ? Container()
-                                    : Text(
-                                        getTitleForTabs(_currentIndex),
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Color(0xff222222),
-                                            fontSize: 20),
-                                      ),
+                            Expanded(
+                              // alignment: Alignment.center,
+                              child: Center(
+                                child: Container(
+                                  padding:   EdgeInsets.fromLTRB((_currentIndex == 1) ? 15 : 0, 0, 0, 0),
+                                  child: _currentIndex == 0
+                                      ? Container()
+                                      : Text(
+                                          getTitleForTabs(_currentIndex),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0xff222222),
+                                              fontSize: 20),
+                                        ),
+                                ),
                               ),
                             ),
                             // GestureDetector(
@@ -594,7 +596,7 @@ class _WinterHomeScreenState extends State<WinterHomeScreen> {
     if (index == 0) {
       return '';
     } else if (index == 1) {
-      return 'Snow Forecast';
+      return 'Aspen Snowmass 6 day snowfall';
     } else if (index == 2) {
       return 'Delay Indicator';
     } else {

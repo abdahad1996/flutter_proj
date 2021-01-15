@@ -367,10 +367,10 @@ class _LoginScreenState extends State<LoginScreen> {
               print("user payment status is ${user.payment_status.amount}");
 
               Prefs.setAccessToken(user.access_token);
-                 if (user.payment_status != null) {
-            Prefs.setUser(user);
-          }
-             
+              if (user.payment_status != null) {
+                Prefs.setUser(user);
+              }
+
               apiCallForAd(user.access_token);
             } catch (e) {
               print("parsing error");
@@ -396,10 +396,17 @@ class _LoginScreenState extends State<LoginScreen> {
           if (baseModel.data != null) {
             AdsModel adModel = AdsModel.fromJson(baseModel.data);
             Prefs.setAdsUrl(adModel.attachment_url);
-            Prefs.savePackageId(user.payment_status.package.id.toString());
+            if (user.payment_status != null) {
+              Prefs.savePackageId(user.payment_status.package.id.toString());
+            }
             Dialogs.hideDialog(context);
 
-            if ((user == null) || (user.payment_status == null)) {
+            if ((user == null)) {
+              toast(
+                  'You need to buy package first to access application features.');
+              Prefs.clearPackageId();
+              Navigator.pushNamed(context, PackagesScreen.routeName);
+            } else if ((user.payment_status == null)) {
               toast(
                   'You need to buy package first to access application features.');
               Prefs.clearPackageId();
@@ -575,10 +582,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
           user = userAuthModel.user;
           Prefs.setAccessToken(user.access_token);
-             if (user.payment_status != null) {
+          if (user.payment_status != null) {
             Prefs.setUser(user);
           }
-           apiCallForAd(user.access_token);
+          apiCallForAd(user.access_token);
         }
       } else {
         print("error response:, ${response}");
@@ -597,8 +604,7 @@ class _LoginScreenState extends State<LoginScreen> {
     switch (result.status) {
       case FacebookLoginStatus.loggedIn:
         final FacebookAccessToken accessToken = result.accessToken;
-        _showMessage(
-            '''
+        _showMessage('''
          Facebook Logged in!
          
          Token: ${accessToken.token}

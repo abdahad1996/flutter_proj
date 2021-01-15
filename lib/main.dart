@@ -38,7 +38,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 void main() => runApp(
       DevicePreview(
         // enabled: !kReleaseMode,
-                enabled: false,
+        enabled: false,
 
         builder: (context) => MyApp(), // Wrap your app
       ),
@@ -93,7 +93,12 @@ class _MyAppState extends State<MyApp> {
         child: WillPopScope(
             child: MaterialApp(
               locale: DevicePreview.locale(context), // Add the locale here
-              builder: DevicePreview.appBuilder,
+              builder: (context, child) {
+                return MediaQuery(
+                  child: child,
+                  data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+                );
+              },
               title: 'Aspen Weather',
               theme: themeData,
               debugShowCheckedModeBanner: false,

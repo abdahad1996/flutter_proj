@@ -226,22 +226,37 @@ class _PayNowScreenState extends State<PayNowScreen> {
                                 child: Container(
                                   child: TextFormField(
                                     focusNode: cardExpiryFocus,
+                                    inputFormatters: [
+                                      WhitelistingTextInputFormatter.digitsOnly,
+                                      new LengthLimitingTextInputFormatter(4),
+                                      new CardMonthInputFormatter()
+                                    ],
                                     decoration: InputDecoration(
-                                        labelText: 'Expiry Date',
-                                        hintText: '2023/04'),
-                                    validator: validateField,
+                                      labelText: 'Expiry Date',
+                                      hintText: 'MM/YY',
+                                    ),
+                                    validator: validateDate,
                                     autofocus: false,
                                     textInputAction: TextInputAction.next,
                                     onFieldSubmitted: (v) {
                                       FocusScope.of(context)
                                           .requestFocus(cardCVCFocus);
                                     },
-                                    keyboardType: TextInputType.text,
+                                    keyboardType: TextInputType.number,
                                     onSaved: (text) {
-                                      cardExpiry = text;
+                                      List<int> expiryDate =
+                                          getExpiryDate(text);
+
+                                      cardExpiry = '${expiryDate[0]}' +
+                                          '-' +
+                                          '${expiryDate[1]}';
                                     },
                                     onChanged: (text) {
-                                      cardExpiry = text;
+                                      List<int> expiryDate =
+                                          getExpiryDate(text);
+                                      cardExpiry = '20' + '${expiryDate[0]}' +
+                                          '/' +
+                                          '${expiryDate[1]}';
                                     },
                                   ),
                                 )),
@@ -323,7 +338,7 @@ class _PayNowScreenState extends State<PayNowScreen> {
 
     cardName = 'John well';
     cardNumber = '4111111111111111';
-    cardExpiry = '2030-03';
+    cardExpiry = '2023-03';
     cvcNumber = '737';
 
     chargePayment(
@@ -334,9 +349,17 @@ class _PayNowScreenState extends State<PayNowScreen> {
         expiryDate: cardExpiry,
         cvcNumber: cvcNumber,
         onSuccess: (BaseModel baseModel) {
+          print("basemodel $baseModel");
           //Dialogs.hideDialog(context);
 
           ///SAVE PACKAGE ID HERE
+
+          if (baseModel.message == "Transaction failed") {
+             toast(baseModel.message);
+            Dialogs.hideDialog(context);
+
+            return;
+          }
 
           /// clear existing pacakge id
           Prefs.clearPackageId();

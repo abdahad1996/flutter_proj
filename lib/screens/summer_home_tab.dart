@@ -618,30 +618,30 @@ class _WeatherTodayScreenState extends State<WeatherTodayScreen> {
 
                           // SizedBox(
                           //   height: 5,
-                          // ),
-                          Text(
-                              todayWeatherModelList[index]
-                                      .dateTime
-                                      .contains('T')
-                                  ? todayWeatherModelList[index]
-                                      .dateTime
-                                      .substring(
-                                          0,
-                                          todayWeatherModelList[index]
-                                              .dateTime
-                                              .indexOf('T'))
-                                  : '',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                  color: Color(0xff222222),
-                                  fontSize: 18)),
+                          // // ),
+                          // Text(
+                          //     todayWeatherModelList[index]
+                          //             .dateTime
+                          //             .contains('T')
+                          //         ? todayWeatherModelList[index]
+                          //             .dateTime
+                          //             .substring(
+                          //                 0,
+                          //                 todayWeatherModelList[index]
+                          //                     .dateTime
+                          //                     .indexOf('T'))
+                          //         : '',
+                          //     style: TextStyle(
+                          //         fontWeight: FontWeight.normal,
+                          //         color: Color(0xff222222),
+                          //         fontSize: 18)),
                           // SizedBox(
                           //   height: 10,
                           // ),
                           // FittedBox(
                           //   fit: BoxFit.contain,
                           Expanded(
-                            flex: 1,
+                            flex: 2,
                             child: Container(
                               padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
 
@@ -883,32 +883,32 @@ class _WeatherTomorrowScreenState extends State<WeatherTomorrowScreen> {
                             ),
                           ),
 
-                          // SizedBox(
-                          //   height: 5,
-                          // ),
-                          Text(
-                              tomorrowWeatherModelList[index]
-                                      .dateTime
-                                      .contains('T')
-                                  ? tomorrowWeatherModelList[index]
-                                      .dateTime
-                                      .substring(
-                                          0,
-                                          tomorrowWeatherModelList[index]
-                                              .dateTime
-                                              .indexOf('T'))
-                                  : '',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                  color: Color(0xff222222),
-                                  fontSize: 18)),
+                          // // SizedBox(
+                          // //   height: 5,
+                          // // ),
+                          // Text(
+                          //     tomorrowWeatherModelList[index]
+                          //             .dateTime
+                          //             .contains('T')
+                          //         ? tomorrowWeatherModelList[index]
+                          //             .dateTime
+                          //             .substring(
+                          //                 0,
+                          //                 tomorrowWeatherModelList[index]
+                          //                     .dateTime
+                          //                     .indexOf('T'))
+                          //         : '',
+                          //     style: TextStyle(
+                          //         fontWeight: FontWeight.normal,
+                          //         color: Color(0xff222222),
+                          //         fontSize: 18)),
                           // SizedBox(
                           //   height: 5,
                           // ),
                           // FittedBox(
                           //   fit: BoxFit.contain,
                           Expanded(
-                            flex: 1,
+                            flex: 2,
                             child: Container(
                               padding: const EdgeInsets.fromLTRB(5, 2, 5, 0),
 

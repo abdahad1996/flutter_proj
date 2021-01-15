@@ -273,6 +273,7 @@ class _SummerIndicatorTabScreenState extends State<SummerIndicatorTabScreen>
 
   Widget list(model) {
     return Container(
+      color:Colors.red,
       padding: EdgeInsets.symmetric(vertical: 10),
       height: MediaQuery.of(context).size.height * 0.3,
       child: ListView(
