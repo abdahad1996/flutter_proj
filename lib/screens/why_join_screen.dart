@@ -76,7 +76,7 @@ class _WhyJoinState extends State<WhyJoin> {
                     Navigator.pop(context);
                   },
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
                     child: Image.asset(
                       'assets/images/back_arrow.png',
                       width: 20,
@@ -88,30 +88,30 @@ class _WhyJoinState extends State<WhyJoin> {
               Align(
                 alignment: Alignment.center,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                  child: Text("Privacy Policy",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xff222222),
-                          fontSize: 16)),
+                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                  child: Text("Privacy policy",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xff042C5C),
+                  fontSize: 20)),
                 ),
               ),
-              // Align(
-              //   alignment: Alignment.topRight,
-              //   child: Padding(
-              //     padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-              //     child: GestureDetector(
-              //       onTap: () {
-              //         Navigator.pop(context);
-              //       },
-              //       child: Image.asset(
-              //         'assets/images/.png',
-              //         width: 25,
-              //         height: 20,
-              //       ),
-              //     ),
-              //   ),
-              // )
+              Align(
+                alignment: Alignment.topRight,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Image.asset(
+                      '',
+                      width: 25,
+                      height: 20,
+                    ),
+                  ),
+                ),
+              )
             ],
           ),
           SizedBox(

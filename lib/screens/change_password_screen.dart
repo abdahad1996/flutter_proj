@@ -64,7 +64,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     Navigator.pop(context);
                   },
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
                     child: Image.asset(
                       'assets/images/back_arrow.png',
                       width: 20,
@@ -76,12 +76,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               Align(
                 alignment: Alignment.center,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                   child: Text("Change Password",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xff042C5C),
-                          fontSize: 20)),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xff042C5C),
+                  fontSize: 20)),
                   // Image.asset(
                   //   'assets/images/three_forecast_head.png',
                   //   width: 130,

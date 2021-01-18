@@ -97,10 +97,10 @@ class _ThunderScreenState extends State<ThunderScreen> {
                     Navigator.pop(context);
                   },
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
                     child: Image.asset(
                       'assets/images/back_arrow.png',
-                      width: 20,
+                      width: 30,
                       height: 15,
                     ),
                   ),
@@ -109,12 +109,12 @@ class _ThunderScreenState extends State<ThunderScreen> {
               Align(
                 alignment: Alignment.center,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                  child: Image.asset(
-                    'assets/images/thunder_head.png',
-                    width: 100,
-                    height: 50,
-                  ),
+                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  child: Text("Thunder Storm",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xff042C5C),
+                  fontSize: 20)),
                 ),
               ),
               Align(

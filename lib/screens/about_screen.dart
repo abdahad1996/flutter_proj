@@ -77,7 +77,7 @@ class _AboutScreenState extends State<AboutScreen> {
                             Navigator.pop(context);
                           },
                           child: Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                            padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
                             child: Image.asset(
                               'assets/images/back_arrow.png',
                               width: 20,
@@ -89,12 +89,12 @@ class _AboutScreenState extends State<AboutScreen> {
                       Align(
                         alignment: Alignment.center,
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                          child: Image.asset(
-                            'assets/images/about_head.png',
-                            width: 100,
-                            height: 50,
-                          ),
+                          padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                          child: Text("About Aspen",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xff042C5C),
+                  fontSize: 20)),
                         ),
                       ),
                       Align(
