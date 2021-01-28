@@ -136,7 +136,7 @@ class _SnowCalendarScreenState extends State<SnowCalendarScreen> {
                     Navigator.pop(context);
                   },
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
                     child: Image.asset(
                       'assets/images/back_arrow.png',
                       width: 20,
@@ -148,14 +148,25 @@ class _SnowCalendarScreenState extends State<SnowCalendarScreen> {
               Align(
                 alignment: Alignment.center,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                  child: Image.asset(
-                    'assets/images/snow_calendar_head.png',
-                    width: 130,
-                    height: 50,
-                  ),
+                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  child: Text("Snow Calender",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xff042C5C),
+                          fontSize: 20)),
                 ),
               ),
+              // Align(
+              //   alignment: Alignment.center,
+              //   child: Padding(
+              //     padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+              //     child: Image.asset(
+              //       'assets/images/snow_calendar_head.png',
+              //       width: 130,
+              //       height: 50,
+              //     ),
+              //   ),
+              // ),
               Align(
                 alignment: Alignment.topRight,
                 child: Padding(

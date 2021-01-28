@@ -179,9 +179,7 @@ class _SummerIndicatorTabScreenState extends State<SummerIndicatorTabScreen>
                     )),
                 body: TabBarView(
                   children: indicators.map((model) {
-                    
-                      return ui(model);
-                    
+                    return ui(model);
                   }).toList(),
 
                   // children: [
@@ -203,41 +201,47 @@ class _SummerIndicatorTabScreenState extends State<SummerIndicatorTabScreen>
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-               SfRadialGauge(
-          axes: <RadialAxis>[
-            RadialAxis(minimum: 0, maximum: 1,
-            ranges: <GaugeRange>[
-                            GaugeRange(startValue: (model.selected == "high")
-                    ? 0.7
-                    : (model.selected == "low")
-                        ? 0.0
-                        : 0.3,endValue:  (model.selected == "high")
-                    ? 1
-                    : (model.selected == "low")
-                        ? 0.3
-                        : 0.7,color: (model.selected == "high")
-                    ? Color.fromRGBO(255, 55, 66, 1)
-                    : (model.selected == "low")
-                        ? Color.fromRGBO(164, 255, 179, 1)
-                        : Color.fromRGBO(254, 245, 84, 1),),
+              SfRadialGauge(axes: <RadialAxis>[
+                RadialAxis(minimum: 0, maximum: 1, ranges: <GaugeRange>[
+                  GaugeRange(
+                    startValue: (model.selected == "high")
+                        ? 0.7
+                        : (model.selected == "low")
+                            ? 0.0
+                            : 0.3,
+                    endValue: (model.selected == "high")
+                        ? 1
+                        : (model.selected == "low")
+                            ? 0.3
+                            : 0.7,
+                    color: (model.selected == "high")
+                        ? Color.fromRGBO(255, 55, 66, 1)
+                        : (model.selected == "low")
+                            ? Color.fromRGBO(164, 255, 179, 1)
+                            : Color.fromRGBO(254, 245, 84, 1),
+                  ),
 
-               
-              // GaugeRange(startValue: 0, endValue: 50, color:Colors.green),
-              // GaugeRange(startValue: 0.5,endValue: 0.75,color: Colors.orange),
-              // GaugeRange(startValue: 0.75,endValue: 1,color: Colors.red)
-              ],
-            pointers: <GaugePointer>[
-              NeedlePointer(value: (model.selected == "high")
-                    ? 1
-                    : (model.selected == "low")
-                        ? 0.3
-                        : 0.7,)],
-            annotations: <GaugeAnnotation>[
-              GaugeAnnotation(widget: Container(child: 
-                 Text(model.selected,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold))),
-                 angle: 90, positionFactor: 0.5
-              )]
-          )]),
+                  // GaugeRange(startValue: 0, endValue: 50, color:Colors.green),
+                  // GaugeRange(startValue: 0.5,endValue: 0.75,color: Colors.orange),
+                  // GaugeRange(startValue: 0.75,endValue: 1,color: Colors.red)
+                ], pointers: <GaugePointer>[
+                  NeedlePointer(
+                    value: (model.selected == "high")
+                        ? 1
+                        : (model.selected == "low")
+                            ? 0.3
+                            : 0.7,
+                  )
+                ], annotations: <GaugeAnnotation>[
+                  GaugeAnnotation(
+                      widget: Container(
+                          child: Text(model.selected,
+                              style: TextStyle(
+                                  fontSize: 25, fontWeight: FontWeight.bold))),
+                      angle: 90,
+                      positionFactor: 0.5)
+                ])
+              ]),
               // CircularPercentIndicator(
               //   radius: 150.0,
               //   lineWidth: 20.0,
@@ -273,7 +277,7 @@ class _SummerIndicatorTabScreenState extends State<SummerIndicatorTabScreen>
 
   Widget list(model) {
     return Container(
-      color:Colors.red,
+      // color: Colors.red,
       padding: EdgeInsets.symmetric(vertical: 10),
       height: MediaQuery.of(context).size.height * 0.3,
       child: ListView(
@@ -288,32 +292,32 @@ class _SummerIndicatorTabScreenState extends State<SummerIndicatorTabScreen>
                     height: 30,
                     width: 30,
                     // color: Colors.red,
-                    decoration: (model.selected == "low") ? BoxDecoration(
-                        color: Color.fromRGBO(164, 255, 179, 1),
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(8.0),
-                            topRight: Radius.circular(8.0),
-                            bottomRight: Radius.circular(8.0),
-                            bottomLeft: Radius.circular(8.0)))
-                            :
-                           (model.selected == "medium") ? BoxDecoration(
-                          color: Color.fromRGBO(254, 245, 84, 1),
-                          shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(8.0),
-                              topRight: Radius.circular(8.0),
-                              bottomRight: Radius.circular(8.0),
-                              bottomLeft: Radius.circular(8.0)))
-                              :
-                              BoxDecoration(
-                          color: Color.fromRGBO(255, 55, 66, 1),
-                          shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(8.0),
-                              topRight: Radius.circular(8.0),
-                              bottomRight: Radius.circular(8.0),
-                              bottomLeft: Radius.circular(8.0))),
+                    decoration: (model.selected == "low")
+                        ? BoxDecoration(
+                            color: Color.fromRGBO(164, 255, 179, 1),
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(8.0),
+                                topRight: Radius.circular(8.0),
+                                bottomRight: Radius.circular(8.0),
+                                bottomLeft: Radius.circular(8.0)))
+                        : (model.selected == "medium")
+                            ? BoxDecoration(
+                                color: Color.fromRGBO(254, 245, 84, 1),
+                                shape: BoxShape.rectangle,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(8.0),
+                                    topRight: Radius.circular(8.0),
+                                    bottomRight: Radius.circular(8.0),
+                                    bottomLeft: Radius.circular(8.0)))
+                            : BoxDecoration(
+                                color: Color.fromRGBO(255, 55, 66, 1),
+                                shape: BoxShape.rectangle,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(8.0),
+                                    topRight: Radius.circular(8.0),
+                                    bottomRight: Radius.circular(8.0),
+                                    bottomLeft: Radius.circular(8.0))),
                   ),
                   SizedBox(
                     width: 20,
@@ -331,7 +335,13 @@ class _SummerIndicatorTabScreenState extends State<SummerIndicatorTabScreen>
               SizedBox(
                 height: 20,
               ),
-              Text((model.selected == "low ") ? model.low : (model.selected == "medium") ? model.medium : model.high)
+              Text((model.selected == "low")
+                  ? model.low
+                  : (model.selected == "medium")
+                      ? model.medium
+                      : model.high)
+              // Text(
+              //     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean quis sapien orci. Nullam ut ligula sed ipsum feugiat iaculis. Cras a facilisis felis, ut facilisis dolor. Praesent lacinia sed nisl at volutpat. Morbi eu scelerisque leo, quis consequat dui. Maecenas eu lacinia ante. Quisque nec metus mollis, facilisis velit non, imperdiet quam. Nullam vitae nunc pellentesque, sollicitudin quam quis, aliquet nunc. Proin tristique, metus sit amet malesuada rutrum, neque sapien finibus erat,Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean quis sapien orci. Nullam ut ligula sed ipsum feugiat iaculis. Cras a facilisis felis, ut facilisis dolor. Praesent lacinia sed nisl at volutpat. Morbi eu scelerisque leo, quis consequat dui. Maecenas eu lacinia ante. Quisque nec metus mollis, facilisis velit non, imperdiet quam. Nullam vitae nunc pellentesque, sollicitudin quam quis, aliquet nunc. Proin tristique, metus sit amet malesuada rutrum, neque sapien finibus erat, eu bibendum turpis sem et neque. Ut vel tortor ipsum. Etiam et justo dui. Curabitur eleifend ex eros, eu vehicula nibh cursus non. Ut scelerisque id ante ut suscipit. Nulla vestibulum magna eu lacus bibendum, vitae bibendum diam blandit. Quisque rhoncus tempus metus, ac aliquam diam cursus maximus. Sed commodo mi nisl, sit amet vestibulum ipsum pharetra non. eu bibendum turpis sem et neque. Ut vel tortor ipsum. Etiam et justo dui. Curabitur eleifend ex eros, eu vehicula nibh cursus non. Ut scelerisque id ante ut suscipit. Nulla vestibulum magna eu lacus bibendum, vitae bibendum diam blandit. Quisque rhoncus tempus metus, ac aliquam diam cursus maximus. Sed commodo mi nisl, sit amet vestibulum ipsum pharetra non.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean quis sapien orci. Nullam ut ligula sed ipsum feugiat iaculis. Cras a facilisis felis, ut facilisis dolor. Praesent lacinia sed nisl at volutpat. Morbi eu scelerisque leo, quis consequat dui. Maecenas eu lacinia ante. Quisque nec metus mollis, facilisis velit non, imperdiet quam. Nullam vitae nunc pellentesque, sollicitudin quam quis, aliquet nunc. Proin tristique, metus sit amet malesuada rutrum, neque sapien finibus erat, eu bibendum turpis sem et neque. Ut vel tortor ipsum. Etiam et justo dui. Curabitur eleifend ex eros, eu vehicula nibh cursus non. Ut scelerisque id ante ut suscipit. Nulla vestibulum magna eu lacus bibendum, vitae bibendum diam blandit. Quisque rhoncus tempus metus, ac aliquam diam cursus maximus. Sed commodo mi nisl, sit amet vestibulum ipsum pharetra non.")
             ],
           ),
           SizedBox(

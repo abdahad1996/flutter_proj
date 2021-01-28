@@ -168,59 +168,61 @@ class _SnowForecastScreenState extends State<SnowForecastScreen> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               SizedBox(
-                                                width: 10,
+                                                height: 15,
                                               ),
                                               Image.network(
                                                 packagesList[index].icon_url,
                                                 width: 70,
+                                                height: 70,
                                               ),
                                               SizedBox(
                                                 width: 5,
                                               ),
-                                              Flexible(
+                                              Expanded(
                                                 // child: Row(
                                                 //   mainAxisAlignment: MainAxisAlignment.start,
                                                 //   crossAxisAlignment:
                                                 //       CrossAxisAlignment.start,
                                                 //   children: [
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    SizedBox(
-                                                      height: 15,
-                                                    ),
-                                                    Text(
-                                                        packagesList[index]
-                                                            .date_formatted,
-                                                        maxLines: null,
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Color(
-                                                                0xff222222),
-                                                            fontSize: 15)),
-                                                    SizedBox(
-                                                      height: 5,
-                                                    ),
-                                                    Text(
-                                                        packagesList[index]
-                                                            .exerpt,
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal,
-                                                            color: Color(
-                                                                0xff222222),
-                                                            fontSize: 14)),
-                                                    SizedBox(
-                                                      height: 10,
-                                                    ),
-                                                    Expanded(
-                                                      // alignment: Alignment.topLeft,
-                                                      child: Text(
+                                                child: SingleChildScrollView(
+                                                    child: Column(
+                                                        //   mainAxisAlignment:
+                                                        //       MainAxisAlignment.start,
+                                                        //   crossAxisAlignment:
+                                                        //       CrossAxisAlignment
+                                                        //           .start,
+                                                        children: [
+                                                      SizedBox(
+                                                        height: 15,
+                                                      ),
+                                                      Text(
+                                                          packagesList[index]
+                                                              .date_formatted,
+                                                          maxLines: null,
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: Color(
+                                                                  0xff222222),
+                                                              fontSize: 15)),
+                                                      SizedBox(
+                                                        height: 5,
+                                                      ),
+                                                      Text(
+                                                          packagesList[index]
+                                                              .exerpt,
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                              color: Color(
+                                                                  0xff222222),
+                                                              fontSize: 14)),
+                                                      SizedBox(
+                                                        height: 10,
+                                                      ),
+                                                      Text(
                                                           packagesList[index]
                                                               .description,
                                                           style: TextStyle(
@@ -230,9 +232,26 @@ class _SnowForecastScreenState extends State<SnowForecastScreen> {
                                                               color: Color(
                                                                   0xff222222),
                                                               fontSize: 12)),
+                                                    ])
+                                                    // SizedBox(
+                                                    //   height: 10,
+                                                    // ),
+                                                    //     Expanded(
+                                                    //       // alignment: Alignment.topLeft,
+                                                    //       child: Text(
+                                                    //           packagesList[index]
+                                                    //               .description,
+                                                    //           style: TextStyle(
+                                                    //               fontWeight:
+                                                    //                   FontWeight
+                                                    //                       .normal,
+                                                    //               color: Color(
+                                                    //                   0xff222222),
+                                                    //               fontSize: 12)),
+                                                    //     ),
+                                                    //   ],
+                                                    // ),
                                                     ),
-                                                  ],
-                                                ),
                                                 //   ],
                                                 // ),
                                               )
