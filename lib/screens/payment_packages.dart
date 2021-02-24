@@ -1,7 +1,12 @@
 import 'package:aspen_weather/models/packages_list_model.dart';
+import 'package:aspen_weather/models/user_model_response.dart';
 import 'package:aspen_weather/network/base_model.dart';
 import 'package:aspen_weather/screens/payment_pay_screen.dart';
+import 'package:aspen_weather/screens/summer_home_screen.dart';
+import 'package:aspen_weather/screens/winter_home_screen.dart';
 import 'package:aspen_weather/service/webservices.dart';
+import 'package:aspen_weather/utils/Dialogs.dart';
+import 'package:aspen_weather/utils/const.dart';
 import 'package:aspen_weather/utils/prefs.dart';
 import 'package:aspen_weather/utils/views.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,6 +26,7 @@ class _PackagesScreenState extends State<PackagesScreen> {
   bool loading = false;
   String bannerImageUrl = '';
   String existingPackageId = '';
+  dynamic accessTok = "";
   @override
   void initState() {
     super.initState();
@@ -28,10 +34,12 @@ class _PackagesScreenState extends State<PackagesScreen> {
     print(Device.get().hasNotch);
     print("iphone");
     print(Device.get().isIphoneX);
+
     load();
   }
 
   void load() async {
+    // accessTok = Prefs.getAccessTokenAwait();
     Prefs.getAdsUrl((String adUrl) async {
       setState(() {
         bannerImageUrl = adUrl;
@@ -44,7 +52,7 @@ class _PackagesScreenState extends State<PackagesScreen> {
     });
     Prefs.getAccessToken((String accessToken) async {
       print(accessToken);
-
+      accessTok = accessToken;
       //check if current pacakge id Exist then show selected pacakge
       loading = true;
 
@@ -112,10 +120,10 @@ class _PackagesScreenState extends State<PackagesScreen> {
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                   child: Text("Packages",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xff042C5C),
-                  fontSize: 20)),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xff042C5C),
+                          fontSize: 20)),
                 ),
               ),
               Align(
@@ -323,13 +331,9 @@ class _PackagesScreenState extends State<PackagesScreen> {
                                                                 children: [
                                                                   GestureDetector(
                                                                     onTap: () {
-                                                                      Navigator.pushNamed(
+                                                                      navigateToPay(
                                                                           context,
-                                                                          PayNowScreen.routeName,
-                                                                          arguments: {
-                                                                            'packageId':
-                                                                                packagesList[index].id.toString()
-                                                                          });
+                                                                          index);
                                                                     },
                                                                     child:
                                                                         Container(
@@ -392,5 +396,109 @@ class _PackagesScreenState extends State<PackagesScreen> {
         ],
       ),
     )));
+  }
+
+  void navigateToPay(BuildContext context, int index) {
+    //free go to homescreen
+    if (packagesList[index]?.id == 1) {
+      /// clear existing pacakge id
+      // Prefs.clearPackageId();
+      // Prefs.savePackageId(packagesList[index]?.id?.toString() ?? "1");
+      // apiCallForProfile("Error in buying package");
+      apiCallForCharge();
+    } else {
+      Navigator.pushNamed(context, PayNowScreen.routeName,
+          arguments: {'packageId': packagesList[index].id.toString()});
+    }
+  }
+
+  Future<void> apiCallForCharge(
+      {String packageId,
+      String cardName,
+      String cardNumber,
+      String cardExpiry,
+      String cvcNumber}) async {
+    Dialogs.showLoadingDialog(context);
+
+    cardName = 'John well';
+    cardNumber = '4111111111111111';
+    cardExpiry = '2023-03';
+    cvcNumber = '737';
+    packageId = "1";
+
+    chargePayment(
+        accessToken: accessTok,
+        packageId: packageId,
+        cardName: cardName,
+        cardNumber: cardNumber,
+        expiryDate: cardExpiry,
+        cvcNumber: cvcNumber,
+        onSuccess: (BaseModel baseModel) {
+          print("basemodel $baseModel");
+          //Dialogs.hideDialog(context);
+
+          ///SAVE PACKAGE ID HERE
+
+          if (baseModel.message == "Transaction failed") {
+            toast(baseModel.message);
+            Dialogs.hideDialog(context);
+
+            return;
+          }
+
+          /// clear existing pacakge id
+          Prefs.clearPackageId();
+          Prefs.savePackageId(packageId.toString());
+
+          if (baseModel.data != null) {
+            apiCallForProfile(baseModel.message);
+
+            /*if (weatherType == Const.WEATHER_TYPE_SUMMER) {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  SummerHomeScreen.routeName, (Route<dynamic> route) => false);
+            } else {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  WinterHomeScreen.routeName, (Route<dynamic> route) => false);
+            }*/
+
+          }
+        },
+        onError: (String error, BaseModel baseModel) {
+          Dialogs.hideDialog(context);
+          toast(error);
+        });
+  }
+
+  Future<void> apiCallForProfile(String message) async {
+    Dialogs.showLoadingDialog(context);
+    print("acess token is $accessTok");
+    getUser(
+        authToken: accessTok,
+        onSuccess: (BaseModel baseModel) {
+          Dialogs.hideDialog(context);
+
+          if (baseModel.data != null) {
+            try {
+              User user = User.fromJson(baseModel.data);
+              Prefs.setUser(user);
+            } catch (e) {
+              toast(e);
+            }
+
+            toast(message);
+
+            if (weatherType == Const.WEATHER_TYPE_SUMMER) {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  SummerHomeScreen.routeName, (Route<dynamic> route) => false);
+            } else {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  WinterHomeScreen.routeName, (Route<dynamic> route) => false);
+            }
+          }
+        },
+        onError: (String error, BaseModel baseModel) {
+          Dialogs.hideDialog(context);
+          toast(error);
+        });
   }
 }

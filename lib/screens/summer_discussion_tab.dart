@@ -7,7 +7,10 @@ import 'package:aspen_weather/utils/prefs.dart';
 import 'package:aspen_weather/utils/views.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_html/style.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SummerDiscussTabScreen extends StatefulWidget {
   static const routeName = '/summer-tab-discuss-screen';
@@ -88,15 +91,34 @@ class _SummerDiscussTabScreenState extends State<SummerDiscussTabScreen> {
                 SizedBox(
                   height: 8,
                 ),*/
-                Text(contentFull,
+                Text(title,
                     style: TextStyle(
                         fontWeight: FontWeight.normal,
                         color: Color(0xff55586D),
                         fontSize: 15)),
+                Html(
+                  data: content,
+                  onLinkTap: (url) {
+                    // open url in a webview
+                    _launchURL(url);
+                  },
+                  onImageTap: (src) {
+                    // Display the image in large form.
+                    print(src);
+                  },
+                ),
               ]),
         ),
       ),
     )));
+  }
+
+  _launchURL(url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      toast('Could not launch $url');
+    }
   }
 
   _selectDate(BuildContext context) async {
@@ -121,7 +143,7 @@ class _SummerDiscussTabScreenState extends State<SummerDiscussTabScreen> {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
-      lastDate: DateTime(2021),
+      lastDate: DateTime(2025),
       builder: (context, child) {
         return Theme(
           data: ThemeData.light(),

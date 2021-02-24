@@ -34,6 +34,7 @@ dependencies:
   pin_code_fields: ^2.4.0
   firebase_auth:
   firebase_messaging: ^7.0.3
+  flutter_html: ^1.2.0
   image_cropper: 1.0.2
   image_picker: ^0.6.6+5
   image: ^2.1.19
@@ -41,7 +42,9 @@ dependencies:
   date_time_format: ^1.1.0
   device_preview: ^0.5.5
   flutter_device_type: ^0.3.2
+  url_launcher : ^5.7.10
   syncfusion_flutter_gauges: ^18.4.33
+  flutter_local_notifications: ^4.0.1
 
 dev_dependencies:
   flutter_test:

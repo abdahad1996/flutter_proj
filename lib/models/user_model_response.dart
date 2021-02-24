@@ -49,8 +49,8 @@ class User {
     }
     if (this.payment_status != null && !(this.payment_status is bool)) {
       map['payment_status'] = this.payment_status.toMap();
-    }else if (this.payment_status is bool){
-       map['payment_status'] = this.payment_status.toMap();
+    } else if (this.payment_status is bool) {
+      map['payment_status'] = this.payment_status.toMap();
     }
 
     map["deviceType"] = deviceType;
@@ -67,7 +67,7 @@ class Package {
   String name;
   String description;
   int amount;
-  bool status;
+  dynamic status;
   Package({
     this.id,
     this.name,

@@ -254,9 +254,10 @@ class _PayNowScreenState extends State<PayNowScreen> {
                                     onChanged: (text) {
                                       List<int> expiryDate =
                                           getExpiryDate(text);
-                                      cardExpiry = '20' + '${expiryDate[0]}' +
+                                      cardExpiry = '20' +
+                                          '${expiryDate[1]}' +
                                           '/' +
-                                          '${expiryDate[1]}';
+                                          '${expiryDate[0]}';
                                     },
                                   ),
                                 )),
@@ -304,8 +305,12 @@ class _PayNowScreenState extends State<PayNowScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        apiCallForCharge(widget.packageId, cardName, cardNumber,
-                            cardExpiry, cardCVC);
+                        apiCallForCharge(
+                            widget.packageId,
+                            cardName,
+                            cardNumber.replaceAll(" ", ""),
+                            cardExpiry,
+                            cardCVC);
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width,
@@ -334,12 +339,27 @@ class _PayNowScreenState extends State<PayNowScreen> {
 
   Future<void> apiCallForCharge(String packageId, String cardName,
       String cardNumber, String cardExpiry, String cvcNumber) async {
+    // cardName = 'John well';
+    // cardNumber = '4111111111111111';
+    // cardExpiry = '2023-03';
+    // cvcNumber = '737';
+    if (cardName.isEmpty) {
+      toast("Please enter name");
+      return;
+    }
+    if (cardNumber.isEmpty) {
+      toast("Please enter name");
+      return;
+    }
+    if (cardExpiry.isEmpty) {
+      toast("Please enter name");
+      return;
+    }
+    if (cvcNumber.isEmpty) {
+      toast("Please enter name");
+      return;
+    }
     Dialogs.showLoadingDialog(context);
-
-    cardName = 'John well';
-    cardNumber = '4111111111111111';
-    cardExpiry = '2023-03';
-    cvcNumber = '737';
 
     chargePayment(
         accessToken: accessToken,
@@ -355,7 +375,7 @@ class _PayNowScreenState extends State<PayNowScreen> {
           ///SAVE PACKAGE ID HERE
 
           if (baseModel.message == "Transaction failed") {
-             toast(baseModel.message);
+            toast(baseModel.message);
             Dialogs.hideDialog(context);
 
             return;

@@ -76,6 +76,7 @@ class UpdateProfileScreenState extends State<UpdateProfileScreen> {
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
+        print("picked file is $_image");
       } else {
         print('No image selected.');
       }
@@ -244,7 +245,7 @@ class UpdateProfileScreenState extends State<UpdateProfileScreen> {
                           ),
                           SizedBox(height: 15),
                           TextFormField(
-                            readOnly :true,
+                            readOnly: true,
                             initialValue: (user != null) ? user.email : "",
                             decoration: InputDecoration(
                                 hintText: 'Enter your email',
@@ -352,8 +353,24 @@ class UpdateProfileScreenState extends State<UpdateProfileScreen> {
     @required dynamic image,
   ) async {
     // request.files.add(new http.MultipartFile.fromBytes('file',  image, contentType: new MediaType('image', 'jpeg')))
-    String fileName = image.path.split('/').last;
-    print("fileName $fileName");
+    // try {
+    dynamic fileName;
+    dynamic imageToBe;
+    if (_image == null && user?.details?.image_url != null ?? false) {
+      imageToBe = null;
+      fileName = null;
+      // imageToBe = user?.details?.image_url ?? null;
+      // fileName = user?.details?.image_url?.split('/')?.last ?? "test.jpg";
+    } else if (_image != null) {
+      print("image $image");
+      fileName = await image.path.split('/').last;
+      print("fileName $fileName");
+      imageToBe = image.path;
+    } else {
+      imageToBe = null;
+      fileName = null;
+    }
+
     // dynamic pngFile = await urlToPngFile(image.path);
     // print("pngFile $pngFile");
 
@@ -367,19 +384,22 @@ class UpdateProfileScreenState extends State<UpdateProfileScreen> {
       //important),
       // "device_token": deviceToken,
       // "device_type": deviceType,
-      "image": await MultipartFile.fromFile(image.path, filename: fileName),
+      "image": (imageToBe == null && fileName == null)
+          ? null
+          : await MultipartFile.fromFile(imageToBe, filename: fileName),
 
       // "expires_at": expires_at,
     });
     print("FORM DATA ${formData.fields}");
     print("image path ${image.path}");
+
     try {
       Dio dio = new Dio();
       // dio.options.headers['content-Type'] = 'application/json';
       dio.options.headers["authorization"] = "Bearer ${this.accessToken}";
       dynamic response = await dio.post(
           "https://kanztainer.com/aspen-weather/api/v1/users/update-profile/${user.id}",
-          // options: Options(contentType: 'multipart/form-data'),
+          options: Options(contentType: 'multipart/form-data'),
           data: formData);
       Dialogs.hideDialog(context);
 
@@ -429,7 +449,7 @@ class UpdateProfileScreenState extends State<UpdateProfileScreen> {
           print(user.name);
           Prefs.setUser(user);
 
-          if (!user.payment_status.package.status) {
+          if (user?.payment_status?.package?.status == null ?? false) {
             toast(
                 'You need to buy package first to access application features.');
             // Prefs.clearPackageId();
@@ -467,10 +487,18 @@ class UpdateProfileScreenState extends State<UpdateProfileScreen> {
       }
     } catch (error) {
       Dialogs.hideDialog(context);
-      toast(error.response.message);
-      print("error is ${error.response}");
-      print("error is ${error.response?.statusCode}");
+      toast(
+          error?.response?.toString() ?? "error exception in updating image ");
+      print("error is ${error?.response ?? "error in update profle screen "}");
+      print("error is ${error.response?.statusCode ?? 400}");
+      return;
     }
+    // } catch (e) {
+    //   Dialogs.hideDialog(context);
+    //   print(e);
+    //   toast("exception found $e");
+    //   return;
+    // }
   }
 
   Future<void> apiCallForUpdate() async {
@@ -481,13 +509,13 @@ class UpdateProfileScreenState extends State<UpdateProfileScreen> {
     }
     _deviceToken = "123";
 
-    if (_image == null) {
+    if (_image == null && user.details.image_url == null) {
       toast("please select an image");
       return;
     }
     Dialogs.showLoadingDialog(context);
     updateWithImage(_name, _email, _password, _confirmPassword, _deviceType,
-        _deviceToken, _image);
+        _deviceToken, _image ?? user?.details?.image_url ?? null);
   }
 
   Future<void> apiCallForAd(String accessToken) async {

@@ -32,13 +32,15 @@ class _SummerIndicatorTabScreenState extends State<SummerIndicatorTabScreen>
   @override
   void load() async {
     Prefs.getWeatherType((String weather) {
+      if (mounted)
+        setState(() {
+          weatherType = weather;
+        });
+    });
+    if (mounted)
       setState(() {
-        weatherType = weather;
+        isLoading = true;
       });
-    });
-    setState(() {
-      isLoading = true;
-    });
     Prefs.getAccessToken((String accessToken) async {
       BaseModel baseModel =
           await getIndicator(authToken: accessToken).catchError((error) {
@@ -52,27 +54,29 @@ class _SummerIndicatorTabScreenState extends State<SummerIndicatorTabScreen>
       // content = "";
 
       if (baseModel != null && baseModel.data != null) {
-        setState(() {
-          isLoading = false;
-          List list = baseModel.data as List;
-          indicators.clear();
-          if (list.length == 0) {
-            toast('No records found');
-          } else {
-            for (var value in list) {
-              print("value is $value");
-              DailyIndicatorModel model = DailyIndicatorModel.fromJson(value);
-              indicators.add(model);
-              print("indicators is $indicators");
+        if (mounted)
+          setState(() {
+            isLoading = false;
+            List list = baseModel.data as List;
+            indicators.clear();
+            if (list.length == 0) {
+              toast('No records found');
+            } else {
+              for (var value in list) {
+                print("value is $value");
+                DailyIndicatorModel model = DailyIndicatorModel.fromJson(value);
+                indicators.add(model);
+                print("indicators is $indicators");
+              }
             }
-          }
-          _tabController =
-              TabController(length: indicators.length, vsync: this);
-        });
+            _tabController =
+                TabController(length: indicators.length, vsync: this);
+          });
       } else {
-        setState(() {
-          isLoading = false;
-        });
+        if (mounted)
+          setState(() {
+            isLoading = false;
+          });
         toast('No data available!');
       }
     });
@@ -201,7 +205,7 @@ class _SummerIndicatorTabScreenState extends State<SummerIndicatorTabScreen>
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              SfRadialGauge(axes: <RadialAxis>[
+              SfRadialGauge(enableLoadingAnimation: true, axes: <RadialAxis>[
                 RadialAxis(minimum: 0, maximum: 1, ranges: <GaugeRange>[
                   GaugeRange(
                     startValue: (model.selected == "high")
@@ -221,8 +225,19 @@ class _SummerIndicatorTabScreenState extends State<SummerIndicatorTabScreen>
                             : Color.fromRGBO(254, 245, 84, 1),
                   ),
 
-                  // GaugeRange(startValue: 0, endValue: 50, color:Colors.green),
-                  // GaugeRange(startValue: 0.5,endValue: 0.75,color: Colors.orange),
+                  model.selected == "high" || model.selected == "medium"
+                      ? GaugeRange(
+                          startValue: 0,
+                          endValue: 0.3,
+                          color: Color.fromRGBO(164, 255, 179, 1))
+                      : GaugeRange(startValue: 0, endValue: 0),
+                  model.selected == "high"
+                      ? GaugeRange(
+                          startValue: 0.3,
+                          endValue: 0.7,
+                          color: Color.fromRGBO(254, 245, 84, 1),
+                        )
+                      : GaugeRange(startValue: 0, endValue: 0)
                   // GaugeRange(startValue: 0.75,endValue: 1,color: Colors.red)
                 ], pointers: <GaugePointer>[
                   NeedlePointer(

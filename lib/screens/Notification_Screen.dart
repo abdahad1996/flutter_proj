@@ -82,7 +82,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       // ),
       title: Text(notifications.title),
       subtitle: Text(notifications.message),
-      trailing: Icon(Icons.keyboard_arrow_right),
+      // trailing: Icon(Icons.keyboard_arrow_right),
       onTap: () {
         print('horse');
       },

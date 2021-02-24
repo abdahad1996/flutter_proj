@@ -50,6 +50,14 @@ class Prefs {
       return success(null);
   }
 
+  static Future getAccessTokenAwait() async {
+    String string = await PreferencesHelper.getString(Const.ACCESS_TOKEN);
+    if (string != null)
+      return string;
+    else
+      return null;
+  }
+
   static Future setAdsUrl(String accessToken) {
     return PreferencesHelper.setString(Const.ADVERTISEMENT_URL, accessToken);
   }
@@ -103,7 +111,7 @@ class Prefs {
     if (string != null) {
       var decode = User.fromJson(json.decode(string));
       print("decoded");
-      print(decode.payment_status.package.status);
+      print(decode?.payment_status?.package?.status ?? "nil ");
 
       return success(decode);
     } else

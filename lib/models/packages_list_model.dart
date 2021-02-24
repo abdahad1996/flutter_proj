@@ -4,7 +4,7 @@ class PackagesListModel {
   String description;
   int amount;
   int no_of_days_validity;
-  bool status;
+  dynamic status;
 
   PackagesListModel(this.id, this.name, this.description, this.amount,
       this.no_of_days_validity, this.status);

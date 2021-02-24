@@ -13,6 +13,7 @@ import 'package:aspen_weather/utils/views.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:intl/intl.dart';
 
 class CumulativeSnowScreen extends StatefulWidget {
   static const routeName = '/cumulative-snow-screen';
@@ -35,7 +36,7 @@ class _CumulativeSnowScreenState extends State<CumulativeSnowScreen> {
   @override
   void initState() {
     super.initState();
-
+    endDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
     Prefs.getAdsUrl((String adUrl) async {
       setState(() {
         bannerImageUrl = adUrl;

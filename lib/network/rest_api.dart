@@ -11,16 +11,16 @@ import 'base_model.dart';
 
 String baseUrl =
     'https://kanztainer.com/aspen-weather/api/v1'; // client - production
-
+// 'http://admin.aspenweather.net/api';
 enum Method { Get, Post, Put, Multipart }
 
 Future<BaseModel> get(String endPoint, {String authToken}) async {
   Map<String, String> headers = {"Authorization": 'Bearer $authToken'};
-  print(" URL $baseUrl + endPoint");
+  print(" URL $baseUrl$endPoint");
   print(" headers $headers");
   http.Response response = await http.get(baseUrl + endPoint, headers: headers);
   print(" response $response");
-int statusCode = response.statusCode;
+  int statusCode = response.statusCode;
   String responsebody = response.body;
   var jsonBody = json.decode(responsebody);
   print("response: ${jsonBody}");

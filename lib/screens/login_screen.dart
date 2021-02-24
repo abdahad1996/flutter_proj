@@ -363,8 +363,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
               user = userAuthModel.user;
               print("user is $user");
-              print("useraccess_token is ${user.access_token}");
-              print("user payment status is ${user.payment_status.amount}");
+              print("useraccess_token is ${user?.access_token ?? 0}");
+              print(
+                  "user payment status is ${user?.payment_status?.amount ?? 5}");
 
               Prefs.setAccessToken(user.access_token);
               if (user.payment_status != null) {
@@ -412,7 +413,10 @@ class _LoginScreenState extends State<LoginScreen> {
               Prefs.clearPackageId();
               Navigator.pushNamed(context, PackagesScreen.routeName);
             } else {
-              if (!user.payment_status.package.status) {
+              if ((user.payment_status.package.status is bool &&
+                      user.payment_status.package.status == false) ||
+                  (user.payment_status.package.status is int &&
+                      user.payment_status.package.status == 0)) {
                 Navigator.pushNamed(context, PackagesScreen.routeName);
               } else {
                 if (weatherType == Const.WEATHER_TYPE_SUMMER) {
