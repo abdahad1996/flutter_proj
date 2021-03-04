@@ -78,10 +78,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                   child: Text("Change Password",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xff042C5C),
-                  fontSize: 20)),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xff042C5C),
+                          fontSize: 20)),
                   // Image.asset(
                   //   'assets/images/three_forecast_head.png',
                   //   width: 130,
@@ -101,8 +101,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     },
                     child: Image.asset(
                       'assets/images/ic_notification.png',
-                      width: 25,
-                      height: 20,
+                      width: 0,
+                      height: 0,
                     ),
                   ),
                 ),

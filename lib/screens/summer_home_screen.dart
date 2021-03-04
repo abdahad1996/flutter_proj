@@ -100,7 +100,7 @@ class _SummerHomeScreenState extends State<SummerHomeScreen> {
     return Scaffold(
         key: _scaffoldKey,
         floatingActionButton: Container(
-         width: 60,
+          width: 60,
           height: 60,
           margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
           child:
@@ -158,10 +158,10 @@ class _SummerHomeScreenState extends State<SummerHomeScreen> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         drawer: Drawer(
             child: SingleChildScrollView(
-              child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               SizedBox(
                 height: 50,
               ),
@@ -181,9 +181,8 @@ class _SummerHomeScreenState extends State<SummerHomeScreen> {
                   ),
                 ),
               ),
-             Align(
+              Align(
                 alignment: Alignment.center,
-             
                 child: ClipRRect(
                   // clipBehavior: Clip,
                   borderRadius: BorderRadius.circular(50),
@@ -307,9 +306,9 @@ class _SummerHomeScreenState extends State<SummerHomeScreen> {
                   ),
                 ),
               )
-          ],
-        ),
-            )),
+            ],
+          ),
+        )),
         body: SafeArea(
           child: Column(
             children: [
@@ -559,7 +558,7 @@ class _SummerHomeScreenState extends State<SummerHomeScreen> {
     } else if (index == 1) {
       return 'Thunderstorm';
     } else if (index == 2) {
-      return 'Delay Indicator';
+      return 'Daily Indicator';
     } else {
       return 'Discussion';
     }

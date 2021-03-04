@@ -272,20 +272,36 @@ class _SummerHomeTabScreenState extends State<SummerHomeTabScreen> {
             SizedBox(
               height: 10,
             ),
+            // Container(
+            //   margin: EdgeInsets.fromLTRB(0, 0, 10, 10),
+            //   child: Align(
+            //       alignment: Alignment.centerRight,
+            //       child: Container(
+            //           child: GestureDetector(
+            //               onTap: () {
+            //                 Navigator.pushNamed(
+            //                     context, SnowForecastScreen.routeName);
+            //               },
+            //               child: Image.asset(
+            //                 'assets/images/bg_button_three_days.png',
+            //                 height: Device.get().isIphoneX ? 50 : 30,
+            //               )))),
+            // ),
             Container(
-              margin: EdgeInsets.fromLTRB(0, 0, 10, 10),
+              margin: EdgeInsets.fromLTRB(
+                  0, 5, 10, Device.get().isIphoneX ? 10 : 5),
               child: Align(
                   alignment: Alignment.centerRight,
-                  child: Container(
-                      child: GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(
-                                context, SnowForecastScreen.routeName);
-                          },
-                          child: Image.asset(
-                            'assets/images/bg_button_three_days.png',
-                            height: 50,
-                          )))),
+                  child: GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(
+                            context, SnowForecastScreen.routeName);
+                      },
+                      child: Image.asset(
+                        'assets/images/bg_button_three_days.png',
+                        width: 150,
+                        height: Device.get().isIphoneX ? 50 : 30,
+                      ))),
             ),
             Expanded(
                 child: Container(

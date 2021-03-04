@@ -336,7 +336,8 @@ class _WinterHomeScreenState extends State<WinterHomeScreen> {
                               // alignment: Alignment.center,
                               child: Center(
                                 child: Container(
-                                  padding:   EdgeInsets.fromLTRB((_currentIndex == 1) ? 15 : 0, 0, 0, 0),
+                                  padding: EdgeInsets.fromLTRB(
+                                      (_currentIndex == 1) ? 15 : 0, 0, 0, 0),
                                   child: _currentIndex == 0
                                       ? Container()
                                       : Text(
@@ -598,7 +599,7 @@ class _WinterHomeScreenState extends State<WinterHomeScreen> {
     } else if (index == 1) {
       return 'Aspen Snowmass 6 day snowfall';
     } else if (index == 2) {
-      return 'Delay Indicator';
+      return 'Daily Indicator';
     } else {
       return 'Discussion';
     }

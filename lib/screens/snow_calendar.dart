@@ -594,7 +594,7 @@ class _SnowCalendarScreenState extends State<SnowCalendarScreen> {
                 if (forecastModel.attributes.ajax != null)
                   ajaxDesc = forecastModel.attributes.ajax.description;
               } else {
-                toast('No records found');
+                // toast('No records found');
 
                 butterMilkDesc = '';
                 highlandsDesc = '';

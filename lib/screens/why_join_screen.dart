@@ -17,7 +17,7 @@ class _WhyJoinState extends State<WhyJoin> {
   String title = '';
   String content = '';
   String bannerImageUrl = '';
-
+  bool isLoading = false;
   @override
   void initState() {
     super.initState();
@@ -25,6 +25,7 @@ class _WhyJoinState extends State<WhyJoin> {
   }
 
   void load() async {
+    isLoading = true;
     Prefs.getAdsUrl((String adUrl) async {
       setState(() {
         bannerImageUrl = adUrl;
@@ -42,11 +43,15 @@ class _WhyJoinState extends State<WhyJoin> {
           await getContentPages(authToken: accessToken, pageId: '3')
               .catchError((error) {
         print(error);
+        setState(() {
+          isLoading = false;
+        });
       });
 
       setState(() {
         title = "";
         content = "";
+        isLoading = false;
 
         if (baseModel != null && baseModel.data != null) {
           ContentModel dataModel = ContentModel.fromJson(baseModel.data);
@@ -90,10 +95,10 @@ class _WhyJoinState extends State<WhyJoin> {
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                   child: Text("Privacy policy",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xff042C5C),
-                  fontSize: 20)),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xff042C5C),
+                          fontSize: 20)),
                 ),
               ),
               Align(
@@ -118,32 +123,39 @@ class _WhyJoinState extends State<WhyJoin> {
             height: 30,
           ),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                width: double.infinity,
-                height: double.infinity,
-                alignment: Alignment.topLeft,
-                child: Column(children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(title,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xff222222),
-                            fontSize: 16)),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Text(content,
-                      style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          color: Color(0xff222222),
-                          fontSize: 14))
-                ]),
-              ),
-            ),
+            child: isLoading
+                ? Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    child: Center(child: CupertinoActivityIndicator()),
+                  )
+                : content.isEmpty
+                    ? Center(child: Text("No Records Found"))
+                    : Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          width: double.infinity,
+                          height: double.infinity,
+                          alignment: Alignment.topLeft,
+                          child: Column(children: [
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(title,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xff222222),
+                                      fontSize: 16)),
+                            ),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Text(content,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    color: Color(0xff222222),
+                                    fontSize: 14))
+                          ]),
+                        ),
+                      ),
           ),
           Align(
             alignment: Alignment.bottomCenter,

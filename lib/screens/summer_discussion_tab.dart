@@ -30,6 +30,7 @@ class _SummerDiscussTabScreenState extends State<SummerDiscussTabScreen> {
   String contentFull = '';
   String dateStr = "";
   List<ContentModel> packagesList = List();
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -91,22 +92,30 @@ class _SummerDiscussTabScreenState extends State<SummerDiscussTabScreen> {
                 SizedBox(
                   height: 8,
                 ),*/
-                Text(title,
+                Text(isLoading ? "" : title,
                     style: TextStyle(
                         fontWeight: FontWeight.normal,
                         color: Color(0xff55586D),
                         fontSize: 15)),
-                Html(
-                  data: content,
-                  onLinkTap: (url) {
-                    // open url in a webview
-                    _launchURL(url);
-                  },
-                  onImageTap: (src) {
-                    // Display the image in large form.
-                    print(src);
-                  },
-                ),
+                isLoading
+                    ? Center(child: CupertinoActivityIndicator())
+                    : content.isEmpty
+                        ? Center(
+                            child: Container(
+                              child: Text("no record found"),
+                            ),
+                          )
+                        : Html(
+                            data: content,
+                            onLinkTap: (url) {
+                              // open url in a webview
+                              _launchURL(url);
+                            },
+                            onImageTap: (src) {
+                              // Display the image in large form.
+                              print(src);
+                            },
+                          ),
               ]),
         ),
       ),
@@ -189,10 +198,14 @@ class _SummerDiscussTabScreenState extends State<SummerDiscussTabScreen> {
   }
 
   void loadByDate() {
+    isLoading = true;
+
     Prefs.getAccessToken((String accessToken) async {
       BaseModel baseModel =
           await getDiscussions(authToken: accessToken, currentDate: dateStr)
               .catchError((error) {
+        isLoading = false;
+
         print(error);
       });
 
@@ -200,6 +213,7 @@ class _SummerDiscussTabScreenState extends State<SummerDiscussTabScreen> {
         title = "";
         content = "";
         contentFull = "";
+        isLoading = false;
 
         packagesList.clear();
 
@@ -207,7 +221,7 @@ class _SummerDiscussTabScreenState extends State<SummerDiscussTabScreen> {
           List list = baseModel.data as List;
 
           if (list.length == 0) {
-            toast('No records found');
+            // toast('No records found');
           } else {
             for (var value in list) {
               ContentModel model = ContentModel.fromJson(value);

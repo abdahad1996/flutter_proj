@@ -24,10 +24,13 @@ class _ThunderScreenState extends State<ThunderScreen> {
   List<StormListModel> stormList = List();
   final List<BarChartModel> dataGraph = List();
   String bannerImageUrl = '';
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
+    print("thunder screen is $isLoading");
+    isLoading = true;
 
     Prefs.getAdsUrl((String adUrl) async {
       setState(() {
@@ -46,16 +49,20 @@ class _ThunderScreenState extends State<ThunderScreen> {
       BaseModel baseModel =
           await getStormForecast(authToken: accessToken).catchError((error) {
         print(error);
+        setState(() {
+          isLoading = false;
+        });
       });
 
       setState(() {
         stormList.clear();
+        isLoading = false;
 
         if (baseModel != null && baseModel.data != null) {
           List list = baseModel.data as List;
 
           if (list.length == 0) {
-            toast('No records found');
+            // toast('No records found');
           } else {
             for (var value in list) {
               StormListModel model = StormListModel.fromJson(value);
@@ -111,10 +118,10 @@ class _ThunderScreenState extends State<ThunderScreen> {
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                   child: Text("Thunder Storm",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xff042C5C),
-                  fontSize: 20)),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xff042C5C),
+                          fontSize: 20)),
                 ),
               ),
               Align(
@@ -139,29 +146,31 @@ class _ThunderScreenState extends State<ThunderScreen> {
             height: 30,
           ),
           Expanded(
-            child: stormList.length == 0
-                ? Center(child: Text("No Records Found"))
-                : ListView(
-                    padding: EdgeInsets.only(left: 5),
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    children: [
-                      Center(
-                        child: Text(
-                            "Cory\'s Thunderstorm predictions for today",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xff222222),
-                                fontSize: 18)),
+            child: isLoading
+                ? Center(child: CupertinoActivityIndicator())
+                : stormList.length == 0
+                    ? Center(child: Text("No Records Found"))
+                    : ListView(
+                        padding: EdgeInsets.only(left: 5),
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        children: [
+                          Center(
+                            child: Text(
+                                "Cory\'s Thunderstorm predictions for today",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xff222222),
+                                    fontSize: 18)),
+                          ),
+                          SizedBox(
+                            height: 50,
+                          ),
+                          BarChartGraph(
+                            data: dataGraph,
+                          ),
+                        ],
                       ),
-                      SizedBox(
-                        height: 50,
-                      ),
-                      BarChartGraph(
-                        data: dataGraph,
-                      ),
-                    ],
-                  ),
           ),
           Align(
             alignment: Alignment.bottomCenter,

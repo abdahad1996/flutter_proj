@@ -390,9 +390,16 @@ class UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
       // "expires_at": expires_at,
     });
-    print("FORM DATA ${formData.fields}");
-    print("image path ${image.path}");
+    print("FORM DATA ${formData?.fields}");
+    // print("image path ${image?.path ?? 2}");
 
+    if ((formData?.fields?.isEmpty ?? false) &&
+        (formData?.files?.isEmpty ?? false)) {
+      toast("Please edit atleast one field ");
+
+      Dialogs.hideDialog(context);
+      return;
+    }
     try {
       Dio dio = new Dio();
       // dio.options.headers['content-Type'] = 'application/json';

@@ -56,7 +56,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           List list = baseModel.data as List;
           notifications.clear();
           if (list.length == 0) {
-            toast('No records found');
+            // toast('No records found');
           } else {
             for (var value in list) {
               print("value is $value");
@@ -77,6 +77,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   Widget list(NotificationModel notifications) {
     return ListTile(
+      // tileColor: Colors.amber,
+      // shape: ShapeBorder,
       // leading: CircleAvatar(
       //   // backgroundImage: NetworkImage(horseUrl),
       // ),
@@ -114,10 +116,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     child: Text("No records found"),
                   )
                 : SafeArea(
-                    child: ListView(
-                        semanticChildCount: notifications.length,
-                        children:
-                            notifications.map((model) => list(model)).toList()
+                    child: ListView.separated(
+                        separatorBuilder: (context, index) => Divider(
+                              color: Colors.black,
+                            ),
+                        itemCount: notifications.length,
+                        itemBuilder: (context, index) =>
+                            list(notifications[index])
+                        // notifications.map((model) => list(model)).toList()
                         // children: <Widget>[
                         //   ListTile(
                         //     leading: CircleAvatar(

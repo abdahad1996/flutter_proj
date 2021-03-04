@@ -17,7 +17,8 @@ class _TermsScreenState extends State<TermsScreen> {
   String title = '';
   String content = '';
   String bannerImageUrl = '';
-
+  bool isLoading = false;
+  double height;
   @override
   void initState() {
     super.initState();
@@ -25,6 +26,7 @@ class _TermsScreenState extends State<TermsScreen> {
   }
 
   void load() async {
+    isLoading = true;
     Prefs.getAdsUrl((String adUrl) async {
       setState(() {
         bannerImageUrl = adUrl;
@@ -42,9 +44,14 @@ class _TermsScreenState extends State<TermsScreen> {
           await getContentPages(authToken: accessToken, pageId: '1')
               .catchError((error) {
         print(error);
+        setState(() {
+          isLoading = false;
+        });
       });
 
       setState(() {
+        isLoading = false;
+
         title = "";
         content = "";
 
@@ -118,41 +125,48 @@ class _TermsScreenState extends State<TermsScreen> {
             height: 30,
           ),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                width: double.infinity,
-                height: double.infinity,
-                alignment: Alignment.topLeft,
-                child: Column(children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(title,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xff222222),
-                            fontSize: 16)),
+            child: isLoading
+                ? Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    child: Center(child: CupertinoActivityIndicator()),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      alignment: Alignment.topLeft,
+                      child: Column(children: [
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(title.isEmpty ? "No record found" : title,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xff222222),
+                                  fontSize: 16)),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Text(content.isEmpty ? "No record found" : content,
+                            style: TextStyle(
+                                fontWeight: FontWeight.normal,
+                                color: Color(0xff222222),
+                                fontSize: 14))
+                      ]),
+                    ),
                   ),
-                  SizedBox(
-                    height: 15,
+          ),
+          isLoading
+              ? Container()
+              : Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Image.network(
+                    bannerImageUrl,
+                    height: 80,
+                    width: double.infinity,
                   ),
-                  Text(content,
-                      style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          color: Color(0xff222222),
-                          fontSize: 14))
-                ]),
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Image.network(
-              bannerImageUrl,
-              height: 80,
-              width: double.infinity,
-            ),
-          ),
+                ),
         ],
       ),
     )));

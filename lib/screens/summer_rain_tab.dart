@@ -22,11 +22,12 @@ class _SummerRainTabScreenState extends State<SummerRainTabScreen> {
   User user;
   List<StormListModel> stormList = List();
   final List<BarChartModel> dataGraph = List();
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-
+    isLoading = true;
     Prefs.getWeatherType((String weather) {
       if (this.mounted) {
         setState(() {
@@ -40,16 +41,18 @@ class _SummerRainTabScreenState extends State<SummerRainTabScreen> {
       BaseModel baseModel =
           await getStormForecast(authToken: accessToken).catchError((error) {
         print(error);
+        isLoading = false;
       });
       if (this.mounted) {
         setState(() {
+          isLoading = false;
           stormList.clear();
 
           if (baseModel != null && baseModel.data != null) {
             List list = baseModel.data as List;
 
             if (list.length == 0) {
-              toast('No records found');
+              // toast('No records found');
             } else {
               for (var value in list) {
                 StormListModel model = StormListModel.fromJson(value);
@@ -76,32 +79,35 @@ class _SummerRainTabScreenState extends State<SummerRainTabScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child:stormList.length == 0
-                ? Center(child: Text("No Records Found"))
-                : Container(
-          child: ListView(
-            padding: EdgeInsets.only(left: 5),
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            children: [
-              Center(
-                child: Text("Cory\'s Thunderstorm predictions for today",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xff222222),
-                        fontSize: 18)),
-              ),
-              SizedBox(
-                height: 50,
-              ),
-              BarChartGraph(
-                data: dataGraph,
-              ),
-            ],
-          ),
-        ),
-      ),
+      body: isLoading
+          ? Center(child: CupertinoActivityIndicator())
+          : Center(
+              child: stormList.length == 0
+                  ? Center(child: Text("No Records Found"))
+                  : Container(
+                      child: ListView(
+                        padding: EdgeInsets.only(left: 5),
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        children: [
+                          Center(
+                            child: Text(
+                                "Cory\'s Thunderstorm predictions for today",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xff222222),
+                                    fontSize: 18)),
+                          ),
+                          SizedBox(
+                            height: 50,
+                          ),
+                          BarChartGraph(
+                            data: dataGraph,
+                          ),
+                        ],
+                      ),
+                    ),
+            ),
     );
   }
 }

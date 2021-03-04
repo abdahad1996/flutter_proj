@@ -26,10 +26,10 @@ import 'package:aspen_weather/service/pushServices.dart';
 import 'package:aspen_weather/utils/views.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:overlay_support/overlay_support.dart' as overay;
 import 'package:page_transition/page_transition.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -91,7 +91,8 @@ class _MyAppState extends State<MyApp> {
     pushNotificationService.initialise();
     return OKToast(
         child: WillPopScope(
-            child: MaterialApp(
+            child: overay.OverlaySupport(
+                child: MaterialApp(
               locale: DevicePreview.locale(context), // Add the locale here
               builder: (context, child) {
                 return MediaQuery(
@@ -109,7 +110,7 @@ class _MyAppState extends State<MyApp> {
                   builder: (context) => SplashScreen(),
                 );
               },
-            ),
+            )),
             onWillPop: onWillPop));
   }
 

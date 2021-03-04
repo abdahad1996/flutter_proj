@@ -60,7 +60,7 @@ class _SummerIndicatorTabScreenState extends State<SummerIndicatorTabScreen>
             List list = baseModel.data as List;
             indicators.clear();
             if (list.length == 0) {
-              toast('No records found');
+              // toast('No records found');
             } else {
               for (var value in list) {
                 print("value is $value");
@@ -77,7 +77,7 @@ class _SummerIndicatorTabScreenState extends State<SummerIndicatorTabScreen>
           setState(() {
             isLoading = false;
           });
-        toast('No data available!');
+        // toast('No data available!');
       }
     });
   }
@@ -206,56 +206,69 @@ class _SummerIndicatorTabScreenState extends State<SummerIndicatorTabScreen>
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               SfRadialGauge(enableLoadingAnimation: true, axes: <RadialAxis>[
-                RadialAxis(minimum: 0, maximum: 1, ranges: <GaugeRange>[
-                  GaugeRange(
-                    startValue: (model.selected == "high")
-                        ? 0.7
-                        : (model.selected == "low")
-                            ? 0.0
-                            : 0.3,
-                    endValue: (model.selected == "high")
-                        ? 1
-                        : (model.selected == "low")
-                            ? 0.3
-                            : 0.7,
-                    color: (model.selected == "high")
-                        ? Color.fromRGBO(255, 55, 66, 1)
-                        : (model.selected == "low")
-                            ? Color.fromRGBO(164, 255, 179, 1)
-                            : Color.fromRGBO(254, 245, 84, 1),
-                  ),
+                RadialAxis(
+                    minimum: 0,
+                    maximum: 1,
+                    showLabels: false,
+                    showAxisLine: false,
+                    // backgroundImage: AssetImage(
+                    //   "assets/images/cumulative_head.png",
+                    //   // width: 188,
+                    //   // height: 25,
+                    // // ),
+                    ranges: <GaugeRange>[
+                      GaugeRange(
+                        startValue: (model.selected == "high")
+                            ? 0.7
+                            : (model.selected == "low")
+                                ? 0.0
+                                : 0.3,
+                        endValue: (model.selected == "high")
+                            ? 1
+                            : (model.selected == "low")
+                                ? 0.3
+                                : 0.7,
+                        color: (model.selected == "high")
+                            ? Color.fromRGBO(255, 55, 66, 1)
+                            : (model.selected == "low")
+                                ? Color.fromRGBO(164, 255, 179, 1)
+                                : Color.fromRGBO(254, 245, 84, 1),
+                      ),
 
-                  model.selected == "high" || model.selected == "medium"
-                      ? GaugeRange(
-                          startValue: 0,
-                          endValue: 0.3,
-                          color: Color.fromRGBO(164, 255, 179, 1))
-                      : GaugeRange(startValue: 0, endValue: 0),
-                  model.selected == "high"
-                      ? GaugeRange(
-                          startValue: 0.3,
-                          endValue: 0.7,
-                          color: Color.fromRGBO(254, 245, 84, 1),
-                        )
-                      : GaugeRange(startValue: 0, endValue: 0)
-                  // GaugeRange(startValue: 0.75,endValue: 1,color: Colors.red)
-                ], pointers: <GaugePointer>[
-                  NeedlePointer(
-                    value: (model.selected == "high")
-                        ? 1
-                        : (model.selected == "low")
-                            ? 0.3
-                            : 0.7,
-                  )
-                ], annotations: <GaugeAnnotation>[
-                  GaugeAnnotation(
-                      widget: Container(
-                          child: Text(model.selected,
-                              style: TextStyle(
-                                  fontSize: 25, fontWeight: FontWeight.bold))),
-                      angle: 90,
-                      positionFactor: 0.5)
-                ])
+                      model.selected == "high" || model.selected == "medium"
+                          ? GaugeRange(
+                              startValue: 0,
+                              endValue: 0.3,
+                              color: Color.fromRGBO(164, 255, 179, 1))
+                          : GaugeRange(startValue: 0, endValue: 0),
+                      model.selected == "high"
+                          ? GaugeRange(
+                              startValue: 0.3,
+                              endValue: 0.7,
+                              color: Color.fromRGBO(254, 245, 84, 1),
+                            )
+                          : GaugeRange(startValue: 0, endValue: 0)
+                      // GaugeRange(startValue: 0.75,endValue: 1,color: Colors.red)
+                    ],
+                    pointers: <GaugePointer>[
+                      NeedlePointer(
+                        value: (model.selected == "high")
+                            ? 1
+                            : (model.selected == "low")
+                                ? 0.3
+                                : 0.7,
+                      )
+                    ],
+                    annotations: <GaugeAnnotation>[
+                      GaugeAnnotation(
+                          widget: Container(
+                              child: Text(model.selected,
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold))),
+                          angle: 90,
+                          positionFactor: 0.5)
+                    ])
               ]),
               // CircularPercentIndicator(
               //   radius: 150.0,

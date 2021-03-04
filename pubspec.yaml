@@ -45,6 +45,7 @@ dependencies:
   url_launcher : ^5.7.10
   syncfusion_flutter_gauges: ^18.4.33
   flutter_local_notifications: ^4.0.1
+  overlay_support: ^1.0.5 
 
 dev_dependencies:
   flutter_test:

@@ -133,6 +133,7 @@ class _WinterHomeTabScreenState extends State<WinterHomeTabScreen> {
 
         currentTime = DateFormat.yMd().format(new DateTime.now());
 
+        weatherIconCurrent = model.weatherIcon;
         // new DateFormat.yMMMd().format(new DateTime.now()); // Apr 8, 2020
       });
     } else {

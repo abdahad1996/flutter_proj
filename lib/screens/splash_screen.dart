@@ -93,7 +93,7 @@ class _SplashScreenState extends State<SplashScreen> {
         setState(() {
           isLoading = false;
         });
-        toast('No data available!');
+        // toast('No data available!');
       }
     });
   }
@@ -145,7 +145,8 @@ class _SplashScreenState extends State<SplashScreen> {
                           } else {
                             Prefs.getUser((User userModel) async {
                               user = userModel;
-                              if ((user == null) || (user.payment_status == null)) {
+                              if ((user == null) ||
+                                  (user.payment_status == null)) {
                                 Prefs.clearPackageId();
                                 Navigator.pushNamed(
                                     context, PackagesScreen.routeName);
