@@ -51,16 +51,22 @@ class _SplashScreenState extends State<SplashScreen> {
       print("IPHONEX");
       //Do some notch business
     }
-    // Prefs.getWeatherType((String weather) {
-    //   setState(() {
-    //     weatherType = weather;
-    //   });
-    // });
+    Prefs.getWeatherType((String weather) {
+      setState(() {
+        weatherType = weather;
+      });
+    });
     setState(() {
       isLoading = true;
     });
     Prefs.getAccessToken((String accessToken) async {
+      print("access token is  $accessToken");
       if (accessToken == null) {
+        // BaseModel baseModel =
+        //     await getTheme(authToken: accessToken).catchError((error) {
+        //   print("error is $error ");
+        //   // toast(error);
+        // });
         setState(() {
           isLoading = false;
         });

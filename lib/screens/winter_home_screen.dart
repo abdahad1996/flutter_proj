@@ -22,6 +22,7 @@ import 'package:aspen_weather/utils/utils.dart';
 import 'package:aspen_weather/utils/views.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class WinterHomeScreen extends StatefulWidget {
   static const routeName = '/Winter-home-screen';
@@ -97,488 +98,536 @@ class _WinterHomeScreenState extends State<WinterHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        key: _scaffoldKey,
-        floatingActionButton: Container(
-          width: 60,
-          height: 60,
-          margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
-          //    decoration: BoxDecoration(
-          //   image: DecorationImage(
-          //     image: AssetImage("assets/images/airport_float_circle.png"),
-          //     fit: BoxFit.fitWidth,
-          //     // alignment: Alignment.topCenter,
-          //   ),
-          // ),
-          child: new FloatingActionButton(
-            backgroundColor: Color.fromRGBO(65, 119, 251, 1),
-            foregroundColor: Colors.white,
-            focusColor: Colors.white,
-            onPressed: () {
-              Navigator.pushNamed(context, AirportScreen.routeName);
-            },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Image.asset(
-                //   'assets/images/airport_float_icon.png',
-                //   fit: BoxFit.cover,
-                //   width: 30,
-                //   height: 30,
-                // ),
-                //           Align(
-                // alignment: Alignment.center,
-                // child: Container(
-                //   // color: Colors.red,
-                //   child: Text(
-                //     "Should be left",
-                //     style: TextStyle(
-                //             fontWeight: FontWeight.bold,
-                //              color: Colors.white,
-                //             fontSize: 8),
-                //   ),
-                // ),
-                //           )
-                AdaptableText(
-                  "aspen airport cam",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 10),
-                ),
-              ],
-            ),
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        drawer: Drawer(
-            child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 50,
-              ),
-              Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Image.asset(
-                      "assets/images/ic_cross_black.png",
-                      width: 20,
-                      height: 20,
-                    ),
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.center,
-                child: ClipRRect(
-                  // clipBehavior: Clip,
-                  borderRadius: BorderRadius.circular(50),
-
-                  // decoration: BoxDecoration(shape: BoxShape.circle),
-                  child: Image.asset(
-                    (weatherType != null)
-                        ? (weatherType == Const.WEATHER_TYPE_SUMMER)
-                            ? 'assets/images/summer.png'
-                            : 'assets/images/winter.png'
-                        : 'assets/images/summer.png',
-                    height: 100,
-                    width: 100,
-                    fit: BoxFit.fill,
-                  ),
-                ),
-              ),
-              GestureDetector(
-                onTap: () {},
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 20, 0, 0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-
-                      Navigator.pushNamed(context, PackagesScreen.routeName);
-                    },
-                    child: Image.asset(
-                      "assets/images/side_menu_package.png",
-                      width: 150,
-                      height: 25,
-                    ),
-                  ),
-                ),
-              ),
-
-              // GestureDetector(
-              //   onTap: () {},
-              //   child: Padding(
-              //     padding: const EdgeInsets.fromLTRB(8, 40, 0, 0),
-              //     child: GestureDetector(
-              //       onTap: () {
-              //         Navigator.pop(context);
-              //         Navigator.pushNamed(context, ThunderScreen.routeName);
-              //       },
-              //       child: Image.asset(
-              //         "assets/images/side_menu_thunder.png",
-              //         width: 200,
-              //         height: 20,
-              //       ),
-              //     ),
+    return WillPopScope(
+        onWillPop: _onWillPop,
+        child: Scaffold(
+            key: _scaffoldKey,
+            floatingActionButton: Container(
+              width: 60,
+              height: 60,
+              margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+              //    decoration: BoxDecoration(
+              //   image: DecorationImage(
+              //     image: AssetImage("assets/images/airport_float_circle.png"),
+              //     fit: BoxFit.fitWidth,
+              //     // alignment: Alignment.topCenter,
               //   ),
               // ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(8, 70, 0, 0),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.pushNamed(context, TermsScreen.routeName);
-                  },
-                  child: Image.asset(
-                    "assets/images/side_menu_terms.png",
-                    width: 240,
-                    height: 25,
-                  ),
+              child: new FloatingActionButton(
+                backgroundColor: Color.fromRGBO(65, 119, 251, 1),
+                foregroundColor: Colors.white,
+                focusColor: Colors.white,
+                onPressed: () {
+                  Navigator.pushNamed(context, AirportScreen.routeName);
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Image.asset(
+                    //   'assets/images/airport_float_icon.png',
+                    //   fit: BoxFit.cover,
+                    //   width: 30,
+                    //   height: 30,
+                    // ),
+                    //           Align(
+                    // alignment: Alignment.center,
+                    // child: Container(
+                    //   // color: Colors.red,
+                    //   child: Text(
+                    //     "Should be left",
+                    //     style: TextStyle(
+                    //             fontWeight: FontWeight.bold,
+                    //              color: Colors.white,
+                    //             fontSize: 8),
+                    //   ),
+                    // ),
+                    //           )
+                    AdaptableText(
+                      "aspen airport cam",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 10),
+                    ),
+                  ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(8, 40, 0, 0),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.pushNamed(context, WhyJoin.routeName);
-                  },
-                  child: Image.asset(
-                    "assets/images/side_menu_join.png",
-                    width: 200,
-                    height: 25,
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            drawer: Drawer(
+                child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 50,
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.pushNamed(context, AboutScreen.routeName);
-                  },
-                  child: Image.asset(
-                    "assets/images/side_menu_about.png",
-                    width: 188,
-                    height: 25,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 70, 0, 0),
-                child: GestureDetector(
-                  onTap: () {},
-                  child: Image.asset(
-                    "assets/images/side_menu_rate.png",
-                    width: 195,
-                    height: 25,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 35, 0, 20),
-                child: GestureDetector(
-                  onTap: () {
-                    logOut(context);
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        LoginScreen.routeName, (Route<dynamic> route) => false);
-                  },
-                  child: Image.asset(
-                    "assets/images/side_menu_sign_out.png",
-                    width: 140,
-                    height: 25,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        )),
-        body: SafeArea(
-          child: Stack(
-            children: [
-              _children[_currentIndex],
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  color: _getColorForTab(_currentIndex),
-                  child: Align(
-                    alignment: FractionalOffset.topLeft,
+                  Align(
+                    alignment: Alignment.topRight,
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                _scaffoldKey.currentState.openDrawer();
-                              },
-                              child: Image.asset(
-                                "assets/images/ic_side_menu.png",
-                                fit: BoxFit.contain,
-                                width: 30,
-                                height: 40,
-                              ),
-                            ),
-                            Expanded(
-                              // alignment: Alignment.center,
-                              child: Center(
-                                child: Container(
-                                  padding: EdgeInsets.fromLTRB(
-                                      (_currentIndex == 1) ? 15 : 0, 0, 0, 0),
-                                  child: _currentIndex == 0
-                                      ? Container()
-                                      : Text(
-                                          getTitleForTabs(_currentIndex),
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Color(0xff222222),
-                                              fontSize: 20),
-                                        ),
-                                ),
-                              ),
-                            ),
-                            // GestureDetector(
-                            //   onTap: () {
-                            //     Navigator.pushNamed(
-                            //         context, ProfileScreen.routeName);
-                            //   },
-                            //   child: Image.asset(
-                            //     "assets/images/ic_profile.png",
-                            //     fit: BoxFit.contain,
-                            //     width: 50,
-                            //     height: 50,
-                            //   ),
-                            // ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                    context, ProfileScreen.routeName);
-                              },
-                              child: Cached_Image(
-                                height: 40,
-                                width: 40,
-                                imageURL: user?.details?.image_url ?? "",
-                                shape: BoxShape.circle,
-                                retry: (status) {
-                                  print("RETRYINGGG");
-                                  Prefs.getUser((User userModel) async {
-                                    setState(() {
-                                      user = userModel;
-                                      // print("user is ${user.details.image_url}");
-                                    });
-                                  });
-                                },
-                              ),
-                            ),
-                          ]),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Image.asset(
+                          "assets/images/ic_cross_black.png",
+                          width: 20,
+                          height: 20,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              Positioned(
-                bottom: 0,
-                child: Align(
-                  alignment: FractionalOffset.bottomLeft,
-                  child: Stack(
-                    children: [
-                      Container(
-                        color: Colors.white,
-                        width: MediaQuery.of(context).size.width,
-                        child: Column(
-                          children: [
-                            Container(
-                              child: GestureDetector(
-                                onTap: () {},
-                                child: Cached_Image(
-                                  fit: BoxFit.fitWidth,
-                                  width: double.infinity,
-                                  imageURL: bannerImageUrl ?? "",
-                                  shape: BoxShape.circle,
-                                  retry: (status) {
-                                    print("RETRYINGGG");
-                                    // Prefs.getUser((User userModel) async {
-                                    //   setState(() {
-                                    //     user = userModel;
-                                    //     // print("user is ${user.details.image_url}");
-                                    //   });
-                                    // });
-                                  },
-                                ),
-                                // Image.network(
-                                //   bannerImageUrl,
-                                //   fit: BoxFit.fitWidth,
-                                //   width: double.infinity,
-                                // ),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {},
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                                child: Container(
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        fit: BoxFit.fill,
-                                        image: AssetImage(
-                                            "assets/images/menu_bottom_bg.png"),
-                                      ),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          flex: 1,
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                _currentIndex = 0;
-                                                isHomeActive = true;
-                                                isRainSnowActive = false;
-                                                isIndicatorActive = false;
-                                                isDiscussionActive = false;
-                                              });
-                                            },
-                                            child: Container(
-                                              margin: EdgeInsets.fromLTRB(
-                                                  0, 10, 0, 0),
-                                              child: isHomeActive
-                                                  ? Image.asset(
-                                                      'assets/images/menu_home_inactive.png',
-                                                      width: 40,
-                                                      height: 40,
-                                                      color: Color(0xFF3D73FF),
-                                                    )
-                                                  : Image.asset(
-                                                      'assets/images/menu_home_inactive.png',
-                                                      width: 40,
-                                                      height: 40,
-                                                    ),
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                _currentIndex = 1;
-                                                isHomeActive = false;
-                                                isRainSnowActive = true;
-                                                isIndicatorActive = false;
-                                                isDiscussionActive = false;
-                                              });
-                                            },
-                                            child: Container(
-                                              margin: EdgeInsets.fromLTRB(
-                                                  0, 10, 0, 0),
-                                              child: isRainSnowActive
-                                                  ? Image.asset(
-                                                      'assets/images/menu_snow_inactive.png',
-                                                      width: 40,
-                                                      height: 40,
-                                                      color: Color(0xFF3D73FF),
-                                                    )
-                                                  : Image.asset(
-                                                      'assets/images/menu_snow_inactive.png',
-                                                      width: 40,
-                                                      height: 40,
-                                                    ),
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: GestureDetector(
-                                            onTap: () {},
-                                            child: Container(),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                _currentIndex = 2;
-                                                isHomeActive = false;
-                                                isRainSnowActive = false;
-                                                isIndicatorActive = true;
-                                                isDiscussionActive = false;
-                                              });
-                                            },
-                                            child: Container(
-                                              margin: EdgeInsets.fromLTRB(
-                                                  0, 10, 0, 0),
-                                              child: isIndicatorActive
-                                                  ? Image.asset(
-                                                      'assets/images/menu_indicator.png',
-                                                      width: 40,
-                                                      height: 40,
-                                                      color: Color(0xFF3D73FF),
-                                                    )
-                                                  : Image.asset(
-                                                      'assets/images/menu_indicator.png',
-                                                      width: 40,
-                                                      height: 40,
-                                                    ),
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                _currentIndex = 3;
-                                                isHomeActive = false;
-                                                isRainSnowActive = false;
-                                                isIndicatorActive = false;
-                                                isDiscussionActive = true;
-                                              });
-                                            },
-                                            child: Container(
-                                              margin: EdgeInsets.fromLTRB(
-                                                  0, 10, 0, 0),
-                                              child: isDiscussionActive
-                                                  ? Image.asset(
-                                                      'assets/images/menu_discussion.png',
-                                                      width: 40,
-                                                      height: 40,
-                                                      color: Color(0xFF3D73FF),
-                                                    )
-                                                  : Image.asset(
-                                                      'assets/images/menu_discussion.png',
-                                                      width: 40,
-                                                      height: 40,
-                                                    ),
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    )),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
+                  Align(
+                    alignment: Alignment.center,
+                    child: ClipRRect(
+                      // clipBehavior: Clip,
+                      borderRadius: BorderRadius.circular(50),
+
+                      // decoration: BoxDecoration(shape: BoxShape.circle),
+                      child: Image.asset(
+                        (weatherType != null)
+                            ? (weatherType == Const.WEATHER_TYPE_SUMMER)
+                                ? 'assets/images/summer.png'
+                                : 'assets/images/winter.png'
+                            : 'assets/images/summer.png',
+                        height: 100,
+                        width: 100,
+                        fit: BoxFit.fill,
+                      ),
+                    ),
                   ),
-                ),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(6, 20, 0, 0),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+
+                          Navigator.pushNamed(
+                              context, PackagesScreen.routeName);
+                        },
+                        child: Image.asset(
+                          "assets/images/side_menu_package.png",
+                          width: 140,
+                          height: 30,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // GestureDetector(
+                  //   onTap: () {},
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.fromLTRB(8, 40, 0, 0),
+                  //     child: GestureDetector(
+                  //       onTap: () {
+                  //         Navigator.pop(context);
+                  //         Navigator.pushNamed(context, ThunderScreen.routeName);
+                  //       },
+                  //       child: Image.asset(
+                  //         "assets/images/side_menu_thunder.png",
+                  //         width: 200,
+                  //         height: 20,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 40, 0, 0),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, TermsScreen.routeName);
+                      },
+                      child: Image.asset(
+                        "assets/images/side_menu_terms.png",
+                        width: 240,
+                        height: 25,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 40, 0, 0),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, WhyJoin.routeName);
+                      },
+                      child: Image.asset(
+                        "assets/images/side_menu_join.png",
+                        width: 200,
+                        height: 25,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, AboutScreen.routeName);
+                      },
+                      child: Image.asset(
+                        "assets/images/side_menu_about.png",
+                        width: 188,
+                        height: 25,
+                      ),
+                    ),
+                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.fromLTRB(0, 70, 0, 0),
+                  //   child: GestureDetector(
+                  //     onTap: () {},
+                  //     child: Image.asset(
+                  //       "assets/images/side_menu_rate.png",
+                  //       width: 195,
+                  //       height: 25,
+                  //     ),
+                  //   ),
+                  // ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 35, 0, 20),
+                    child: GestureDetector(
+                      onTap: () {
+                        logOut(context);
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            LoginScreen.routeName,
+                            (Route<dynamic> route) => false);
+                      },
+                      child: Image.asset(
+                        "assets/images/side_menu_sign_out.png",
+                        width: 140,
+                        height: 25,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            )),
+            body: SafeArea(
+              child: Stack(
+                children: [
+                  _children[_currentIndex],
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      color: _getColorForTab(_currentIndex),
+                      child: Align(
+                        alignment: FractionalOffset.topLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    _scaffoldKey.currentState.openDrawer();
+                                  },
+                                  child: Image.asset(
+                                    "assets/images/ic_side_menu.png",
+                                    fit: BoxFit.contain,
+                                    width: 30,
+                                    height: 40,
+                                  ),
+                                ),
+                                Expanded(
+                                  // alignment: Alignment.center,
+                                  child: Center(
+                                    child: Container(
+                                      padding: EdgeInsets.fromLTRB(
+                                          (_currentIndex == 1) ? 15 : 0,
+                                          0,
+                                          0,
+                                          0),
+                                      child: _currentIndex == 0
+                                          ? Container()
+                                          : Text(
+                                              getTitleForTabs(_currentIndex),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color(0xff222222),
+                                                  fontSize: 20),
+                                            ),
+                                    ),
+                                  ),
+                                ),
+                                // GestureDetector(
+                                //   onTap: () {
+                                //     Navigator.pushNamed(
+                                //         context, ProfileScreen.routeName);
+                                //   },
+                                //   child: Image.asset(
+                                //     "assets/images/ic_profile.png",
+                                //     fit: BoxFit.contain,
+                                //     width: 50,
+                                //     height: 50,
+                                //   ),
+                                // ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                        context, ProfileScreen.routeName);
+                                  },
+                                  child: Cached_Image(
+                                    height: 40,
+                                    width: 40,
+                                    imageURL: user?.details?.image_url ?? "",
+                                    shape: BoxShape.circle,
+                                    retry: (status) {
+                                      print("RETRYINGGG");
+                                      Prefs.getUser((User userModel) async {
+                                        setState(() {
+                                          user = userModel;
+                                          // print("user is ${user.details.image_url}");
+                                        });
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ]),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    child: Align(
+                      alignment: FractionalOffset.bottomLeft,
+                      child: Stack(
+                        children: [
+                          Container(
+                            color: Colors.white,
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              children: [
+                                Container(
+                                  child: GestureDetector(
+                                    onTap: () {},
+                                    child:
+                                        // Cached_Image(
+                                        //   fit: BoxFit.fitWidth,
+                                        //   width: double.infinity,
+                                        //   imageURL: bannerImageUrl ?? "",
+                                        //   shape: BoxShape.circle,
+                                        //   retry: (status) {
+                                        //     print("RETRYINGGG");
+                                        //     // Prefs.getUser((User userModel) async {
+                                        //     //   setState(() {
+                                        //     //     user = userModel;
+                                        //     //     // print("user is ${user.details.image_url}");
+                                        //     //   });
+                                        //     // });
+                                        //   },
+                                        // ),
+                                        Image.network(
+                                      bannerImageUrl,
+                                      fit: BoxFit.fitWidth,
+                                      width: double.infinity,
+                                    ),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {},
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            fit: BoxFit.fill,
+                                            image: AssetImage(
+                                                "assets/images/menu_bottom_bg.png"),
+                                          ),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              flex: 1,
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    _currentIndex = 0;
+                                                    isHomeActive = true;
+                                                    isRainSnowActive = false;
+                                                    isIndicatorActive = false;
+                                                    isDiscussionActive = false;
+                                                  });
+                                                },
+                                                child: Container(
+                                                  margin: EdgeInsets.fromLTRB(
+                                                      0, 10, 0, 0),
+                                                  child: isHomeActive
+                                                      ? Image.asset(
+                                                          'assets/images/menu_home_inactive.png',
+                                                          width: 40,
+                                                          height: 40,
+                                                          color:
+                                                              Color(0xFF3D73FF),
+                                                        )
+                                                      : Image.asset(
+                                                          'assets/images/menu_home_inactive.png',
+                                                          width: 40,
+                                                          height: 40,
+                                                        ),
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 1,
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    _currentIndex = 1;
+                                                    isHomeActive = false;
+                                                    isRainSnowActive = true;
+                                                    isIndicatorActive = false;
+                                                    isDiscussionActive = false;
+                                                  });
+                                                },
+                                                child: Container(
+                                                  margin: EdgeInsets.fromLTRB(
+                                                      0, 10, 0, 0),
+                                                  child: isRainSnowActive
+                                                      ? Image.asset(
+                                                          'assets/images/menu_snow_inactive.png',
+                                                          width: 40,
+                                                          height: 40,
+                                                          color:
+                                                              Color(0xFF3D73FF),
+                                                        )
+                                                      : Image.asset(
+                                                          'assets/images/menu_snow_inactive.png',
+                                                          width: 40,
+                                                          height: 40,
+                                                        ),
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 1,
+                                              child: GestureDetector(
+                                                onTap: () {},
+                                                child: Container(),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 1,
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    _currentIndex = 2;
+                                                    isHomeActive = false;
+                                                    isRainSnowActive = false;
+                                                    isIndicatorActive = true;
+                                                    isDiscussionActive = false;
+                                                  });
+                                                },
+                                                child: Container(
+                                                  margin: EdgeInsets.fromLTRB(
+                                                      0, 10, 0, 0),
+                                                  child: isIndicatorActive
+                                                      ? Image.asset(
+                                                          'assets/images/menu_indicator.png',
+                                                          width: 40,
+                                                          height: 40,
+                                                          color:
+                                                              Color(0xFF3D73FF),
+                                                        )
+                                                      : Image.asset(
+                                                          'assets/images/menu_indicator.png',
+                                                          width: 40,
+                                                          height: 40,
+                                                        ),
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 1,
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    _currentIndex = 3;
+                                                    isHomeActive = false;
+                                                    isRainSnowActive = false;
+                                                    isIndicatorActive = false;
+                                                    isDiscussionActive = true;
+                                                  });
+                                                },
+                                                child: Container(
+                                                  margin: EdgeInsets.fromLTRB(
+                                                      0, 10, 0, 0),
+                                                  child: isDiscussionActive
+                                                      ? Image.asset(
+                                                          'assets/images/menu_discussion.png',
+                                                          width: 40,
+                                                          height: 40,
+                                                          color:
+                                                              Color(0xFF3D73FF),
+                                                        )
+                                                      : Image.asset(
+                                                          'assets/images/menu_discussion.png',
+                                                          width: 40,
+                                                          height: 40,
+                                                        ),
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        )),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )));
+  }
+
+  Future<bool> _onWillPop() async {
+    bool isExit = false;
+
+    await showDialog(
+      context: context,
+      builder: (context) => new AlertDialog(
+        title: new Text("Exit Application"),
+        content: new Text("Are you sure you want to exit the Application?"),
+        actions: <Widget>[
+          new FlatButton(
+            onPressed: () {
+              Navigator.of(context).pop(false);
+              isExit = false;
+            },
+            child: new Text("NO"),
           ),
-        ));
+          new FlatButton(
+            onPressed: () {
+              // Navigator.pop(context);
+              Future.delayed(const Duration(milliseconds: 1000), () {
+                SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+              });
+              isExit = false;
+            },
+            child: new Text("YES"),
+          ),
+        ],
+      ),
+    );
+
+    // }
+    return isExit;
   }
 
   Color _getColorForTab(int index) {
@@ -597,7 +646,7 @@ class _WinterHomeScreenState extends State<WinterHomeScreen> {
     if (index == 0) {
       return '';
     } else if (index == 1) {
-      return 'Aspen Snowmass 6 day snowfall';
+      return 'Aspen Snowmass 7 day snowfall';
     } else if (index == 2) {
       return 'Daily Indicator';
     } else {

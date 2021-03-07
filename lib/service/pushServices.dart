@@ -150,6 +150,7 @@ class PushNotificationService {
           );
           showSimpleNotification(
             ListTile(
+              leading: Image.asset("assets/images/summer.png"),
               title: Text(notification.title),
               subtitle: Text(notification.body),
             ),

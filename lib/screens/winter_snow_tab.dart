@@ -11,6 +11,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
+import 'package:flutter_device_type/flutter_device_type.dart';
+import 'package:intl/intl.dart';
+
 class WinterSnowTabScreen extends StatefulWidget {
   static const routeName = '/winter-tab-snow-screen';
 
@@ -53,10 +56,13 @@ class _WinterSnowTabScreenState extends State<WinterSnowTabScreen> {
       thSat = 'N/A',
       thSun = 'N/A';
 
+  String todayDate = "";
+
   @override
   void initState() {
     super.initState();
-
+    var date = DateTime.now();
+    todayDate = DateFormat('EEEE').format(date);
     Prefs.getWeatherType((String weather) {
       setState(() {
         weatherType = weather;
@@ -87,7 +93,7 @@ class _WinterSnowTabScreenState extends State<WinterSnowTabScreen> {
               Container(
                 color: Colors.white,
                 width: MediaQuery.of(context).size.width,
-                height: 380,
+                height: Device.get().isIphoneX ? 450 : 450,
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
@@ -199,7 +205,9 @@ class _WinterSnowTabScreenState extends State<WinterSnowTabScreen> {
                                   alignment: Alignment.center,
                                   child: Text('Monday',
                                       style: TextStyle(
-                                        color: Colors.black,
+                                        color: (todayDate == "Monday"
+                                            ? Colors.red
+                                            : Colors.black),
                                         fontWeight: FontWeight.bold,
                                         fontSize: 9,
                                       ))),
@@ -287,7 +295,9 @@ class _WinterSnowTabScreenState extends State<WinterSnowTabScreen> {
                                   alignment: Alignment.center,
                                   child: Text('Tuesday',
                                       style: TextStyle(
-                                        color: Colors.black,
+                                        color: (todayDate == "Tuesday"
+                                            ? Colors.red
+                                            : Colors.black),
                                         fontWeight: FontWeight.bold,
                                         fontSize: 9,
                                       ))),
@@ -376,7 +386,9 @@ class _WinterSnowTabScreenState extends State<WinterSnowTabScreen> {
                                   child: Text(
                                     'Wednesday',
                                     style: TextStyle(
-                                      color: Colors.black,
+                                      color: (todayDate == "Wednesday"
+                                          ? Colors.red
+                                          : Colors.black),
                                       fontSize: 9,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -414,8 +426,7 @@ class _WinterSnowTabScreenState extends State<WinterSnowTabScreen> {
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 3,
                                     style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 9),
+                                        color: Colors.black, fontSize: 9),
                                   )),
                             ),
                           ),
@@ -467,7 +478,9 @@ class _WinterSnowTabScreenState extends State<WinterSnowTabScreen> {
                                   alignment: Alignment.center,
                                   child: Text('Thursday',
                                       style: TextStyle(
-                                        color: Colors.black,
+                                        color: (todayDate == "Thursday"
+                                            ? Colors.red
+                                            : Colors.black),
                                         fontSize: 9,
                                         fontWeight: FontWeight.bold,
                                       ))),
@@ -555,7 +568,9 @@ class _WinterSnowTabScreenState extends State<WinterSnowTabScreen> {
                                   alignment: Alignment.center,
                                   child: Text('Friday',
                                       style: TextStyle(
-                                        color: Colors.black,
+                                        color: (todayDate == "Friday"
+                                            ? Colors.red
+                                            : Colors.black),
                                         fontSize: 9,
                                         fontWeight: FontWeight.bold,
                                       ))),
@@ -631,6 +646,7 @@ class _WinterSnowTabScreenState extends State<WinterSnowTabScreen> {
                           ),
                         ],
                       ),
+                      // Container(color: Colors.red,width: 100,height: 100,)
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -643,7 +659,9 @@ class _WinterSnowTabScreenState extends State<WinterSnowTabScreen> {
                                   alignment: Alignment.center,
                                   child: Text('Saturday',
                                       style: TextStyle(
-                                        color: Colors.black,
+                                        color: (todayDate == "Saturday"
+                                            ? Colors.red
+                                            : Colors.black),
                                         fontSize: 9,
                                         fontWeight: FontWeight.bold,
                                       ))),
@@ -731,7 +749,6 @@ class _WinterSnowTabScreenState extends State<WinterSnowTabScreen> {
                                   alignment: Alignment.center,
                                   child: Text('Sunday',
                                       style: TextStyle(
-                                        color: Colors.black,
                                         fontSize: 9,
                                         fontWeight: FontWeight.bold,
                                       ))),

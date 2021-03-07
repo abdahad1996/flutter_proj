@@ -308,7 +308,7 @@ class _SummerHomeTabScreenState extends State<SummerHomeTabScreen> {
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        fit: BoxFit.fill,
+                        fit: BoxFit.cover,
                         image: AssetImage('assets/images/home_slider_bg.png'),
                       ),
                     ),

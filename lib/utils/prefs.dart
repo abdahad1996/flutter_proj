@@ -20,7 +20,7 @@ class Prefs {
     if (string != null)
       return success(string);
     else
-      return success(Const.WEATHER_TYPE_SUMMER); // default - summer weather
+      return success(Const.WEATHER_TYPE_WINTER); // default - summer weather
   }
 
   static Future<void> getWeatherType(Function(String) success) async {
@@ -28,7 +28,7 @@ class Prefs {
     if (string != null)
       return success(string);
     else
-      return success(Const.WEATHER_TYPE_SUMMER); // default - summer weather
+      return success(Const.WEATHER_TYPE_WINTER); // default - summer weather
   }
 
   static Future setUser(User user) {

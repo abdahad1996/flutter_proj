@@ -316,7 +316,7 @@ class _WinterHomeTabScreenState extends State<WinterHomeTabScreen> {
                                 width: MediaQuery.of(context).size.width,
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
-                                    fit: BoxFit.fill,
+                                    fit: BoxFit.fitHeight,
                                     image: AssetImage(
                                         'assets/images/home_slider_bg.png'),
                                   ),

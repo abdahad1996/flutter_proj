@@ -70,7 +70,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         setState(() {
           isLoading = false;
         });
-        toast('No data available!');
+        // toast('No data available!');
       }
     });
   }

@@ -74,7 +74,7 @@ class _SnowCalendarScreenState extends State<SnowCalendarScreen> {
         apiCallForGetForecast(accessToken, selectedDate);
       },
       daysHaveCircularBorder: true,
-      showOnlyCurrentMonthDate: false,
+      showOnlyCurrentMonthDate: true,
       weekendTextStyle: TextStyle(
         color: Colors.red,
       ),

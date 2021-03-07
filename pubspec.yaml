@@ -48,13 +48,14 @@ dependencies:
   overlay_support: ^1.0.5 
 
 dev_dependencies:
+  flutter_launcher_icons: "^0.8.0"
   flutter_test:
     sdk: flutter
 
-#flutter_icons:
-#  image_path: 'assets/images/icon.png'
-#  android: false
-#  ios: true
+flutter_icons:
+ image_path: 'assets/images/summer.png'
+ android: false
+ ios: true
 
 # The following section is specific to Flutter.
 flutter:

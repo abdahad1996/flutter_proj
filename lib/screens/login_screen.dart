@@ -563,6 +563,7 @@ class _LoginScreenState extends State<LoginScreen> {
       "device_type": device_type,
       "expires_at": expires_at,
     });
+    print("form data is ${formData?.fields ?? "nil"}");
     try {
       dynamic response = await Dio().post(
           "https://kanztainer.com/aspen-weather/api/v1/social_login",
@@ -635,13 +636,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
           if (accessToken.token != null) {
             apiCallForFbGoogleSignIn(
-                accessToken.userId,
+                accessToken.token,
                 userFacebookProfile["name"],
                 userFacebookProfile["email"],
                 'facebook',
                 userFacebookProfile["picture"]["data"]["url"],
                 accessToken.userId,
-                accessToken.userId,
+                accessToken.token,
                 date);
           }
         });
@@ -728,7 +729,7 @@ class _LoginScreenState extends State<LoginScreen> {
               email,
               'google',
               picture,
-              googleSignInAuthentication.accessToken,
+              googleSignInAuthentication.idToken,
               googleSignInAuthentication.accessToken,
               date);
         }
