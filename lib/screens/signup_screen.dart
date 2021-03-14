@@ -61,7 +61,7 @@ class _SignupScreenState extends State<SignupScreen> {
     String ImageUrl = 'https://i.stack.imgur.com/Dw6f7.png';
 
     return Scaffold(
-      resizeToAvoidBottomPadding: true,
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.transparent,
       body: Container(
           child: SafeArea(

@@ -59,7 +59,7 @@ class _PayNowScreenState extends State<PayNowScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
         bottomNavigationBar: Container(
           child: Image.network(
             bannerImageUrl,
