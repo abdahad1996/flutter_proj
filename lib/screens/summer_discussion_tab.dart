@@ -102,7 +102,7 @@ class _SummerDiscussTabScreenState extends State<SummerDiscussTabScreen> {
                     : content.isEmpty
                         ? Center(
                             child: Container(
-                              child: Text("no record found"),
+                              child: Text("No record found"),
                             ),
                           )
                         : Html(

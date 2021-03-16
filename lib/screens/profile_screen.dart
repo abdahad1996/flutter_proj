@@ -1,3 +1,4 @@
+import 'package:aspen_weather/models/active_ad_model.dart';
 import 'package:aspen_weather/models/user_model_response.dart';
 import 'package:aspen_weather/screens/Notification_Screen.dart';
 import 'package:aspen_weather/screens/change_password_screen.dart';
@@ -6,6 +7,7 @@ import 'package:aspen_weather/screens/updateProfile_Screen.dart';
 import 'package:aspen_weather/utils/CachedImage.dart';
 import 'package:aspen_weather/utils/const.dart';
 import 'package:aspen_weather/utils/prefs.dart';
+import 'package:aspen_weather/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -20,13 +22,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String weatherType;
   String bannerImageUrl = '';
   User user;
+  AdsModel ad;
   @override
   void initState() {
     super.initState();
 
-    Prefs.getAdsUrl((String adUrl) async {
+    Prefs.getaddModel((AdsModel ad) async {
       setState(() {
-        bannerImageUrl = adUrl;
+        bannerImageUrl = ad.attachment_url;
+        ad = ad;
       });
     });
 
@@ -187,12 +191,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SizedBox(
                   height: 10,
                 ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Image.network(
-                    bannerImageUrl,
-                    height: 80,
-                    width: double.infinity,
+                // Align(
+                //   alignment: Alignment.bottomCenter,
+                //   child: Image.network(
+                //     bannerImageUrl,
+                //     height: 80,
+                //     width: double.infinity,
+                //   ),
+                // ),
+                InkWell(
+                  onTap: () {
+                    launchURL(ad?.url ?? "");
+                  },
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Image.network(
+                      bannerImageUrl,
+                      height: 80,
+                      width: double.infinity,
+                    ),
                   ),
                 ),
               ],

@@ -1,3 +1,4 @@
+import 'package:aspen_weather/models/active_ad_model.dart';
 import 'package:aspen_weather/network/base_model.dart';
 import 'package:aspen_weather/screens/login_screen.dart';
 import 'package:aspen_weather/service/webservices.dart';
@@ -35,9 +36,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   }
 
   void load() async {
-    Prefs.getAdsUrl((String adUrl) async {
+    Prefs.getaddModel((AdsModel ad) async {
       setState(() {
-        bannerImageUrl = adUrl;
+        bannerImageUrl = ad.attachment_url;
       });
     });
 
@@ -109,22 +110,22 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           fontStyle: FontStyle.normal,
                         )),
                   ),
-                   Align(
-                        alignment: Alignment.topRight,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: Image.asset(
-                              '',
-                              width: 25,
-                              height: 20,
-                            ),
-                          ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Image.asset(
+                          '',
+                          width: 25,
+                          height: 20,
                         ),
-                      )
+                      ),
+                    ),
+                  )
                 ],
               ),
               SizedBox(

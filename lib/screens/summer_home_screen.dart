@@ -46,7 +46,7 @@ class _SummerHomeScreenState extends State<SummerHomeScreen> {
   int _currentIndex = 0;
   String accessToken = '';
   String bannerImageUrl = '';
-
+  AdsModel ad;
   final List<Widget> _children = [
     SummerHomeTabScreen(),
     SummerRainTabScreen(),
@@ -84,10 +84,11 @@ class _SummerHomeScreenState extends State<SummerHomeScreen> {
         onSuccess: (BaseModel baseModel) {
           if (baseModel.data != null) {
             AdsModel adModel = AdsModel.fromJson(baseModel.data);
-            Prefs.setAdsUrl(adModel.attachment_url);
+            Prefs.setAdsUrl(adModel);
 
             setState(() {
               this.bannerImageUrl = adModel.attachment_url;
+              ad = adModel;
             });
           }
         },
@@ -391,7 +392,9 @@ class _SummerHomeScreenState extends State<SummerHomeScreen> {
                             children: [
                               Container(
                                 child: GestureDetector(
-                                  onTap: () {},
+                                  onTap: () {
+                                    launchURL(ad?.url ?? "");
+                                  },
                                   child: Image.network(
                                     bannerImageUrl,
                                     fit: BoxFit.fitWidth,
@@ -428,7 +431,7 @@ class _SummerHomeScreenState extends State<SummerHomeScreen> {
                                               },
                                               child: Container(
                                                 margin: EdgeInsets.fromLTRB(
-                                                    0, 10, 0, 0),
+                                                    0, 15, 0, 0),
                                                 child: isHomeActive
                                                     ? Image.asset(
                                                         'assets/images/menu_home_inactive.png',
@@ -459,7 +462,7 @@ class _SummerHomeScreenState extends State<SummerHomeScreen> {
                                               },
                                               child: Container(
                                                 margin: EdgeInsets.fromLTRB(
-                                                    0, 10, 0, 0),
+                                                    0, 15, 0, 0),
                                                 child: isRainSnowActive
                                                     ? Image.asset(
                                                         'assets/images/menu_thunder.png',
@@ -497,7 +500,7 @@ class _SummerHomeScreenState extends State<SummerHomeScreen> {
                                               },
                                               child: Container(
                                                 margin: EdgeInsets.fromLTRB(
-                                                    0, 10, 0, 0),
+                                                    0, 15, 0, 0),
                                                 child: isIndicatorActive
                                                     ? Image.asset(
                                                         'assets/images/menu_indicator.png',
@@ -528,7 +531,7 @@ class _SummerHomeScreenState extends State<SummerHomeScreen> {
                                               },
                                               child: Container(
                                                 margin: EdgeInsets.fromLTRB(
-                                                    0, 10, 0, 0),
+                                                    0, 15, 0, 0),
                                                 child: isDiscussionActive
                                                     ? Image.asset(
                                                         'assets/images/menu_discussion.png',

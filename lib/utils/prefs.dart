@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:aspen_weather/models/active_ad_model.dart';
 import 'package:aspen_weather/models/user_model_response.dart';
 import 'package:aspen_weather/utils/preference_helper.dart';
 
@@ -58,16 +59,28 @@ class Prefs {
       return null;
   }
 
-  static Future setAdsUrl(String accessToken) {
-    return PreferencesHelper.setString(Const.ADVERTISEMENT_URL, accessToken);
+  static Future setAdsUrl(AdsModel adds) {
+    return PreferencesHelper.setString(
+        Const.ADVERTISEMENT_URL, json.encode(adds.toJson()));
   }
 
-  static Future<void> getAdsUrl(Function(String) success) async {
+  // static Future<void> getAdsUrl(Function(String) success) async {
+  //   String string = await PreferencesHelper.getString(Const.ADVERTISEMENT_URL);
+  //   if (string != null)
+  //     return success(string);
+  //   else
+  //     return success('');
+  // }
+  static Future<void> getaddModel(Function(AdsModel) success) async {
     String string = await PreferencesHelper.getString(Const.ADVERTISEMENT_URL);
-    if (string != null)
-      return success(string);
-    else
-      return success('');
+
+    print(string);
+    if (string != null) {
+      var decode = AdsModel.fromJson(json.decode(string));
+
+      return success(decode);
+    } else
+      return success(null);
   }
 
   static Future setFCMToken(String fcmToken) {

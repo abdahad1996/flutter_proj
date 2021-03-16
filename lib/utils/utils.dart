@@ -11,6 +11,7 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'const.dart';
 
@@ -412,4 +413,18 @@ bool hasYearPassed(int year) {
   // The year has passed if the year we are currently is more than card's
   // year
   return fourDigitsYear < now.year;
+}
+
+launchURL(url) async {
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    toast('Could not launch $url');
+  }
+}
+
+extension StringExtension on String {
+  String capitalize() {
+    return "${this[0].toUpperCase()}${this.substring(1)}";
+  }
 }

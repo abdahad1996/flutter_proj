@@ -1,3 +1,4 @@
+import 'package:aspen_weather/models/active_ad_model.dart';
 import 'package:aspen_weather/network/base_model.dart';
 import 'package:aspen_weather/screens/Notification_Screen.dart';
 import 'package:aspen_weather/service/webservices.dart';
@@ -25,6 +26,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   bool passwordNotVisible = true;
 
   String accessToken = '';
+  AdsModel ad;
 
   @override
   void initState() {
@@ -33,9 +35,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   void load() async {
-    Prefs.getAdsUrl((String adUrl) async {
+    Prefs.getaddModel((AdsModel add) async {
       setState(() {
-        bannerImageUrl = adUrl;
+        bannerImageUrl = add.attachment_url;
+        ad = add;
       });
     });
 
@@ -214,10 +217,15 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               ),
             ),
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Image.network(bannerImageUrl,
-                height: 100, width: MediaQuery.of(context).size.width),
+          InkWell(
+            onTap: () {
+              launchURL(ad?.url ?? "");
+            },
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Image.network(bannerImageUrl,
+                  height: 100, width: MediaQuery.of(context).size.width),
+            ),
           ),
         ],
       ),

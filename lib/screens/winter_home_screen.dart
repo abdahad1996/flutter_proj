@@ -44,6 +44,7 @@ class _WinterHomeScreenState extends State<WinterHomeScreen> {
   bool isDiscussionActive = false;
 
   int _currentIndex = 0;
+  AdsModel ad;
 
   final List<Widget> _children = [
     WinterHomeTabScreen(),
@@ -85,9 +86,10 @@ class _WinterHomeScreenState extends State<WinterHomeScreen> {
         onSuccess: (BaseModel baseModel) {
           if (baseModel.data != null) {
             AdsModel adModel = AdsModel.fromJson(baseModel.data);
-            Prefs.setAdsUrl(adModel.attachment_url);
+            Prefs.setAdsUrl(adModel);
             setState(() {
               this.bannerImageUrl = adModel.attachment_url;
+              ad = adModel;
             });
           }
         },
@@ -410,7 +412,9 @@ class _WinterHomeScreenState extends State<WinterHomeScreen> {
                               children: [
                                 Container(
                                   child: GestureDetector(
-                                    onTap: () {},
+                                    onTap: () {
+                                      launchURL(ad?.url ?? "");
+                                    },
                                     child:
                                         // Cached_Image(
                                         //   fit: BoxFit.fitWidth,
@@ -463,7 +467,7 @@ class _WinterHomeScreenState extends State<WinterHomeScreen> {
                                                 },
                                                 child: Container(
                                                   margin: EdgeInsets.fromLTRB(
-                                                      0, 10, 0, 0),
+                                                      0, 20, 0, 0),
                                                   child: isHomeActive
                                                       ? Image.asset(
                                                           'assets/images/menu_home_inactive.png',
@@ -494,7 +498,7 @@ class _WinterHomeScreenState extends State<WinterHomeScreen> {
                                                 },
                                                 child: Container(
                                                   margin: EdgeInsets.fromLTRB(
-                                                      0, 10, 0, 0),
+                                                      0, 20, 0, 0),
                                                   child: isRainSnowActive
                                                       ? Image.asset(
                                                           'assets/images/menu_snow_inactive.png',
@@ -532,7 +536,7 @@ class _WinterHomeScreenState extends State<WinterHomeScreen> {
                                                 },
                                                 child: Container(
                                                   margin: EdgeInsets.fromLTRB(
-                                                      0, 10, 0, 0),
+                                                      0, 20, 0, 0),
                                                   child: isIndicatorActive
                                                       ? Image.asset(
                                                           'assets/images/menu_indicator.png',
@@ -563,7 +567,7 @@ class _WinterHomeScreenState extends State<WinterHomeScreen> {
                                                 },
                                                 child: Container(
                                                   margin: EdgeInsets.fromLTRB(
-                                                      0, 10, 0, 0),
+                                                      0, 20, 0, 0),
                                                   child: isDiscussionActive
                                                       ? Image.asset(
                                                           'assets/images/menu_discussion.png',

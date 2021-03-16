@@ -1,8 +1,10 @@
+import 'package:aspen_weather/models/active_ad_model.dart';
 import 'package:aspen_weather/models/snow_forecast_model.dart';
 import 'package:aspen_weather/network/base_model.dart';
 import 'package:aspen_weather/service/webservices.dart';
 import 'package:aspen_weather/utils/Dialogs.dart';
 import 'package:aspen_weather/utils/prefs.dart';
+import 'package:aspen_weather/utils/utils.dart';
 import 'package:aspen_weather/utils/views.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +33,7 @@ class _SnowCalendarScreenState extends State<SnowCalendarScreen> {
       ajaxDesc = '';
   String accessToken = '';
   String bannerImageUrl = '';
-
+  AdsModel ad;
   @override
   void initState() {
     super.initState();
@@ -39,9 +41,10 @@ class _SnowCalendarScreenState extends State<SnowCalendarScreen> {
     selectedDate =
         "${_currentDate.year.toString()}-${_currentDate.month.toString().padLeft(2, '0')}-${_currentDate.day.toString().padLeft(2, '0')}";
 
-    Prefs.getAdsUrl((String adUrl) async {
+    Prefs.getaddModel((AdsModel ad) async {
       setState(() {
-        bannerImageUrl = adUrl;
+        bannerImageUrl = ad.attachment_url;
+        ad = ad;
       });
     });
 
@@ -550,12 +553,25 @@ class _SnowCalendarScreenState extends State<SnowCalendarScreen> {
               ),
             ),
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Image.network(
-              bannerImageUrl,
-              height: 80,
-              width: double.infinity,
+          // Align(
+          //   alignment: Alignment.bottomCenter,
+          //   child: Image.network(
+          //     bannerImageUrl,
+          //     height: 80,
+          //     width: double.infinity,
+          //   ),
+          // ),
+          InkWell(
+            onTap: () {
+              launchURL(ad?.url ?? "");
+            },
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Image.network(
+                bannerImageUrl,
+                height: 80,
+                width: double.infinity,
+              ),
             ),
           ),
         ],

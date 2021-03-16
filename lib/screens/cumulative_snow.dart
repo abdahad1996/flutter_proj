@@ -1,3 +1,4 @@
+import 'package:aspen_weather/models/active_ad_model.dart';
 import 'package:aspen_weather/models/snow_forecast_model.dart';
 import 'package:aspen_weather/models/snow_forecast_range.dart';
 import 'package:aspen_weather/models/snow_forecast_weekly.dart';
@@ -9,6 +10,7 @@ import 'package:aspen_weather/utils/Dialogs.dart';
 import 'package:aspen_weather/utils/bar_chart_graph.dart';
 import 'package:aspen_weather/utils/bar_chart_model.dart';
 import 'package:aspen_weather/utils/prefs.dart';
+import 'package:aspen_weather/utils/utils.dart';
 import 'package:aspen_weather/utils/views.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -30,16 +32,19 @@ class _CumulativeSnowScreenState extends State<CumulativeSnowScreen> {
   final List<BarChartModel> dataGraph = List();
   String startDate = '2020-12-04', endDate = '2021-01-04';
   String accessToken = '';
+  AdsModel ad;
 
   int butterMilkValue = 0, highLandValue = 0, snowMassValue = 0, ajaxValue = 0;
 
   @override
   void initState() {
     super.initState();
-    endDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
-    Prefs.getAdsUrl((String adUrl) async {
+    // endDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    endDate = DateFormat(DateFormat.NUM_MONTH_DAY).format(DateTime.now());
+    Prefs.getaddModel((AdsModel adds) async {
       setState(() {
-        bannerImageUrl = adUrl;
+        bannerImageUrl = adds.attachment_url;
+        ad = adds;
       });
     });
 
@@ -137,10 +142,15 @@ class _CumulativeSnowScreenState extends State<CumulativeSnowScreen> {
               ]),
             ),
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Image.network(bannerImageUrl,
-                height: 100, width: MediaQuery.of(context).size.width),
+          InkWell(
+            onTap: () {
+              launchURL(ad?.url ?? "");
+            },
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Image.network(bannerImageUrl,
+                  height: 100, width: MediaQuery.of(context).size.width),
+            ),
           ),
         ],
       ),

@@ -1,3 +1,4 @@
+import 'package:aspen_weather/models/active_ad_model.dart';
 import 'package:aspen_weather/models/storm_list_model.dart';
 import 'package:aspen_weather/models/user_model_response.dart';
 import 'package:aspen_weather/network/base_model.dart';
@@ -5,6 +6,7 @@ import 'package:aspen_weather/service/webservices.dart';
 import 'package:aspen_weather/utils/bar_chart_graph.dart';
 import 'package:aspen_weather/utils/bar_chart_model.dart';
 import 'package:aspen_weather/utils/prefs.dart';
+import 'package:aspen_weather/utils/utils.dart';
 import 'package:aspen_weather/utils/views.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,16 +27,17 @@ class _ThunderScreenState extends State<ThunderScreen> {
   final List<BarChartModel> dataGraph = List();
   String bannerImageUrl = '';
   bool isLoading = false;
-
+  AdsModel ad;
   @override
   void initState() {
     super.initState();
     print("thunder screen is $isLoading");
     isLoading = true;
 
-    Prefs.getAdsUrl((String adUrl) async {
+    Prefs.getaddModel((AdsModel ad) async {
       setState(() {
-        bannerImageUrl = adUrl;
+        bannerImageUrl = ad.attachment_url;
+        ad = ad;
       });
     });
 
@@ -172,12 +175,25 @@ class _ThunderScreenState extends State<ThunderScreen> {
                         ],
                       ),
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Image.network(
-              bannerImageUrl,
-              height: 80,
-              width: double.infinity,
+          // Align(
+          //   alignment: Alignment.bottomCenter,
+          //   child: Image.network(
+          //     bannerImageUrl,
+          //     height: 80,
+          //     width: double.infinity,
+          //   ),
+          // ),
+          InkWell(
+            onTap: () {
+              launchURL(ad?.url ?? "");
+            },
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Image.network(
+                bannerImageUrl,
+                height: 80,
+                width: double.infinity,
+              ),
             ),
           ),
         ],

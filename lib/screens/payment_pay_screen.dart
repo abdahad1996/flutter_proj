@@ -1,3 +1,4 @@
+import 'package:aspen_weather/models/active_ad_model.dart';
 import 'package:aspen_weather/models/user_model_response.dart';
 import 'package:aspen_weather/network/base_model.dart';
 import 'package:aspen_weather/screens/summer_home_screen.dart';
@@ -31,14 +32,15 @@ class _PayNowScreenState extends State<PayNowScreen> {
   final FocusNode cardExpiryFocus = FocusNode();
   final FocusNode cardCVCFocus = FocusNode();
   String bannerImageUrl = '';
-
+  AdsModel ad;
   @override
   void initState() {
     super.initState();
 
-    Prefs.getAdsUrl((String adUrl) async {
+    Prefs.getaddModel((AdsModel add) async {
       setState(() {
-        bannerImageUrl = adUrl;
+        bannerImageUrl = add.attachment_url;
+        ad = add;
       });
     });
 
@@ -60,11 +62,16 @@ class _PayNowScreenState extends State<PayNowScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        bottomNavigationBar: Container(
-          child: Image.network(
-            bannerImageUrl,
-            height: 80,
-            width: double.infinity,
+        bottomNavigationBar: InkWell(
+          onTap: () {
+            launchURL(ad?.url);
+          },
+          child: Container(
+            child: Image.network(
+              bannerImageUrl,
+              height: 80,
+              width: double.infinity,
+            ),
           ),
         ),
         body: SafeArea(

@@ -1,3 +1,4 @@
+import 'package:aspen_weather/models/active_ad_model.dart';
 import 'package:aspen_weather/models/packages_list_model.dart';
 import 'package:aspen_weather/models/user_model_response.dart';
 import 'package:aspen_weather/network/base_model.dart';
@@ -8,6 +9,7 @@ import 'package:aspen_weather/service/webservices.dart';
 import 'package:aspen_weather/utils/Dialogs.dart';
 import 'package:aspen_weather/utils/const.dart';
 import 'package:aspen_weather/utils/prefs.dart';
+import 'package:aspen_weather/utils/utils.dart';
 import 'package:aspen_weather/utils/views.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +29,7 @@ class _PackagesScreenState extends State<PackagesScreen> {
   String bannerImageUrl = '';
   String existingPackageId = '';
   dynamic accessTok = "";
+  AdsModel ad;
   @override
   void initState() {
     super.initState();
@@ -40,9 +43,10 @@ class _PackagesScreenState extends State<PackagesScreen> {
 
   void load() async {
     // accessTok = Prefs.getAccessTokenAwait();
-    Prefs.getAdsUrl((String adUrl) async {
+    Prefs.getaddModel((AdsModel add) async {
       setState(() {
-        bannerImageUrl = adUrl;
+        bannerImageUrl = add.attachment_url;
+        ad = add;
       });
     });
 
@@ -385,12 +389,17 @@ class _PackagesScreenState extends State<PackagesScreen> {
               ),
             ),
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Image.network(
-              bannerImageUrl,
-              height: 80,
-              width: double.infinity,
+          InkWell(
+            onTap: () {
+              launchURL(ad?.url ?? "");
+            },
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Image.network(
+                bannerImageUrl,
+                height: 80,
+                width: double.infinity,
+              ),
             ),
           ),
         ],

@@ -1,9 +1,13 @@
+import 'package:aspen_weather/models/active_ad_model.dart';
 import 'package:aspen_weather/models/content_model.dart';
 import 'package:aspen_weather/network/base_model.dart';
 import 'package:aspen_weather/service/webservices.dart';
 import 'package:aspen_weather/utils/prefs.dart';
+import 'package:aspen_weather/utils/utils.dart';
+import 'package:aspen_weather/utils/views.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AboutScreen extends StatefulWidget {
   static const routeName = '/about-screen';
@@ -18,6 +22,7 @@ class _AboutScreenState extends State<AboutScreen> {
   String content = '';
   String bannerImageUrl = '';
   bool isLoading = false;
+  AdsModel add;
 
   @override
   void initState() {
@@ -27,9 +32,10 @@ class _AboutScreenState extends State<AboutScreen> {
 
   void load() async {
     isLoading = true;
-    Prefs.getAdsUrl((String adUrl) async {
+    Prefs.getaddModel((AdsModel ads) async {
       setState(() {
-        bannerImageUrl = adUrl;
+        bannerImageUrl = ads.attachment_url;
+        add = ads;
       });
     });
 
@@ -160,12 +166,17 @@ class _AboutScreenState extends State<AboutScreen> {
                         ),
                       ),
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Image.network(
-              bannerImageUrl,
-              height: 80,
-              width: double.infinity,
+          InkWell(
+            onTap: () {
+              launchURL(add?.url ?? "");
+            },
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Image.network(
+                bannerImageUrl,
+                height: 80,
+                width: double.infinity,
+              ),
             ),
           ),
         ],

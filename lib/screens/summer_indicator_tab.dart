@@ -1,4 +1,5 @@
 import 'package:aspen_weather/main.dart';
+import 'package:aspen_weather/models/active_ad_model.dart';
 import 'package:aspen_weather/models/indicator_model.dart';
 import 'package:aspen_weather/models/user_model_response.dart';
 import 'package:aspen_weather/network/base_model.dart';
@@ -28,7 +29,7 @@ class _SummerIndicatorTabScreenState extends State<SummerIndicatorTabScreen>
   TabController _tabController;
   bool isLoading = false;
   final List<DailyIndicatorModel> indicators = List();
-
+  AdsModel ad;
   @override
   void load() async {
     Prefs.getWeatherType((String weather) {
@@ -86,10 +87,11 @@ class _SummerIndicatorTabScreenState extends State<SummerIndicatorTabScreen>
   void initState() {
     super.initState();
 
-    Prefs.getAdsUrl((String adUrl) async {
+    Prefs.getaddModel((AdsModel ad) async {
       if (mounted) {
         setState(() {
-          this.adUrl = adUrl;
+          this.adUrl = ad.attachment_url;
+          ad = ad;
         });
       }
     });
@@ -133,7 +135,7 @@ class _SummerIndicatorTabScreenState extends State<SummerIndicatorTabScreen>
         ? Center(child: CupertinoActivityIndicator())
         : (indicators.length == 0)
             ? Center(
-                child: Text("no records found"),
+                child: Text("No records found"),
               )
             : Scaffold(
                 appBar: PreferredSize(
@@ -268,7 +270,7 @@ class _SummerIndicatorTabScreenState extends State<SummerIndicatorTabScreen>
                           annotations: <GaugeAnnotation>[
                             GaugeAnnotation(
                                 widget: Container(
-                                    child: Text(model.selected,
+                                    child: Text(capitalize(model.selected),
                                         style: TextStyle(
                                             fontSize: 25,
                                             fontWeight: FontWeight.bold))),
@@ -359,7 +361,7 @@ class _SummerIndicatorTabScreenState extends State<SummerIndicatorTabScreen>
                     width: 20,
                   ),
                   Text(
-                    model.selected,
+                    capitalize(model.selected),
                     style: TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
@@ -375,10 +377,10 @@ class _SummerIndicatorTabScreenState extends State<SummerIndicatorTabScreen>
                 // margin: EdgeInsets.all(10),
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 child: Text((model.selected == "low")
-                    ? model.low
+                    ? capitalize(model.low)
                     : (model.selected == "medium")
-                        ? model.medium
-                        : model.high),
+                        ? capitalize(model.medium)
+                        : capitalize(model.high)),
               )
               // Text(
               //     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean quis sapien orci. Nullam ut ligula sed ipsum feugiat iaculis. Cras a facilisis felis, ut facilisis dolor. Praesent lacinia sed nisl at volutpat. Morbi eu scelerisque leo, quis consequat dui. Maecenas eu lacinia ante. Quisque nec metus mollis, facilisis velit non, imperdiet quam. Nullam vitae nunc pellentesque, sollicitudin quam quis, aliquet nunc. Proin tristique, metus sit amet malesuada rutrum, neque sapien finibus erat,Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean quis sapien orci. Nullam ut ligula sed ipsum feugiat iaculis. Cras a facilisis felis, ut facilisis dolor. Praesent lacinia sed nisl at volutpat. Morbi eu scelerisque leo, quis consequat dui. Maecenas eu lacinia ante. Quisque nec metus mollis, facilisis velit non, imperdiet quam. Nullam vitae nunc pellentesque, sollicitudin quam quis, aliquet nunc. Proin tristique, metus sit amet malesuada rutrum, neque sapien finibus erat, eu bibendum turpis sem et neque. Ut vel tortor ipsum. Etiam et justo dui. Curabitur eleifend ex eros, eu vehicula nibh cursus non. Ut scelerisque id ante ut suscipit. Nulla vestibulum magna eu lacus bibendum, vitae bibendum diam blandit. Quisque rhoncus tempus metus, ac aliquam diam cursus maximus. Sed commodo mi nisl, sit amet vestibulum ipsum pharetra non. eu bibendum turpis sem et neque. Ut vel tortor ipsum. Etiam et justo dui. Curabitur eleifend ex eros, eu vehicula nibh cursus non. Ut scelerisque id ante ut suscipit. Nulla vestibulum magna eu lacus bibendum, vitae bibendum diam blandit. Quisque rhoncus tempus metus, ac aliquam diam cursus maximus. Sed commodo mi nisl, sit amet vestibulum ipsum pharetra non.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean quis sapien orci. Nullam ut ligula sed ipsum feugiat iaculis. Cras a facilisis felis, ut facilisis dolor. Praesent lacinia sed nisl at volutpat. Morbi eu scelerisque leo, quis consequat dui. Maecenas eu lacinia ante. Quisque nec metus mollis, facilisis velit non, imperdiet quam. Nullam vitae nunc pellentesque, sollicitudin quam quis, aliquet nunc. Proin tristique, metus sit amet malesuada rutrum, neque sapien finibus erat, eu bibendum turpis sem et neque. Ut vel tortor ipsum. Etiam et justo dui. Curabitur eleifend ex eros, eu vehicula nibh cursus non. Ut scelerisque id ante ut suscipit. Nulla vestibulum magna eu lacus bibendum, vitae bibendum diam blandit. Quisque rhoncus tempus metus, ac aliquam diam cursus maximus. Sed commodo mi nisl, sit amet vestibulum ipsum pharetra non."))
@@ -469,3 +471,10 @@ class _SummerIndicatorTabScreenState extends State<SummerIndicatorTabScreen>
     );
   }
 }
+
+// extension StringExtension on String {
+//   String capitalize() {
+//     return "${this[0].toUpperCase()}${this.substring(1)}";
+//   }
+// }
+String capitalize(String s) => s[0].toUpperCase() + s.substring(1);

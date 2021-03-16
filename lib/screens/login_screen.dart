@@ -396,7 +396,7 @@ class _LoginScreenState extends State<LoginScreen> {
         onSuccess: (BaseModel baseModel) {
           if (baseModel.data != null) {
             AdsModel adModel = AdsModel.fromJson(baseModel.data);
-            Prefs.setAdsUrl(adModel.attachment_url);
+            Prefs.setAdsUrl(adModel);
             if (user.payment_status != null) {
               Prefs.savePackageId(user.payment_status.package.id.toString());
             }

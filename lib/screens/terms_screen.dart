@@ -1,7 +1,9 @@
+import 'package:aspen_weather/models/active_ad_model.dart';
 import 'package:aspen_weather/models/content_model.dart';
 import 'package:aspen_weather/network/base_model.dart';
 import 'package:aspen_weather/service/webservices.dart';
 import 'package:aspen_weather/utils/prefs.dart';
+import 'package:aspen_weather/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +21,7 @@ class _TermsScreenState extends State<TermsScreen> {
   String bannerImageUrl = '';
   bool isLoading = false;
   double height;
+  AdsModel ad;
   @override
   void initState() {
     super.initState();
@@ -27,9 +30,10 @@ class _TermsScreenState extends State<TermsScreen> {
 
   void load() async {
     isLoading = true;
-    Prefs.getAdsUrl((String adUrl) async {
+    Prefs.getaddModel((AdsModel ad) async {
       setState(() {
-        bannerImageUrl = adUrl;
+        bannerImageUrl = ad.attachment_url;
+        ad = ad;
       });
     });
 
@@ -159,12 +163,17 @@ class _TermsScreenState extends State<TermsScreen> {
           ),
           isLoading
               ? Container()
-              : Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Image.network(
-                    bannerImageUrl,
-                    height: 80,
-                    width: double.infinity,
+              : InkWell(
+                  onTap: () {
+                    launchURL(ad?.url ?? "");
+                  },
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Image.network(
+                      bannerImageUrl,
+                      height: 80,
+                      width: double.infinity,
+                    ),
                   ),
                 ),
         ],
