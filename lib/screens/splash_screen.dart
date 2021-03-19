@@ -1,3 +1,4 @@
+import 'package:aspen_weather/models/packages_list_model.dart';
 import 'package:aspen_weather/models/themeModel.dart';
 import 'package:aspen_weather/models/user_model_response.dart';
 import 'package:aspen_weather/network/base_model.dart';
@@ -27,7 +28,8 @@ class _SplashScreenState extends State<SplashScreen> {
   bool isLoading = false;
   String themeTypeUrl;
   String weatherType;
-
+  String existingPackageId;
+  List<PackagesListModel> packagesList = List();
   User user;
 
   @override
@@ -72,6 +74,9 @@ class _SplashScreenState extends State<SplashScreen> {
         });
         return;
       }
+      //check for validity of package
+
+      //get theme
       BaseModel baseModel =
           await getTheme(authToken: accessToken).catchError((error) {
         print("error is $error ");
@@ -102,6 +107,34 @@ class _SplashScreenState extends State<SplashScreen> {
         // toast('No data available!');
       }
     });
+  }
+
+  Future checkForPackageExpiry(String accessToken) async {
+    Prefs.getPackageId((String packageId) async {
+      existingPackageId = packageId;
+      print('existingPackageId ${existingPackageId}');
+    });
+
+    print(accessToken);
+
+    //check if current pacakge id Exist then show selected pacakge
+
+    BaseModel baseModel =
+        await getPackagesScreen(authToken: accessToken).catchError((error) {
+      print(error);
+    });
+
+    if (baseModel != null && baseModel.data != null) {
+      List list = baseModel.data as List;
+      if (list.length == 0) {
+        // toast('No records found');
+      } else {
+        for (var value in list) {
+          PackagesListModel model = PackagesListModel.fromJson(value);
+          packagesList.add(model);
+        }
+      }
+    }
   }
 
   @override

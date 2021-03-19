@@ -15,6 +15,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_device_type/flutter_device_type.dart';
 
+import 'login_screen.dart';
+
 class PackagesScreen extends StatefulWidget {
   static const routeName = '/packages-screen';
 
@@ -104,23 +106,25 @@ class _PackagesScreenState extends State<PackagesScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Align(
-                alignment: Alignment.topLeft,
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+                alignment: Alignment.topRight,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
                     child: Image.asset(
-                      'assets/images/back_arrow.png',
-                      width: 20,
-                      height: 15,
+                      existingPackageId?.isNotEmpty ?? false
+                          ? 'assets/images/back_arrow.png'
+                          : "",
+                      width: 25,
+                      height: 20,
                     ),
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.center,
+              Container(
+                // alignment: Alignment.centerLeft,
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                   child: Text("Packages",
@@ -130,22 +134,54 @@ class _PackagesScreenState extends State<PackagesScreen> {
                           fontSize: 20)),
                 ),
               ),
-              Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                  child: GestureDetector(
-                    onTap: () {
+              Container(
+                // alignment: Alignment.topLeft,
+                child: GestureDetector(
+                  //logout
+                  onTap: () {
+                    if (existingPackageId?.isNotEmpty ?? false) {
                       Navigator.pop(context);
-                    },
-                    child: Image.asset(
-                      '',
-                      width: 25,
-                      height: 20,
-                    ),
-                  ),
+                    } else {
+                      Prefs.setAccessToken(null);
+                      Prefs.removeUser();
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          LoginScreen.routeName,
+                          (Route<dynamic> route) => false);
+                    }
+                  },
+                  child: Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                      child: (existingPackageId?.isEmpty ?? true)
+                          ? Text("Logout",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xff042C5C),
+                                  fontSize: 15))
+                          : Container()
+                      // Image.asset(
+                      //     'assets/images/back_arrow.png',
+                      //     width: 20,
+                      //     height: 15,
+                      //   ),
+                      ),
                 ),
-              )
+              ),
+              // Align(
+              //   alignment: Alignment.topRight,
+              //   child: Padding(
+              //     padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+              //     child: GestureDetector(
+              //       onTap: () {
+              //         Navigator.pop(context);
+              //       },
+              //       child: Image.asset(
+              //         '',
+              //         width: 25,
+              //         height: 20,
+              //       ),
+              //     ),
+              //   ),
+              // )
             ],
           ),
           Expanded(
