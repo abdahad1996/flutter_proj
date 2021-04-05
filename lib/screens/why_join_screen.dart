@@ -2,8 +2,10 @@ import 'package:aspen_weather/models/active_ad_model.dart';
 import 'package:aspen_weather/models/content_model.dart';
 import 'package:aspen_weather/network/base_model.dart';
 import 'package:aspen_weather/service/webservices.dart';
+import 'package:aspen_weather/utils/const.dart';
 import 'package:aspen_weather/utils/prefs.dart';
 import 'package:aspen_weather/utils/utils.dart';
+import 'package:aspen_weather/utils/views.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +17,10 @@ class WhyJoin extends StatefulWidget {
 }
 
 class _WhyJoinState extends State<WhyJoin> {
+  PageController _controller = PageController(
+    initialPage: 0,
+  );
+  List<AdsModel> addsList = List();
   String weatherType;
   String title = '';
   String content = '';
@@ -29,12 +35,12 @@ class _WhyJoinState extends State<WhyJoin> {
 
   void load() async {
     isLoading = true;
-    Prefs.getaddModel((AdsModel ad) async {
-      setState(() {
-        bannerImageUrl = ad.attachment_url;
-        ad = ad;
-      });
-    });
+    // Prefs.getaddModel((AdsModel ad) async {
+    //   setState(() {
+    //     bannerImageUrl = ad.attachment_url;
+    //     ad = ad;
+    //   });
+    // });
 
     Prefs.getWeatherType((String weather) {
       setState(() {
@@ -43,6 +49,7 @@ class _WhyJoinState extends State<WhyJoin> {
     });
 
     Prefs.getAccessToken((String accessToken) async {
+      apiCallForAd(accessToken);
       BaseModel baseModel =
           await getContentPages(authToken: accessToken, pageId: '3')
               .catchError((error) {
@@ -64,6 +71,47 @@ class _WhyJoinState extends State<WhyJoin> {
         }
       });
     });
+  }
+
+  Widget advertisement(model) {
+    return Container(
+      color: Colors.grey,
+      child: GestureDetector(
+        onTap: () {
+          launchURL(model?.url ?? "");
+        },
+        child: Image.network(
+          model?.attachment_url ?? "",
+          fit: BoxFit.fill,
+          width: double.infinity,
+        ),
+      ),
+    );
+  }
+
+  Future<void> apiCallForAd(String accessToken) async {
+    getAd(
+        authToken: accessToken,
+        onSuccess: (BaseModel baseModel) {
+          if (baseModel.data != null) {
+            List<AdsModel> list = List();
+            for (var value in baseModel.data) {
+              AdsModel model = AdsModel.fromJson(value);
+              list.add(model);
+            }
+            Prefs.setListData(Const.addsFromPref, list);
+            print("ads data is $list");
+            setState(() {
+              addsList = list;
+
+              // this.bannerImageUrl = adModel.attachment_url;
+              // ad = adModel;
+            });
+          }
+        },
+        onError: (String error, BaseModel baseModel) {
+          toast(error);
+        });
   }
 
   @override
@@ -140,24 +188,26 @@ class _WhyJoinState extends State<WhyJoin> {
                           width: double.infinity,
                           height: double.infinity,
                           alignment: Alignment.topLeft,
-                          child: Column(children: [
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(title,
+                          child: SingleChildScrollView(
+                            child: Column(children: [
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(title,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xff222222),
+                                        fontSize: 16)),
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Text(content,
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.normal,
                                       color: Color(0xff222222),
-                                      fontSize: 16)),
-                            ),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            Text(content,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.normal,
-                                    color: Color(0xff222222),
-                                    fontSize: 14))
-                          ]),
+                                      fontSize: 14))
+                            ]),
+                          ),
                         ),
                       ),
           ),
@@ -169,19 +219,32 @@ class _WhyJoinState extends State<WhyJoin> {
           //     width: double.infinity,
           //   ),
           // ),
-          InkWell(
-            onTap: () {
-              launchURL(ad?.url ?? "");
-            },
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Image.network(
-                bannerImageUrl,
-                height: 80,
-                width: double.infinity,
-              ),
-            ),
-          ),
+          // InkWell(
+          //   onTap: () {
+          //     launchURL(ad?.url ?? "");
+          //   },
+          //   child: Align(
+          //     alignment: Alignment.bottomCenter,
+          //     child: Image.network(
+          //       bannerImageUrl,
+          //       height: 80,
+          //       width: double.infinity,
+          //     ),
+          //   ),
+          // ),
+          addsList.isEmpty
+              ? Container()
+              : Container(
+                  height: 75,
+                  child: PageView(
+                    controller: _controller,
+                    children: addsList
+                        .map(
+                          (model) => advertisement(model),
+                        )
+                        .toList(),
+                  ),
+                ),
         ],
       ),
     )));

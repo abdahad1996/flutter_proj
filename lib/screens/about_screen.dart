@@ -17,6 +17,11 @@ class AboutScreen extends StatefulWidget {
 }
 
 class _AboutScreenState extends State<AboutScreen> {
+  PageController _controller = PageController(
+    initialPage: 0,
+  );
+  List<AdsModel> addsList = List();
+
   String weatherType;
   String title = '';
   String content = '';
@@ -32,12 +37,12 @@ class _AboutScreenState extends State<AboutScreen> {
 
   void load() async {
     isLoading = true;
-    Prefs.getaddModel((AdsModel ads) async {
-      setState(() {
-        bannerImageUrl = ads.attachment_url;
-        add = ads;
-      });
-    });
+    // Prefs.getaddModel((AdsModel ads) async {
+    //   setState(() {
+    //     bannerImageUrl = ads.attachment_url;
+    //     add = ads;
+    //   });
+    // });
 
     Prefs.getWeatherType((String weather) {
       setState(() {
@@ -46,6 +51,7 @@ class _AboutScreenState extends State<AboutScreen> {
     });
 
     Prefs.getAccessToken((String accessToken) async {
+      apiCallForAd(accessToken);
       BaseModel baseModel =
           await getContentPages(authToken: accessToken, pageId: '2')
               .catchError((error) {
@@ -67,6 +73,47 @@ class _AboutScreenState extends State<AboutScreen> {
         }
       });
     });
+  }
+
+  Widget advertisement(model) {
+    return Container(
+      color: Colors.grey,
+      child: GestureDetector(
+        onTap: () {
+          launchURL(model?.url ?? "");
+        },
+        child: Image.network(
+          model?.attachment_url ?? "",
+          fit: BoxFit.fill,
+          width: double.infinity,
+        ),
+      ),
+    );
+  }
+
+  Future<void> apiCallForAd(String accessToken) async {
+    getAd(
+        authToken: accessToken,
+        onSuccess: (BaseModel baseModel) {
+          if (baseModel.data != null) {
+            List<AdsModel> list = List();
+            for (var value in baseModel.data) {
+              AdsModel model = AdsModel.fromJson(value);
+              list.add(model);
+            }
+            // Prefs.setListData(Const.addsFromPref, list);
+            // print("ads data is $list");
+            setState(() {
+              addsList = list;
+
+              // this.bannerImageUrl = adModel.attachment_url;
+              // ad = adModel;
+            });
+          }
+        },
+        onError: (String error, BaseModel baseModel) {
+          toast(error);
+        });
   }
 
   @override
@@ -166,19 +213,32 @@ class _AboutScreenState extends State<AboutScreen> {
                         ),
                       ),
           ),
-          InkWell(
-            onTap: () {
-              launchURL(add?.url ?? "");
-            },
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Image.network(
-                bannerImageUrl,
-                height: 80,
-                width: double.infinity,
-              ),
-            ),
-          ),
+          // InkWell(
+          //   onTap: () {
+          //     launchURL(add?.url ?? "");
+          //   },
+          //   child: Align(
+          //     alignment: Alignment.bottomCenter,
+          //     child: Image.network(
+          //       bannerImageUrl,
+          //       height: 80,
+          //       width: double.infinity,
+          //     ),
+          //   ),
+          // ),
+          addsList.isEmpty
+              ? Container()
+              : Container(
+                  height: 75,
+                  child: PageView(
+                    controller: _controller,
+                    children: addsList
+                        .map(
+                          (model) => advertisement(model),
+                        )
+                        .toList(),
+                  ),
+                ),
         ],
       ),
     )));

@@ -64,6 +64,17 @@ class Prefs {
         Const.ADVERTISEMENT_URL, json.encode(adds.toJson()));
   }
 
+  static setListData(String key, List<AdsModel> value) async {
+    List<String> personsEncoded =
+        value.map((person) => jsonEncode(person.toJson())).toList();
+    PreferencesHelper.setList(key, personsEncoded);
+  }
+
+  static Future<List<AdsModel>> getListData(String key) async {
+    final value = await PreferencesHelper.getList(key);
+    return value.map((model) => AdsModel.fromJson(model)).toList();
+  }
+
   // static Future<void> getAdsUrl(Function(String) success) async {
   //   String string = await PreferencesHelper.getString(Const.ADVERTISEMENT_URL);
   //   if (string != null)

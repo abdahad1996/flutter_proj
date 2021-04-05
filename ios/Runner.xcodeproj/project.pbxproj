@@ -380,7 +380,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Runner/Aspen Weather.entitlements";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6SVEFB85Y3;
+				DEVELOPMENT_TEAM = GXL72LV45C;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -396,8 +396,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 0.0.34;
-				PRODUCT_BUNDLE_IDENTIFIER = com.summit.aspenweathertestt;
+				MARKETING_VERSION = 0.0.43;
+				PRODUCT_BUNDLE_IDENTIFIER = com.summit.aspenweathertest;
 				PRODUCT_NAME = "Aspen Weather";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -521,7 +521,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Runner/Aspen Weather.entitlements";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6SVEFB85Y3;
+				DEVELOPMENT_TEAM = GXL72LV45C;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -537,8 +537,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 0.0.34;
-				PRODUCT_BUNDLE_IDENTIFIER = com.summit.aspenweathertestt;
+				MARKETING_VERSION = 0.0.43;
+				PRODUCT_BUNDLE_IDENTIFIER = com.summit.aspenweathertest;
 				PRODUCT_NAME = "Aspen Weather";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -556,7 +556,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Runner/Aspen Weather.entitlements";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6SVEFB85Y3;
+				DEVELOPMENT_TEAM = GXL72LV45C;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -572,8 +572,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 0.0.34;
-				PRODUCT_BUNDLE_IDENTIFIER = com.summit.aspenweathertestt;
+				MARKETING_VERSION = 0.0.43;
+				PRODUCT_BUNDLE_IDENTIFIER = com.summit.aspenweathertest;
 				PRODUCT_NAME = "Aspen Weather";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;

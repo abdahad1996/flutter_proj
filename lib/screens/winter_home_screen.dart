@@ -1,4 +1,5 @@
 import 'package:aspen_weather/models/active_ad_model.dart';
+import 'package:aspen_weather/models/packages_list_model.dart';
 import 'package:aspen_weather/models/user_model_response.dart';
 import 'package:aspen_weather/network/base_model.dart';
 import 'package:aspen_weather/screens/Winter_home_tab.dart';
@@ -32,6 +33,10 @@ class WinterHomeScreen extends StatefulWidget {
 }
 
 class _WinterHomeScreenState extends State<WinterHomeScreen> {
+  PageController _controller = PageController(
+    initialPage: 0,
+  );
+
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   String weatherType;
@@ -56,6 +61,9 @@ class _WinterHomeScreenState extends State<WinterHomeScreen> {
   String accessToken = '';
   String bannerImageUrl = '';
 
+  String existingPackageId;
+  List<PackagesListModel> packagesList = List();
+  List<AdsModel> addsList = List();
   @override
   void initState() {
     super.initState();
@@ -64,6 +72,7 @@ class _WinterHomeScreenState extends State<WinterHomeScreen> {
       print(accessToken);
       this.accessToken = accessToken;
       apiCallForAd(accessToken);
+      // checkForPackageExpiry(accessToken);
     });
 
     Prefs.getWeatherType((String weather) {
@@ -85,17 +94,77 @@ class _WinterHomeScreenState extends State<WinterHomeScreen> {
         authToken: accessToken,
         onSuccess: (BaseModel baseModel) {
           if (baseModel.data != null) {
-            AdsModel adModel = AdsModel.fromJson(baseModel.data);
-            Prefs.setAdsUrl(adModel);
+            List<AdsModel> list = List();
+            for (var value in baseModel.data) {
+              AdsModel model = AdsModel.fromJson(value);
+              list.add(model);
+            }
+            Prefs.setListData(Const.addsFromPref, list);
+            print("ads data is $list");
             setState(() {
-              this.bannerImageUrl = adModel.attachment_url;
-              ad = adModel;
+              addsList = list;
+
+              // this.bannerImageUrl = adModel.attachment_url;
+              // ad = adModel;
             });
           }
         },
         onError: (String error, BaseModel baseModel) {
           toast(error);
         });
+  }
+
+  Future checkForPackageExpiry(String accessToken) async {
+    Prefs.getPackageId((String packageId) async {
+      existingPackageId = packageId;
+      print('existingPackageId ${existingPackageId}');
+    });
+
+    print(accessToken);
+
+    //check if current pacakge id Exist then show selected pacakge
+
+    BaseModel baseModel =
+        await getPackagesScreen(authToken: accessToken).catchError((error) {
+      print(error);
+    });
+
+    if (baseModel != null && baseModel.data != null) {
+      List list = baseModel.data as List;
+      if (list.length == 0) {
+        // toast('No records found');
+        //logout
+        Prefs.setAccessToken(null);
+        Prefs.removeUser();
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            LoginScreen.routeName, (Route<dynamic> route) => false);
+      } else {
+        for (var value in list) {
+          PackagesListModel model = PackagesListModel.fromJson(value);
+          packagesList.add(model);
+          if (model.id == existingPackageId) {
+            if (model.status != 1) {
+              //logout
+              Prefs.setAccessToken(null);
+              Prefs.removeUser();
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  LoginScreen.routeName, (Route<dynamic> route) => false);
+            }
+          }
+          print("package is ${model.id}");
+          print("package is ${model.name}");
+          print("package is ${model.no_of_days_validity}");
+          print("package is ${model.amount}");
+          print("package is ${model.status}");
+        }
+      }
+    } else {
+      //logout
+      Prefs.setAccessToken(null);
+      Prefs.removeUser();
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          LoginScreen.routeName, (Route<dynamic> route) => false);
+    }
   }
 
   @override
@@ -373,26 +442,48 @@ class _WinterHomeScreenState extends State<WinterHomeScreen> {
                                 //     height: 50,
                                 //   ),
                                 // ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                        context, ProfileScreen.routeName);
-                                  },
-                                  child: Cached_Image(
-                                    height: 40,
-                                    width: 40,
-                                    imageURL: user?.details?.image_url ?? "",
-                                    shape: BoxShape.circle,
-                                    retry: (status) {
-                                      print("RETRYINGGG");
-                                      Prefs.getUser((User userModel) async {
-                                        setState(() {
-                                          user = userModel;
-                                          // print("user is ${user.details.image_url}");
-                                        });
-                                      });
+                                // GestureDetector(
+                                //   onTap: () {
+                                //     Navigator.pushNamed(
+                                //         context, ProfileScreen.routeName);
+                                //   },
+                                //   child:
+                                //   Cached_Image(
+                                //     height: 40,
+                                //     width: 40,
+                                //     imageURL: user?.details?.image_url ?? "",
+                                //     shape: BoxShape.circle,
+                                //     retry: (status) {
+                                //       print("RETRYINGGG");
+                                //       Prefs.getUser((User userModel) async {
+                                //         setState(() {
+                                //           user = userModel;
+                                //           // print("user is ${user.details.image_url}");
+                                //         });
+                                //       });
+                                //     },
+                                //   ),
+                                // ),
+                                Container(
+                                  // color: Colors.grey,
+
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                          context, ProfileScreen.routeName);
+                                      // launchURL(model?.url ?? "");
                                     },
+                                    child: ClipOval(
+                                      child: Image.network(
+                                        user?.details?.image_url ?? "",
+                                        fit: BoxFit.cover,
+                                        height: 40,
+                                        width: 40,
+                                      ),
+                                    ),
                                   ),
+                                  // decoration:
+                                  //     BoxDecoration(color: Colors.grey, shape: BoxShape.circle),
                                 ),
                               ]),
                         ),
@@ -410,34 +501,19 @@ class _WinterHomeScreenState extends State<WinterHomeScreen> {
                             width: MediaQuery.of(context).size.width,
                             child: Column(
                               children: [
-                                Container(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      launchURL(ad?.url ?? "");
-                                    },
-                                    child:
-                                        // Cached_Image(
-                                        //   fit: BoxFit.fitWidth,
-                                        //   width: double.infinity,
-                                        //   imageURL: bannerImageUrl ?? "",
-                                        //   shape: BoxShape.circle,
-                                        //   retry: (status) {
-                                        //     print("RETRYINGGG");
-                                        //     // Prefs.getUser((User userModel) async {
-                                        //     //   setState(() {
-                                        //     //     user = userModel;
-                                        //     //     // print("user is ${user.details.image_url}");
-                                        //     //   });
-                                        //     // });
-                                        //   },
-                                        // ),
-                                        Image.network(
-                                      bannerImageUrl,
-                                      fit: BoxFit.fitWidth,
-                                      width: double.infinity,
-                                    ),
-                                  ),
-                                ),
+                                addsList.isEmpty
+                                    ? Container()
+                                    : Container(
+                                        height: 75,
+                                        child: PageView(
+                                          controller: _controller,
+                                          children: addsList
+                                              .map(
+                                                (model) => advertisement(model),
+                                              )
+                                              .toList(),
+                                        ),
+                                      ),
                                 GestureDetector(
                                   onTap: () {},
                                   child: Padding(
@@ -598,6 +674,22 @@ class _WinterHomeScreenState extends State<WinterHomeScreen> {
                 ],
               ),
             )));
+  }
+
+  Widget advertisement(model) {
+    return Container(
+      color: Colors.grey,
+      child: GestureDetector(
+        onTap: () {
+          launchURL(model?.url ?? "");
+        },
+        child: Image.network(
+          model?.attachment_url ?? "",
+          fit: BoxFit.fill,
+          width: double.infinity,
+        ),
+      ),
+    );
   }
 
   Future<bool> _onWillPop() async {

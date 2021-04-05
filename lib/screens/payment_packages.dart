@@ -32,6 +32,10 @@ class _PackagesScreenState extends State<PackagesScreen> {
   String existingPackageId = '';
   dynamic accessTok = "";
   AdsModel ad;
+  PageController _controller = PageController(
+    initialPage: 0,
+  );
+  List<AdsModel> addsList = List();
   @override
   void initState() {
     super.initState();
@@ -45,18 +49,19 @@ class _PackagesScreenState extends State<PackagesScreen> {
 
   void load() async {
     // accessTok = Prefs.getAccessTokenAwait();
-    Prefs.getaddModel((AdsModel add) async {
-      setState(() {
-        bannerImageUrl = add.attachment_url;
-        ad = add;
-      });
-    });
+    // Prefs.getaddModel((AdsModel add) async {
+    //   setState(() {
+    //     bannerImageUrl = add.attachment_url;
+    //     ad = add;
+    //   });
+    // });
 
     Prefs.getPackageId((String packageId) async {
       existingPackageId = packageId;
       print('existingPackageId ${existingPackageId}');
     });
     Prefs.getAccessToken((String accessToken) async {
+      apiCallForAd(accessToken);
       print(accessToken);
       accessTok = accessToken;
       //check if current pacakge id Exist then show selected pacakge
@@ -91,6 +96,31 @@ class _PackagesScreenState extends State<PackagesScreen> {
         weatherType = weather;
       });
     });
+  }
+
+  Future<void> apiCallForAd(String accessToken) async {
+    getAd(
+        authToken: accessToken,
+        onSuccess: (BaseModel baseModel) {
+          if (baseModel.data != null) {
+            List<AdsModel> list = List();
+            for (var value in baseModel.data) {
+              AdsModel model = AdsModel.fromJson(value);
+              list.add(model);
+            }
+            Prefs.setListData(Const.addsFromPref, list);
+            print("ads data is $list");
+            setState(() {
+              addsList = list;
+
+              // this.bannerImageUrl = adModel.attachment_url;
+              // ad = adModel;
+            });
+          }
+        },
+        onError: (String error, BaseModel baseModel) {
+          toast(error);
+        });
   }
 
   @override
@@ -239,68 +269,78 @@ class _PackagesScreenState extends State<PackagesScreen> {
                                             child: Column(
                                               children: [
                                                 Expanded(
-                                                  child: Column(
-                                                    children: [
-                                                      SizedBox(
-                                                        height: 20,
+                                                  child: SingleChildScrollView(
+                                                    child: Container(
+                                                      child: Column(
+                                                        children: [
+                                                          SizedBox(
+                                                            height: 20,
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    right:
+                                                                        28.0),
+                                                            child: Text(
+                                                                packagesList[index]
+                                                                    .name,
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: Color(
+                                                                        0xff31343D),
+                                                                    fontSize:
+                                                                        20)),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 15,
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    right:
+                                                                        28.0),
+                                                            child: Text(
+                                                                "\$ ${packagesList[index].amount.toString()}",
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: Color(
+                                                                        0xff31343D),
+                                                                    fontSize:
+                                                                        23)),
+                                                          ),
+                                                          SizedBox(
+                                                            height: Device.get()
+                                                                    .isIphoneX
+                                                                ? 25
+                                                                : 10,
+                                                          ),
+                                                          Text(
+                                                              packagesList[
+                                                                      index]
+                                                                  .description,
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .normal,
+                                                                  color: Color(
+                                                                      0xff77869E),
+                                                                  fontSize:
+                                                                      17)),
+                                                          SizedBox(
+                                                            height: Device.get()
+                                                                    .isIphoneX
+                                                                ? 25
+                                                                : 10,
+                                                          ),
+                                                        ],
                                                       ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                right: 28.0),
-                                                        child: Text(
-                                                            packagesList[index]
-                                                                .name,
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                color: Color(
-                                                                    0xff31343D),
-                                                                fontSize: 20)),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 15,
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                right: 28.0),
-                                                        child: Text(
-                                                            "\$ ${packagesList[index].amount.toString()}",
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                color: Color(
-                                                                    0xff31343D),
-                                                                fontSize: 23)),
-                                                      ),
-                                                      SizedBox(
-                                                        height: Device.get()
-                                                                .isIphoneX
-                                                            ? 25
-                                                            : 10,
-                                                      ),
-                                                      Text(
-                                                          packagesList[index]
-                                                              .description,
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .normal,
-                                                              color: Color(
-                                                                  0xff77869E),
-                                                              fontSize: 17)),
-                                                      SizedBox(
-                                                        height: Device.get()
-                                                                .isIphoneX
-                                                            ? 25
-                                                            : 10,
-                                                      ),
-                                                    ],
+                                                    ),
                                                   ),
                                                 ),
                                                 Align(
@@ -425,22 +465,51 @@ class _PackagesScreenState extends State<PackagesScreen> {
               ),
             ),
           ),
-          InkWell(
-            onTap: () {
-              launchURL(ad?.url ?? "");
-            },
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Image.network(
-                bannerImageUrl,
-                height: 80,
-                width: double.infinity,
-              ),
-            ),
-          ),
+          // InkWell(
+          //   onTap: () {
+          //     launchURL(ad?.url ?? "");
+          //   },
+          //   child: Align(
+          //     alignment: Alignment.bottomCenter,
+          //     child: Image.network(
+          //       bannerImageUrl,
+          //       height: 80,
+          //       width: double.infinity,
+          //     ),
+          //   ),
+          // ),
+          addsList.isEmpty
+              ? Container()
+              : Container(
+                  height: 75,
+                  child: PageView(
+                    controller: _controller,
+                    children: addsList
+                        .map(
+                          (model) => advertisement(model),
+                        )
+                        .toList(),
+                  ),
+                ),
         ],
       ),
     )));
+  }
+
+  Widget advertisement(model) {
+    return Container(
+      color: Colors.grey,
+      child: GestureDetector(
+        onTap: () {
+          launchURL(model?.url ?? "");
+        },
+        child: Image.network(
+          model?.attachment_url ?? "",
+          fit: BoxFit.fill,
+          width: double.infinity,
+        ),
+      ),
+    );
   }
 
   void navigateToPay(BuildContext context, int index) {

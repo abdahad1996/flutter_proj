@@ -10,6 +10,7 @@ import 'package:aspen_weather/utils/views.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_device_type/flutter_device_type.dart';
+import 'package:flutter_html/style.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
@@ -87,14 +88,14 @@ class _SummerIndicatorTabScreenState extends State<SummerIndicatorTabScreen>
   void initState() {
     super.initState();
 
-    Prefs.getaddModel((AdsModel ad) async {
-      if (mounted) {
-        setState(() {
-          this.adUrl = ad.attachment_url;
-          ad = ad;
-        });
-      }
-    });
+    // Prefs.getaddModel((AdsModel ad) async {
+    //   if (mounted) {
+    //     setState(() {
+    //       this.adUrl = ad.attachment_url;
+    //       ad = ad;
+    //     });
+    //   }
+    // });
 
     Prefs.getWeatherType((String weather) {
       if (mounted) {
@@ -199,275 +200,349 @@ class _SummerIndicatorTabScreenState extends State<SummerIndicatorTabScreen>
   }
 
   Widget ui(DailyIndicatorModel model) {
-    return Container(
-        // color: Colors.red,
+    return SingleChildScrollView(
+      child: Container(
+          // color: Colors.red,
+          height: MediaQuery.of(context).size.height * 1.5,
+          color: Color.fromRGBO(250, 250, 255, 1),
+          padding: EdgeInsets.all(10.0),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  // color: Colors.red,
+                  child: SfRadialGauge(
+                      enableLoadingAnimation: true,
+                      axes: <RadialAxis>[
+                        RadialAxis(
+                            minimum: 0,
+                            maximum: 1,
+                            // radiusFactor: 0.7,
+                            canScaleToFit: true,
+                            showLabels: false,
+                            showAxisLine: false,
+                            // backgroundImage: AssetImage(
+                            //   "assets/images/cumulative_head.png",
+                            //  width: 188,
+                            // height: 25,
+                            // // ),
+                            ranges: <GaugeRange>[
+                              GaugeRange(
+                                startValue: (model.selected == "high")
+                                    ? 0.7
+                                    : (model.selected == "low")
+                                        ? 0.0
+                                        : 0.3,
+                                endValue: (model.selected == "high")
+                                    ? 1
+                                    : (model.selected == "low")
+                                        ? 0.3
+                                        : 0.7,
+                                color: (model.selected == "high")
+                                    ? Color.fromRGBO(255, 55, 66, 1)
+                                    : (model.selected == "low")
+                                        ? Color.fromRGBO(164, 255, 179, 1)
+                                        : Color.fromRGBO(254, 245, 84, 1),
+                              ),
 
-        color: Color.fromRGBO(250, 250, 255, 1),
-        padding: EdgeInsets.all(10.0),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                // color: Colors.red,
-                child: SfRadialGauge(
-                    enableLoadingAnimation: true,
-                    axes: <RadialAxis>[
-                      RadialAxis(
-                          minimum: 0,
-                          maximum: 1,
-                          // radiusFactor: 0.7,
-                          showLabels: false,
-                          showAxisLine: false,
-                          // backgroundImage: AssetImage(
-                          //   "assets/images/cumulative_head.png",
-                          //   // width: 188,
-                          //   // height: 25,
-                          // // ),
-                          ranges: <GaugeRange>[
-                            GaugeRange(
-                              startValue: (model.selected == "high")
-                                  ? 0.7
-                                  : (model.selected == "low")
-                                      ? 0.0
-                                      : 0.3,
-                              endValue: (model.selected == "high")
-                                  ? 1
-                                  : (model.selected == "low")
-                                      ? 0.3
-                                      : 0.7,
-                              color: (model.selected == "high")
-                                  ? Color.fromRGBO(255, 55, 66, 1)
-                                  : (model.selected == "low")
-                                      ? Color.fromRGBO(164, 255, 179, 1)
-                                      : Color.fromRGBO(254, 245, 84, 1),
-                            ),
+                              model.selected == "high" ||
+                                      model.selected == "medium"
+                                  ? GaugeRange(
+                                      startValue: 0,
+                                      endValue: 0.3,
+                                      color: Color.fromRGBO(164, 255, 179, 1))
+                                  : GaugeRange(startValue: 0, endValue: 0),
+                              model.selected == "high"
+                                  ? GaugeRange(
+                                      startValue: 0.3,
+                                      endValue: 0.7,
+                                      color: Color.fromRGBO(254, 245, 84, 1),
+                                    )
+                                  : GaugeRange(startValue: 0, endValue: 0)
+                              // GaugeRange(startValue: 0.75,endValue: 1,color: Colors.red)
+                            ],
+                            pointers: <GaugePointer>[
+                              NeedlePointer(
+                                value: (model.selected == "high")
+                                    ? 1
+                                    : (model.selected == "low")
+                                        ? 0.3
+                                        : 0.7,
+                              )
+                            ],
+                            annotations: <GaugeAnnotation>[
+                              GaugeAnnotation(
+                                  widget: Container(
+                                      child: Text(capitalize(model.selected),
+                                          style: TextStyle(
+                                              fontSize: 25,
+                                              fontWeight: FontWeight.bold))),
+                                  angle: 90,
+                                  positionFactor: 0.5)
+                            ])
+                      ]),
+                ),
+                // CircularPercentIndicator(
+                //   radius: 150.0,
+                //   lineWidth: 20.0,
+                //   // backgroundWidth: 20,
+                //   percent: (model.selected == "high")
+                //       ? 0.9
+                //       : (model.selected == "low")
+                //           ? 0.5
+                //           : 0.7,
+                //   startAngle: 270,
+                //   center: Text(
+                //     model.selected,
+                //     style: TextStyle(
+                //         fontSize: 20,
+                //         fontWeight: FontWeight.bold,
+                //         color: Colors.black,
+                //         decoration: TextDecoration.underline),
+                //   ),
+                //   // fillColor: Colors.white,
+                //   // arcType: ArcType.HALF,
+                //   backgroundColor: Color.fromRGBO(240, 240, 240, 1),
+                //   progressColor: (model.selected == "high")
+                //       ? Color.fromRGBO(255, 55, 66, 1)
+                //       : (model.selected == "low")
+                //           ? Color.fromRGBO(164, 255, 179, 1)
+                //           : Color.fromRGBO(254, 245, 84, 1),
+                //   circularStrokeCap: CircularStrokeCap.round,
+                // ),
 
-                            model.selected == "high" ||
-                                    model.selected == "medium"
-                                ? GaugeRange(
-                                    startValue: 0,
-                                    endValue: 0.3,
-                                    color: Color.fromRGBO(164, 255, 179, 1))
-                                : GaugeRange(startValue: 0, endValue: 0),
-                            model.selected == "high"
-                                ? GaugeRange(
-                                    startValue: 0.3,
-                                    endValue: 0.7,
-                                    color: Color.fromRGBO(254, 245, 84, 1),
-                                  )
-                                : GaugeRange(startValue: 0, endValue: 0)
-                            // GaugeRange(startValue: 0.75,endValue: 1,color: Colors.red)
-                          ],
-                          pointers: <GaugePointer>[
-                            NeedlePointer(
-                              value: (model.selected == "high")
-                                  ? 1
-                                  : (model.selected == "low")
-                                      ? 0.3
-                                      : 0.7,
-                            )
-                          ],
-                          annotations: <GaugeAnnotation>[
-                            GaugeAnnotation(
-                                widget: Container(
-                                    child: Text(capitalize(model.selected),
-                                        style: TextStyle(
-                                            fontSize: 25,
-                                            fontWeight: FontWeight.bold))),
-                                angle: 90,
-                                positionFactor: 0.5)
-                          ])
-                    ]),
-              ),
-              // CircularPercentIndicator(
-              //   radius: 150.0,
-              //   lineWidth: 20.0,
-              //   // backgroundWidth: 20,
-              //   percent: (model.selected == "high")
-              //       ? 0.9
-              //       : (model.selected == "low")
-              //           ? 0.5
-              //           : 0.7,
-              //   startAngle: 270,
-              //   center: Text(
-              //     model.selected,
-              //     style: TextStyle(
-              //         fontSize: 20,
-              //         fontWeight: FontWeight.bold,
-              //         color: Colors.black,
-              //         decoration: TextDecoration.underline),
-              //   ),
-              //   // fillColor: Colors.white,
-              //   // arcType: ArcType.HALF,
-              //   backgroundColor: Color.fromRGBO(240, 240, 240, 1),
-              //   progressColor: (model.selected == "high")
-              //       ? Color.fromRGBO(255, 55, 66, 1)
-              //       : (model.selected == "low")
-              //           ? Color.fromRGBO(164, 255, 179, 1)
-              //           : Color.fromRGBO(254, 245, 84, 1),
-              //   circularStrokeCap: CircularStrokeCap.round,
-              // ),
-
-              Expanded(child: list(model))
-            ]));
+                Expanded(child: list(model))
+              ])),
+    );
   }
 
   Widget list(model) {
     return Container(
       // color: Colors.red,
 
-      padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
-      height: MediaQuery.of(context).size.height * 0.3,
-      child: ListView(
-        scrollDirection: Axis.vertical,
-        children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      // padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
+      // height: 400,
+      // child: ListView(
+      //   scrollDirection: Axis.vertical,
+      //   children: <Widget>[
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  Container(
-                    height: 30,
-                    width: 30,
-                    // color: Colors.red,
-                    decoration: (model.selected == "low")
+              Container(
+                height: 30,
+                width: 30,
+                // color: Colors.red,
+                decoration: (model.selected == "low")
+                    ? BoxDecoration(
+                        color: Color.fromRGBO(164, 255, 179, 1),
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(8.0),
+                            topRight: Radius.circular(8.0),
+                            bottomRight: Radius.circular(8.0),
+                            bottomLeft: Radius.circular(8.0)))
+                    : (model.selected == "medium")
                         ? BoxDecoration(
-                            color: Color.fromRGBO(164, 255, 179, 1),
+                            color: Color.fromRGBO(254, 245, 84, 1),
                             shape: BoxShape.rectangle,
                             borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(8.0),
                                 topRight: Radius.circular(8.0),
                                 bottomRight: Radius.circular(8.0),
                                 bottomLeft: Radius.circular(8.0)))
-                        : (model.selected == "medium")
-                            ? BoxDecoration(
-                                color: Color.fromRGBO(254, 245, 84, 1),
-                                shape: BoxShape.rectangle,
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(8.0),
-                                    topRight: Radius.circular(8.0),
-                                    bottomRight: Radius.circular(8.0),
-                                    bottomLeft: Radius.circular(8.0)))
-                            : BoxDecoration(
-                                color: Color.fromRGBO(255, 55, 66, 1),
-                                shape: BoxShape.rectangle,
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(8.0),
-                                    topRight: Radius.circular(8.0),
-                                    bottomRight: Radius.circular(8.0),
-                                    bottomLeft: Radius.circular(8.0))),
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Text(
-                    capitalize(model.selected),
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  )
-                ],
+                        : BoxDecoration(
+                            color: Color.fromRGBO(255, 55, 66, 1),
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(8.0),
+                                topRight: Radius.circular(8.0),
+                                bottomRight: Radius.circular(8.0),
+                                bottomLeft: Radius.circular(8.0))),
               ),
               SizedBox(
-                height: 5,
+                width: 20,
               ),
-              Container(
-                // margin: EdgeInsets.all(10),
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                child: Text((model.selected == "low")
-                    ? capitalize(model.low)
-                    : (model.selected == "medium")
-                        ? capitalize(model.medium)
-                        : capitalize(model.high)),
+              Text(
+                capitalize(model.selected),
+                style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
               )
-              // Text(
-              //     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean quis sapien orci. Nullam ut ligula sed ipsum feugiat iaculis. Cras a facilisis felis, ut facilisis dolor. Praesent lacinia sed nisl at volutpat. Morbi eu scelerisque leo, quis consequat dui. Maecenas eu lacinia ante. Quisque nec metus mollis, facilisis velit non, imperdiet quam. Nullam vitae nunc pellentesque, sollicitudin quam quis, aliquet nunc. Proin tristique, metus sit amet malesuada rutrum, neque sapien finibus erat,Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean quis sapien orci. Nullam ut ligula sed ipsum feugiat iaculis. Cras a facilisis felis, ut facilisis dolor. Praesent lacinia sed nisl at volutpat. Morbi eu scelerisque leo, quis consequat dui. Maecenas eu lacinia ante. Quisque nec metus mollis, facilisis velit non, imperdiet quam. Nullam vitae nunc pellentesque, sollicitudin quam quis, aliquet nunc. Proin tristique, metus sit amet malesuada rutrum, neque sapien finibus erat, eu bibendum turpis sem et neque. Ut vel tortor ipsum. Etiam et justo dui. Curabitur eleifend ex eros, eu vehicula nibh cursus non. Ut scelerisque id ante ut suscipit. Nulla vestibulum magna eu lacus bibendum, vitae bibendum diam blandit. Quisque rhoncus tempus metus, ac aliquam diam cursus maximus. Sed commodo mi nisl, sit amet vestibulum ipsum pharetra non. eu bibendum turpis sem et neque. Ut vel tortor ipsum. Etiam et justo dui. Curabitur eleifend ex eros, eu vehicula nibh cursus non. Ut scelerisque id ante ut suscipit. Nulla vestibulum magna eu lacus bibendum, vitae bibendum diam blandit. Quisque rhoncus tempus metus, ac aliquam diam cursus maximus. Sed commodo mi nisl, sit amet vestibulum ipsum pharetra non.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean quis sapien orci. Nullam ut ligula sed ipsum feugiat iaculis. Cras a facilisis felis, ut facilisis dolor. Praesent lacinia sed nisl at volutpat. Morbi eu scelerisque leo, quis consequat dui. Maecenas eu lacinia ante. Quisque nec metus mollis, facilisis velit non, imperdiet quam. Nullam vitae nunc pellentesque, sollicitudin quam quis, aliquet nunc. Proin tristique, metus sit amet malesuada rutrum, neque sapien finibus erat, eu bibendum turpis sem et neque. Ut vel tortor ipsum. Etiam et justo dui. Curabitur eleifend ex eros, eu vehicula nibh cursus non. Ut scelerisque id ante ut suscipit. Nulla vestibulum magna eu lacus bibendum, vitae bibendum diam blandit. Quisque rhoncus tempus metus, ac aliquam diam cursus maximus. Sed commodo mi nisl, sit amet vestibulum ipsum pharetra non."))
             ],
           ),
           SizedBox(
-            height: 30,
+            height: 5,
           ),
-          // Column(
-          //   crossAxisAlignment: CrossAxisAlignment.start,
-          //   children: [
-          //     Row(
-          //       children: [
-          //         Container(
-          //             height: 30,
-          //             width: 30,
-          //             decoration: BoxDecoration(
-          //                 color: Color.fromRGBO(254, 245, 84, 1),
-          //                 shape: BoxShape.rectangle,
-          //                 borderRadius: BorderRadius.only(
-          //                     topLeft: Radius.circular(8.0),
-          //                     topRight: Radius.circular(8.0),
-          //                     bottomRight: Radius.circular(8.0),
-          //                     bottomLeft: Radius.circular(8.0)))),
-          //         SizedBox(
-          //           width: 20,
-          //         ),
-          //         Text(
-          //           "Medium",
-          //           style: TextStyle(
-          //             fontSize: 25,
-          //             fontWeight: FontWeight.bold,
-          //             color: Colors.black,
-          //           ),
-          //         )
-          //       ],
-          //     ),
-          //     SizedBox(
-          //       height: 20,
-          //     ),
-          //     Text(model.medium)
-          //   ],
-          // ),
-          // SizedBox(
-          //   height: 20,
-          // ),
-          // Column(
-          //   crossAxisAlignment: CrossAxisAlignment.start,
-          //   children: [
-          //     Row(
-          //       children: [
-          //         Container(
-          //             height: 30,
-          //             width: 30,
-          //             decoration: BoxDecoration(
-          //                 color: Color.fromRGBO(255, 55, 66, 1),
-          //                 shape: BoxShape.rectangle,
-          //                 borderRadius: BorderRadius.only(
-          //                     topLeft: Radius.circular(8.0),
-          //                     topRight: Radius.circular(8.0),
-          //                     bottomRight: Radius.circular(8.0),
-          //                     bottomLeft: Radius.circular(8.0)))),
-          //         SizedBox(
-          //           width: 20,
-          //         ),
-          //         Text(
-          //           "High",
-          //           style: TextStyle(
-          //             fontSize: 25,
-          //             fontWeight: FontWeight.bold,
-          //             color: Colors.black,
-          //           ),
-          //         )
-          //       ],
-          //     ),
-          //     SizedBox(
-          //       height: 20,
-          //     ),
-          // Text(model.high),
-          SizedBox(
-            height: 20,
+          Container(
+            // margin: EdgeInsets.all(10),
+            padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+            child: Text((model.selected == "low")
+                ? capitalize(model.low)
+                : (model.selected == "medium")
+                    ? capitalize(model.medium)
+                    : capitalize(model.high)),
           ),
-          // Text("Chats Tab Bar View"),
-          //   ],
-          // ),
+          Container(
+              // margin: EdgeInsets.all(10),
+              padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+              child: Text("What the delay status mean:",
+                  style: TextStyle(
+                      color: Colors.black87,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold))),
+          Container(
+              // margin: EdgeInsets.all(10),
+              padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
+              child: RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                        text: "Low ",
+                        style: TextStyle(
+                            color: Color.fromRGBO(164, 255, 179, 1),
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold)),
+                    TextSpan(
+                      text:
+                          "This means we experience little or no delays at the Aspen airport due to weather. If delays did pop up they would be shortlived",
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                      // will work here
+                    ),
+                  ],
+                ),
+              )),
+          Container(
+              // margin: EdgeInsets.all(10),
+              padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
+              child: RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                        text: "Medium ",
+                        style: TextStyle(
+                            color: Color.fromRGBO(254, 245, 84, 1),
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold)),
+                    TextSpan(
+                      text:
+                          "This means cloud ceilings , visiblitiy , or wind problems at the airport might be an issue for a portion of the day. Delays/cancellations are possible but probably won't last all day and night ",
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                      // will work here
+                    ),
+                  ],
+                ),
+              )),
+          Container(
+              // margin: EdgeInsets.all(10),
+              padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
+              child: RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                        text: "High ",
+                        style: TextStyle(
+                            color: Color.fromRGBO(255, 55, 66, 1),
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold)),
+                    TextSpan(
+                      text:
+                          "This means either cloud ceilings/visiblities/wind are going to be below airport minimum for a significant period of time . Delays and cancellations are a good possibilitiy.",
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                      // will work here
+                    ),
+                  ],
+                ),
+              )),
+
+          // Text(
+          //     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean quis sapien orci. Nullam ut ligula sed ipsum feugiat iaculis. Cras a facilisis felis, ut facilisis dolor. Praesent lacinia sed nisl at volutpat. Morbi eu scelerisque leo, quis consequat dui. Maecenas eu lacinia ante. Quisque nec metus mollis, facilisis velit non, imperdiet quam. Nullam vitae nunc pellentesque, sollicitudin quam quis, aliquet nunc. Proin tristique, metus sit amet malesuada rutrum, neque sapien finibus erat,Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean quis sapien orci. Nullam ut ligula sed ipsum feugiat iaculis. Cras a facilisis felis, ut facilisis dolor. Praesent lacinia sed nisl at volutpat. Morbi eu scelerisque leo, quis consequat dui. Maecenas eu lacinia ante. Quisque nec metus mollis, facilisis velit non, imperdiet quam. Nullam vitae nunc pellentesque, sollicitudin quam quis, aliquet nunc. Proin tristique, metus sit amet malesuada rutrum, neque sapien finibus erat, eu bibendum turpis sem et neque. Ut vel tortor ipsum. Etiam et justo dui. Curabitur eleifend ex eros, eu vehicula nibh cursus non. Ut scelerisque id ante ut suscipit. Nulla vestibulum magna eu lacus bibendum, vitae bibendum diam blandit. Quisque rhoncus tempus metus, ac aliquam diam cursus maximus. Sed commodo mi nisl, sit amet vestibulum ipsum pharetra non. eu bibendum turpis sem et neque. Ut vel tortor ipsum. Etiam et justo dui. Curabitur eleifend ex eros, eu vehicula nibh cursus non. Ut scelerisque id ante ut suscipit. Nulla vestibulum magna eu lacus bibendum, vitae bibendum diam blandit. Quisque rhoncus tempus metus, ac aliquam diam cursus maximus. Sed commodo mi nisl, sit amet vestibulum ipsum pharetra non.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean quis sapien orci. Nullam ut ligula sed ipsum feugiat iaculis. Cras a facilisis felis, ut facilisis dolor. Praesent lacinia sed nisl at volutpat. Morbi eu scelerisque leo, quis consequat dui. Maecenas eu lacinia ante. Quisque nec metus mollis, facilisis velit non, imperdiet quam. Nullam vitae nunc pellentesque, sollicitudin quam quis, aliquet nunc. Proin tristique, metus sit amet malesuada rutrum, neque sapien finibus erat, eu bibendum turpis sem et neque. Ut vel tortor ipsum. Etiam et justo dui. Curabitur eleifend ex eros, eu vehicula nibh cursus non. Ut scelerisque id ante ut suscipit. Nulla vestibulum magna eu lacus bibendum, vitae bibendum diam blandit. Quisque rhoncus tempus metus, ac aliquam diam cursus maximus. Sed commodo mi nisl, sit amet vestibulum ipsum pharetra non."))
         ],
       ),
+
+      // Column(
+      //   crossAxisAlignment: CrossAxisAlignment.start,
+      //   children: [
+      //     Row(
+      //       children: [
+      //         Container(
+      //             height: 30,
+      //             width: 30,
+      //             decoration: BoxDecoration(
+      //                 color: Color.fromRGBO(254, 245, 84, 1),
+      //                 shape: BoxShape.rectangle,
+      //                 borderRadius: BorderRadius.only(
+      //                     topLeft: Radius.circular(8.0),
+      //                     topRight: Radius.circular(8.0),
+      //                     bottomRight: Radius.circular(8.0),
+      //                     bottomLeft: Radius.circular(8.0)))),
+      //         SizedBox(
+      //           width: 20,
+      //         ),
+      //         Text(
+      //           "Medium",
+      //           style: TextStyle(
+      //             fontSize: 25,
+      //             fontWeight: FontWeight.bold,
+      //             color: Colors.black,
+      //           ),
+      //         )
+      //       ],
+      //     ),
+      //     SizedBox(
+      //       height: 20,
+      //     ),
+      //     Text(model.medium)
+      //   ],
+      // ),
+      // SizedBox(
+      //   height: 20,
+      // ),
+      // Column(
+      //   crossAxisAlignment: CrossAxisAlignment.start,
+      //   children: [
+      //     Row(
+      //       children: [
+      //         Container(
+      //             height: 30,
+      //             width: 30,
+      //             decoration: BoxDecoration(
+      //                 color: Color.fromRGBO(255, 55, 66, 1),
+      //                 shape: BoxShape.rectangle,
+      //                 borderRadius: BorderRadius.only(
+      //                     topLeft: Radius.circular(8.0),
+      //                     topRight: Radius.circular(8.0),
+      //                     bottomRight: Radius.circular(8.0),
+      //                     bottomLeft: Radius.circular(8.0)))),
+      //         SizedBox(
+      //           width: 20,
+      //         ),
+      //         Text(
+      //           "High",
+      //           style: TextStyle(
+      //             fontSize: 25,
+      //             fontWeight: FontWeight.bold,
+      //             color: Colors.black,
+      //           ),
+      //         )
+      //       ],
+      //     ),
+      //     SizedBox(
+      //       height: 20,
+      //     ),
+      // Text(model.high),
+      // SizedBox(
+      //   height: 20,
+      // ),
+      // Text("Chats Tab Bar View"),
+      //   ],
+      // ),
+      //   ],
+      // ),
+      // ),
     );
   }
 }

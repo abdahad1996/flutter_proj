@@ -10,8 +10,8 @@ import 'package:http/http.dart' as http;
 import 'base_model.dart';
 
 String baseUrl =
-    'https://kanztainer.com/aspen-weather/api/v1'; // client - production
-// 'http://admin.aspenweather.net/api';
+    // 'https://kanztainer.com/aspen-weather/api/v1'; // client - production
+    Const.API_BASE_URL;
 enum Method { Get, Post, Put, Multipart }
 
 Future<BaseModel> get(String endPoint, {String authToken}) async {

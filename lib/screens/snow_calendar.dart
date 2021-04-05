@@ -8,8 +8,10 @@ import 'package:aspen_weather/utils/utils.dart';
 import 'package:aspen_weather/utils/views.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
+import 'package:flutter_device_type/flutter_device_type.dart';
 import 'package:intl/intl.dart';
 
 class SnowCalendarScreen extends StatefulWidget {
@@ -34,6 +36,10 @@ class _SnowCalendarScreenState extends State<SnowCalendarScreen> {
   String accessToken = '';
   String bannerImageUrl = '';
   AdsModel ad;
+  PageController _controller = PageController(
+    initialPage: 0,
+  );
+  List<AdsModel> addsList = List();
   @override
   void initState() {
     super.initState();
@@ -58,7 +64,49 @@ class _SnowCalendarScreenState extends State<SnowCalendarScreen> {
       print(accessToken);
       this.accessToken = accessToken;
       apiCallForGetForecast(accessToken, selectedDate);
+      apiCallForAd(accessToken);
     });
+  }
+
+  Widget advertisement(model) {
+    return Container(
+      color: Colors.grey,
+      child: GestureDetector(
+        onTap: () {
+          launchURL(model?.url ?? "");
+        },
+        child: Image.network(
+          model?.attachment_url ?? "",
+          fit: BoxFit.fill,
+          width: double.infinity,
+        ),
+      ),
+    );
+  }
+
+  Future<void> apiCallForAd(String accessToken) async {
+    getAd(
+        authToken: accessToken,
+        onSuccess: (BaseModel baseModel) {
+          if (baseModel.data != null) {
+            List<AdsModel> list = List();
+            for (var value in baseModel.data) {
+              AdsModel model = AdsModel.fromJson(value);
+              list.add(model);
+            }
+            // Prefs.setListData(Const.addsFromPref, list);
+            // print("ads data is $list");
+            setState(() {
+              addsList = list;
+
+              // this.bannerImageUrl = adModel.attachment_url;
+              // ad = adModel;
+            });
+          }
+        },
+        onError: (String error, BaseModel baseModel) {
+          toast(error);
+        });
   }
 
   @override
@@ -298,18 +346,33 @@ class _SnowCalendarScreenState extends State<SnowCalendarScreen> {
                                                 SizedBox(
                                                   height: 5,
                                                 ),
-                                                Align(
-                                                  alignment: Alignment.topLeft,
-                                                  child: Text(snowMassDesc,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      maxLines: 4,
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                          color:
-                                                              Color(0xff222222),
-                                                          fontSize: 14)),
+                                                Expanded(
+                                                  child: SingleChildScrollView(
+                                                    scrollDirection:
+                                                        Axis.vertical,
+                                                    child: Container(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              (Device.get()
+                                                                      .isIphoneX
+                                                                  ? 1.5
+                                                                  : 1.7),
+                                                      // alignment: Alignment.topLeft,
+                                                      child: Text(snowMassDesc,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          maxLines: 4,
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                              color: Color(
+                                                                  0xff222222),
+                                                              fontSize: 14)),
+                                                    ),
+                                                  ),
                                                 ),
                                                 SizedBox(
                                                   height: 5,
@@ -369,20 +432,35 @@ class _SnowCalendarScreenState extends State<SnowCalendarScreen> {
                                                           fontSize: 15)),
                                                 ),
                                                 SizedBox(
-                                                  height: 15,
+                                                  height: 5,
                                                 ),
-                                                Align(
-                                                  alignment: Alignment.topLeft,
-                                                  child: Text(highlandsDesc,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      maxLines: 4,
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                          color:
-                                                              Color(0xff222222),
-                                                          fontSize: 15)),
+                                                Expanded(
+                                                  child: SingleChildScrollView(
+                                                    scrollDirection:
+                                                        Axis.vertical,
+                                                    child: Container(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              (Device.get()
+                                                                      .isIphoneX
+                                                                  ? 1.5
+                                                                  : 1.6),
+                                                      // alignment: Alignment.topLeft,
+                                                      child: Text(highlandsDesc,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          maxLines: 4,
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                              color: Color(
+                                                                  0xff222222),
+                                                              fontSize: 14)),
+                                                    ),
+                                                  ),
                                                 ),
                                                 SizedBox(
                                                   height: 5,
@@ -431,8 +509,7 @@ class _SnowCalendarScreenState extends State<SnowCalendarScreen> {
                                                 SizedBox(
                                                   height: 15,
                                                 ),
-                                                Align(
-                                                  alignment: Alignment.topLeft,
+                                                Container(
                                                   child: Text('Buttermilk',
                                                       style: TextStyle(
                                                           fontWeight:
@@ -444,18 +521,34 @@ class _SnowCalendarScreenState extends State<SnowCalendarScreen> {
                                                 SizedBox(
                                                   height: 5,
                                                 ),
-                                                Align(
-                                                  alignment: Alignment.topLeft,
-                                                  child: Text(butterMilkDesc,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      maxLines: 4,
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                          color:
-                                                              Color(0xff222222),
-                                                          fontSize: 14)),
+                                                Expanded(
+                                                  child: SingleChildScrollView(
+                                                    scrollDirection:
+                                                        Axis.horizontal,
+                                                    child: Container(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              (Device.get()
+                                                                      .isIphoneX
+                                                                  ? 1.5
+                                                                  : 1.7),
+                                                      // alignment: Alignment.topLeft,
+                                                      child: Text(
+                                                          butterMilkDesc,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          maxLines: 4,
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                              color: Color(
+                                                                  0xff222222),
+                                                              fontSize: 14)),
+                                                    ),
+                                                  ),
                                                 ),
                                                 SizedBox(
                                                   height: 5,
@@ -517,18 +610,33 @@ class _SnowCalendarScreenState extends State<SnowCalendarScreen> {
                                                 SizedBox(
                                                   height: 5,
                                                 ),
-                                                Align(
-                                                  alignment: Alignment.topLeft,
-                                                  child: Text(ajaxDesc,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      maxLines: 4,
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                          color:
-                                                              Color(0xff222222),
-                                                          fontSize: 14)),
+                                                Expanded(
+                                                  child: SingleChildScrollView(
+                                                    scrollDirection:
+                                                        Axis.vertical,
+                                                    child: Container(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              (Device.get()
+                                                                      .isIphoneX
+                                                                  ? 1.5
+                                                                  : 1.7),
+                                                      // alignment: Alignment.topLeft,
+                                                      child: Text(ajaxDesc,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          maxLines: 4,
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                              color: Color(
+                                                                  0xff222222),
+                                                              fontSize: 14)),
+                                                    ),
+                                                  ),
                                                 ),
                                                 SizedBox(
                                                   height: 5,
@@ -561,19 +669,32 @@ class _SnowCalendarScreenState extends State<SnowCalendarScreen> {
           //     width: double.infinity,
           //   ),
           // ),
-          InkWell(
-            onTap: () {
-              launchURL(ad?.url ?? "");
-            },
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Image.network(
-                bannerImageUrl,
-                height: 80,
-                width: double.infinity,
-              ),
-            ),
-          ),
+          // InkWell(
+          //   onTap: () {
+          //     launchURL(ad?.url ?? "");
+          //   },
+          //   child: Align(
+          //     alignment: Alignment.bottomCenter,
+          //     child: Image.network(
+          //       bannerImageUrl,
+          //       height: 80,
+          //       width: double.infinity,
+          //     ),
+          //   ),
+          // ),
+          addsList.isEmpty
+              ? Container()
+              : Container(
+                  height: 75,
+                  child: PageView(
+                    controller: _controller,
+                    children: addsList
+                        .map(
+                          (model) => advertisement(model),
+                        )
+                        .toList(),
+                  ),
+                ),
         ],
       ),
     )));

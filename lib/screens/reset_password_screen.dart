@@ -28,23 +28,68 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final FocusNode _confirmPasswordFocus = FocusNode();
   bool passwordNotVisible = true;
   String accessToken = '';
-
+  PageController _controller = PageController(
+    initialPage: 0,
+  );
+  List<AdsModel> addsList = List();
   @override
   void initState() {
     super.initState();
     load();
   }
 
+  Widget advertisement(model) {
+    return Container(
+      color: Colors.grey,
+      child: GestureDetector(
+        onTap: () {
+          launchURL(model?.url ?? "");
+        },
+        child: Image.network(
+          model?.attachment_url ?? "",
+          fit: BoxFit.fill,
+          width: double.infinity,
+        ),
+      ),
+    );
+  }
+
+  Future<void> apiCallForAd(String accessToken) async {
+    getAd(
+        authToken: accessToken,
+        onSuccess: (BaseModel baseModel) {
+          if (baseModel.data != null) {
+            List<AdsModel> list = List();
+            for (var value in baseModel.data) {
+              AdsModel model = AdsModel.fromJson(value);
+              list.add(model);
+            }
+            // Prefs.setListData(Const.addsFromPref, list);
+            // print("ads data is $list");
+            setState(() {
+              addsList = list;
+
+              // this.bannerImageUrl = adModel.attachment_url;
+              // ad = adModel;
+            });
+          }
+        },
+        onError: (String error, BaseModel baseModel) {
+          toast(error);
+        });
+  }
+
   void load() async {
-    Prefs.getaddModel((AdsModel ad) async {
-      setState(() {
-        bannerImageUrl = ad.attachment_url;
-      });
-    });
+    // Prefs.getaddModel((AdsModel ad) async {
+    //   setState(() {
+    //     bannerImageUrl = ad.attachment_url;
+    //   });
+    // });
 
     Prefs.getAccessToken((String accessToken) async {
       print(accessToken);
       this.accessToken = accessToken;
+      apiCallForAd(accessToken);
     });
   }
 

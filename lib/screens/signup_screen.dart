@@ -513,33 +513,30 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Future<void> apiCallForAd(String accessToken) async {
-    getAd(
-        authToken: accessToken,
-        onSuccess: (BaseModel baseModel) {
-          if (baseModel.data != null) {
-            AdsModel adModel = AdsModel.fromJson(baseModel.data);
-            Prefs.setAdsUrl(adModel);
+    // getAd(
+    //     authToken: accessToken,
+    //     onSuccess: (BaseModel baseModel) {
+    //       if (baseModel.data != null) {
+    //         AdsModel adModel = AdsModel.fromJson(baseModel.data);
+    //         Prefs.setAdsUrl(adModel);
 
-            if (user.payment_status == null) {
-              toast(
-                  'You need to buy package first to access application features.');
-              Prefs.clearPackageId();
-              Navigator.pushNamed(context, PackagesScreen.routeName);
-            } else {
-              if (weatherType == Const.WEATHER_TYPE_SUMMER) {
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    SummerHomeScreen.routeName,
-                    (Route<dynamic> route) => false);
-              } else {
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    WinterHomeScreen.routeName,
-                    (Route<dynamic> route) => false);
-              }
-            }
-          }
-        },
-        onError: (String error, BaseModel baseModel) {
-          toast(error);
-        });
+    if (user.payment_status == null) {
+      toast('You need to buy package first to access application features.');
+      Prefs.clearPackageId();
+      Navigator.pushNamed(context, PackagesScreen.routeName);
+    } else {
+      if (weatherType == Const.WEATHER_TYPE_SUMMER) {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            SummerHomeScreen.routeName, (Route<dynamic> route) => false);
+      } else {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            WinterHomeScreen.routeName, (Route<dynamic> route) => false);
+      }
+    }
+    // }
+    // },
+    // onError: (String error, BaseModel baseModel) {
+    //   toast(error);
+    // });
   }
 }

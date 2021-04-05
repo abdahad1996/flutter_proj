@@ -2,8 +2,10 @@ import 'package:aspen_weather/models/active_ad_model.dart';
 import 'package:aspen_weather/models/content_model.dart';
 import 'package:aspen_weather/network/base_model.dart';
 import 'package:aspen_weather/service/webservices.dart';
+import 'package:aspen_weather/utils/const.dart';
 import 'package:aspen_weather/utils/prefs.dart';
 import 'package:aspen_weather/utils/utils.dart';
+import 'package:aspen_weather/utils/views.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +17,11 @@ class TermsScreen extends StatefulWidget {
 }
 
 class _TermsScreenState extends State<TermsScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  PageController _controller = PageController(
+    initialPage: 0,
+  );
+  List<AdsModel> addsList = List();
   String weatherType;
   String title = '';
   String content = '';
@@ -30,12 +37,12 @@ class _TermsScreenState extends State<TermsScreen> {
 
   void load() async {
     isLoading = true;
-    Prefs.getaddModel((AdsModel ad) async {
-      setState(() {
-        bannerImageUrl = ad.attachment_url;
-        ad = ad;
-      });
-    });
+    // Prefs.getaddModel((AdsModel ad) async {
+    //   setState(() {
+    //     bannerImageUrl = ad.attachment_url;
+    //     ad = ad;
+    //   });
+    // });
 
     Prefs.getWeatherType((String weather) {
       setState(() {
@@ -44,6 +51,7 @@ class _TermsScreenState extends State<TermsScreen> {
     });
 
     Prefs.getAccessToken((String accessToken) async {
+      apiCallForAd(accessToken);
       BaseModel baseModel =
           await getContentPages(authToken: accessToken, pageId: '1')
               .catchError((error) {
@@ -66,6 +74,47 @@ class _TermsScreenState extends State<TermsScreen> {
         }
       });
     });
+  }
+
+  Future<void> apiCallForAd(String accessToken) async {
+    getAd(
+        authToken: accessToken,
+        onSuccess: (BaseModel baseModel) {
+          if (baseModel.data != null) {
+            List<AdsModel> list = List();
+            for (var value in baseModel.data) {
+              AdsModel model = AdsModel.fromJson(value);
+              list.add(model);
+            }
+            Prefs.setListData(Const.addsFromPref, list);
+            print("ads data is $list");
+            setState(() {
+              addsList = list;
+
+              // this.bannerImageUrl = adModel.attachment_url;
+              // ad = adModel;
+            });
+          }
+        },
+        onError: (String error, BaseModel baseModel) {
+          toast(error);
+        });
+  }
+
+  Widget advertisement(model) {
+    return Container(
+      color: Colors.grey,
+      child: GestureDetector(
+        onTap: () {
+          launchURL(model?.url ?? "");
+        },
+        child: Image.network(
+          model?.attachment_url ?? "",
+          fit: BoxFit.fill,
+          width: double.infinity,
+        ),
+      ),
+    );
   }
 
   @override
@@ -163,19 +212,32 @@ class _TermsScreenState extends State<TermsScreen> {
           ),
           isLoading
               ? Container()
-              : InkWell(
-                  onTap: () {
-                    launchURL(ad?.url ?? "");
-                  },
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Image.network(
-                      bannerImageUrl,
-                      height: 80,
-                      width: double.infinity,
+              // : InkWell(
+              //     onTap: () {
+              //       launchURL(ad?.url ?? "");
+              //     },
+              //     child: Align(
+              //       alignment: Alignment.bottomCenter,
+              //       child: Image.network(
+              //         bannerImageUrl,
+              //         height: 80,
+              //         width: double.infinity,
+              //       ),
+              //     ),
+              //   ),
+              : addsList.isEmpty
+                  ? Container()
+                  : Container(
+                      height: 75,
+                      child: PageView(
+                        controller: _controller,
+                        children: addsList
+                            .map(
+                              (model) => advertisement(model),
+                            )
+                            .toList(),
+                      ),
                     ),
-                  ),
-                ),
         ],
       ),
     )));

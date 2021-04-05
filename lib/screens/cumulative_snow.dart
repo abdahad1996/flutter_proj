@@ -31,22 +31,27 @@ class _CumulativeSnowScreenState extends State<CumulativeSnowScreen> {
   List<StormListModel> stormList = List();
   final List<BarChartModel> dataGraph = List();
   String startDate = '2020-12-04', endDate = '2021-01-04';
+
   String accessToken = '';
   AdsModel ad;
 
   int butterMilkValue = 0, highLandValue = 0, snowMassValue = 0, ajaxValue = 0;
-
+  PageController _controller = PageController(
+    initialPage: 0,
+  );
+  List<AdsModel> addsList = List();
   @override
   void initState() {
     super.initState();
-    // endDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
-    endDate = DateFormat(DateFormat.NUM_MONTH_DAY).format(DateTime.now());
-    Prefs.getaddModel((AdsModel adds) async {
-      setState(() {
-        bannerImageUrl = adds.attachment_url;
-        ad = adds;
-      });
-    });
+    endDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    print("Date format is ");
+    print(DateFormat.yMMMMd().format(DateTime.now()));
+    // Prefs.getaddModel((AdsModel adds) async {
+    //   setState(() {
+    //     bannerImageUrl = adds.attachment_url;
+    //     ad = adds;
+    //   });
+    // });
 
     Prefs.getWeatherType((String weather) {
       setState(() {
@@ -57,9 +62,50 @@ class _CumulativeSnowScreenState extends State<CumulativeSnowScreen> {
     Prefs.getAccessToken((String accessToken) async {
       print(accessToken);
       this.accessToken = accessToken;
-
+      apiCallForAd(accessToken);
       apiCallForGetForecastDateRange(accessToken);
     });
+  }
+
+  Widget advertisement(model) {
+    return Container(
+      color: Colors.grey,
+      child: GestureDetector(
+        onTap: () {
+          launchURL(model?.url ?? "");
+        },
+        child: Image.network(
+          model?.attachment_url ?? "",
+          fit: BoxFit.fill,
+          width: double.infinity,
+        ),
+      ),
+    );
+  }
+
+  Future<void> apiCallForAd(String accessToken) async {
+    getAd(
+        authToken: accessToken,
+        onSuccess: (BaseModel baseModel) {
+          if (baseModel.data != null) {
+            List<AdsModel> list = List();
+            for (var value in baseModel.data) {
+              AdsModel model = AdsModel.fromJson(value);
+              list.add(model);
+            }
+            // Prefs.setListData(Const.addsFromPref, list);
+            // print("ads data is $list");
+            setState(() {
+              addsList = list;
+
+              // this.bannerImageUrl = adModel.attachment_url;
+              // ad = adModel;
+            });
+          }
+        },
+        onError: (String error, BaseModel baseModel) {
+          toast(error);
+        });
   }
 
   @override
@@ -128,7 +174,8 @@ class _CumulativeSnowScreenState extends State<CumulativeSnowScreen> {
               margin: EdgeInsets.only(left: 10),
               color: Color(0xffF8F9FF),
               child: Column(children: [
-                Text("$startDate until $endDate",
+                Text(
+                    " April 12, 2020 until ${DateFormat.yMMMMd().format(DateTime.now())}",
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Color(0xff31343D),
@@ -142,16 +189,29 @@ class _CumulativeSnowScreenState extends State<CumulativeSnowScreen> {
               ]),
             ),
           ),
-          InkWell(
-            onTap: () {
-              launchURL(ad?.url ?? "");
-            },
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Image.network(bannerImageUrl,
-                  height: 100, width: MediaQuery.of(context).size.width),
-            ),
-          ),
+          // InkWell(
+          //   onTap: () {
+          //     launchURL(ad?.url ?? "");
+          //   },
+          //   child: Align(
+          //     alignment: Alignment.bottomCenter,
+          //     child: Image.network(bannerImageUrl,
+          //         height: 100, width: MediaQuery.of(context).size.width),
+          //   ),
+          // ),
+          addsList.isEmpty
+              ? Container()
+              : Container(
+                  height: 75,
+                  child: PageView(
+                    controller: _controller,
+                    children: addsList
+                        .map(
+                          (model) => advertisement(model),
+                        )
+                        .toList(),
+                  ),
+                ),
         ],
       ),
     )));

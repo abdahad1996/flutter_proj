@@ -1,6 +1,9 @@
 class Const {
-  static const String API_BASE_URL =
+  static const String API_BASE_URL_TEST =
       "https://kanztainer.com/aspen-weather/api/v1";
+  // "http://aspenweather.net/aspen-weather/api";
+  static const String API_BASE_URL =
+      "https://aspenweather.net/aspen-weather/api/v1";
 
   static const String USER = 'user';
   static const String FCM_TOKEN = 'fcm_token';
@@ -22,8 +25,9 @@ class Const {
   // static const String WEATHER_TYPE_SUMMER = "weather_summer";
   // static const String WEATHER_TYPE_WINTER = "weather_winter";
 
-  static const String WEATHER_TYPE_SUMMER = "Summer";
-  static const String WEATHER_TYPE_WINTER = "Winter";
+  static const String WEATHER_TYPE_SUMMER = "summer";
+  static const String WEATHER_TYPE_WINTER = "winter";
+  static const String addsFromPref = "addsData";
 
   static const String TAG_SESSION_EXPIRED_CHECK = "Session expired";
   static const String MESSAGE_SESSION_EXPIRED_APP = "Session Expired";

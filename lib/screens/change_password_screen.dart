@@ -27,7 +27,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   String accessToken = '';
   AdsModel ad;
-
+  PageController _controller = PageController(
+    initialPage: 0,
+  );
+  List<AdsModel> addsList = List();
   @override
   void initState() {
     super.initState();
@@ -35,17 +38,59 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   void load() async {
-    Prefs.getaddModel((AdsModel add) async {
-      setState(() {
-        bannerImageUrl = add.attachment_url;
-        ad = add;
-      });
-    });
+    // Prefs.getaddModel((AdsModel add) async {
+    //   setState(() {
+    //     bannerImageUrl = add.attachment_url;
+    //     ad = add;
+    //   });
+    // });
 
     Prefs.getAccessToken((String accessToken) async {
       print(accessToken);
+      apiCallForAd(accessToken);
       this.accessToken = accessToken;
     });
+  }
+
+  Widget advertisement(model) {
+    return Container(
+      color: Colors.grey,
+      child: GestureDetector(
+        onTap: () {
+          launchURL(model?.url ?? "");
+        },
+        child: Image.network(
+          model?.attachment_url ?? "",
+          fit: BoxFit.fill,
+          width: double.infinity,
+        ),
+      ),
+    );
+  }
+
+  Future<void> apiCallForAd(String accessToken) async {
+    getAd(
+        authToken: accessToken,
+        onSuccess: (BaseModel baseModel) {
+          if (baseModel.data != null) {
+            List<AdsModel> list = List();
+            for (var value in baseModel.data) {
+              AdsModel model = AdsModel.fromJson(value);
+              list.add(model);
+            }
+            // Prefs.setListData(Const.addsFromPref, list);
+            // print("ads data is $list");
+            setState(() {
+              addsList = list;
+
+              // this.bannerImageUrl = adModel.attachment_url;
+              // ad = adModel;
+            });
+          }
+        },
+        onError: (String error, BaseModel baseModel) {
+          toast(error);
+        });
   }
 
   @override
@@ -217,16 +262,29 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               ),
             ),
           ),
-          InkWell(
-            onTap: () {
-              launchURL(ad?.url ?? "");
-            },
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Image.network(bannerImageUrl,
-                  height: 100, width: MediaQuery.of(context).size.width),
-            ),
-          ),
+          // InkWell(
+          //   onTap: () {
+          //     launchURL(ad?.url ?? "");
+          //   },
+          //   child: Align(
+          //     alignment: Alignment.bottomCenter,
+          //     child: Image.network(bannerImageUrl,
+          //         height: 100, width: MediaQuery.of(context).size.width),
+          //   ),
+          // ),
+          addsList.isEmpty
+              ? Container()
+              : Container(
+                  height: 75,
+                  child: PageView(
+                    controller: _controller,
+                    children: addsList
+                        .map(
+                          (model) => advertisement(model),
+                        )
+                        .toList(),
+                  ),
+                ),
         ],
       ),
     )));

@@ -1,15 +1,19 @@
 import 'package:aspen_weather/models/active_ad_model.dart';
 import 'package:aspen_weather/models/user_model_response.dart';
+import 'package:aspen_weather/network/base_model.dart';
 import 'package:aspen_weather/screens/Notification_Screen.dart';
 import 'package:aspen_weather/screens/change_password_screen.dart';
 import 'package:aspen_weather/screens/splash_screen.dart';
 import 'package:aspen_weather/screens/updateProfile_Screen.dart';
+import 'package:aspen_weather/service/webservices.dart';
 import 'package:aspen_weather/utils/CachedImage.dart';
 import 'package:aspen_weather/utils/const.dart';
 import 'package:aspen_weather/utils/prefs.dart';
 import 'package:aspen_weather/utils/utils.dart';
+import 'package:aspen_weather/utils/views.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
 class ProfileScreen extends StatefulWidget {
   static const routeName = '/profile-screen';
@@ -23,15 +27,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String bannerImageUrl = '';
   User user;
   AdsModel ad;
+  PageController _controller = PageController(
+    initialPage: 0,
+  );
+  List<AdsModel> addsList = List();
   @override
   void initState() {
     super.initState();
 
-    Prefs.getaddModel((AdsModel ad) async {
-      setState(() {
-        bannerImageUrl = ad.attachment_url;
-        ad = ad;
-      });
+    // Prefs.getaddModel((AdsModel ad) async {
+    //   setState(() {
+    //     bannerImageUrl = ad.attachment_url;
+    //     ad = ad;
+    //   });
+    // });
+    Prefs.getAccessToken((String accessToken) async {
+      print(accessToken);
+      apiCallForAd(accessToken);
+      // this.accessToken = accessToken;
     });
 
     Prefs.getWeatherType((String weather) {
@@ -46,6 +59,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
         // print("user is ${user.details.image_url}");
       });
     });
+  }
+
+  Widget advertisement(model) {
+    return Container(
+      color: Colors.grey,
+      child: GestureDetector(
+        onTap: () {
+          launchURL(model?.url ?? "");
+        },
+        child: Image.network(
+          model?.attachment_url ?? "",
+          fit: BoxFit.fill,
+          width: double.infinity,
+        ),
+      ),
+    );
+  }
+
+  Future<void> apiCallForAd(String accessToken) async {
+    getAd(
+        authToken: accessToken,
+        onSuccess: (BaseModel baseModel) {
+          if (baseModel.data != null) {
+            List<AdsModel> list = List();
+            for (var value in baseModel.data) {
+              AdsModel model = AdsModel.fromJson(value);
+              list.add(model);
+            }
+            // Prefs.setListData(Const.addsFromPref, list);
+            // print("ads data is $list");
+            setState(() {
+              addsList = list;
+
+              // this.bannerImageUrl = adModel.attachment_url;
+              // ad = adModel;
+            });
+          }
+        },
+        onError: (String error, BaseModel baseModel) {
+          toast(error);
+        });
   }
 
   void load() async {}
@@ -116,14 +170,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
             padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
             child: Column(
               children: [
-                Cached_Image(
-                  height: 80,
-                  width: 80,
-                  imageURL: user?.details?.image_url ?? "",
-                  shape: BoxShape.circle,
-                  retry: (status) {
-                    print("RETRYINGGG");
-                  },
+                // Cached_Image(
+                //   height: 80,
+                //   width: 80,
+                //   imageURL: user?.details?.image_url ?? "",
+                //   shape: BoxShape.circle,
+                //   retry: (status) {
+                //     print("RETRYINGGG");
+                //   },
+                // ),
+                Container(
+                  // color: Colors.grey,
+
+                  child: GestureDetector(
+                    onTap: () {
+                      // launchURL(model?.url ?? "");
+                    },
+                    child: ClipOval(
+                      child: Image.network(
+                        user?.details?.image_url ?? "",
+                        fit: BoxFit.cover,
+                        height: 80,
+                        width: 80,
+                      ),
+                    ),
+                  ),
+                  // decoration:
+                  //     BoxDecoration(color: Colors.grey, shape: BoxShape.circle),
                 ),
                 // (user.details.image_url == null)
                 //     ? Image.asset(
@@ -178,7 +251,43 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Navigator.pushNamed(
                           context, NotificationScreen.routeName);
                     },
-                    child: Image.asset('assets/images/cell_notification.png')),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10.0),
+                        child: Container(
+                          height: 80,
+                          color: Colors.white70,
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                  child: Text(
+                                    "Notifications",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xff042C5C),
+                                        fontSize: 20),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                  child: Transform.rotate(
+                                    angle: -math.pi,
+                                    child: Image.asset(
+                                      'assets/images/back_arrow.png',
+                                      width: 20,
+                                      height: 20,
+                                    ),
+                                  ),
+                                ),
+                              ]),
+                        ),
+                      ),
+                    )),
+                // Image.asset('assets/images/cell_notification.png')),
                 SizedBox(height: 6),
                 GestureDetector(
                   onTap: () {
@@ -199,19 +308,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 //     width: double.infinity,
                 //   ),
                 // ),
-                InkWell(
-                  onTap: () {
-                    launchURL(ad?.url ?? "");
-                  },
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Image.network(
-                      bannerImageUrl,
-                      height: 80,
-                      width: double.infinity,
-                    ),
-                  ),
-                ),
+                // Expanded(child: Container()),
+                addsList.isEmpty
+                    ? Container()
+                    : Column(
+                        children: [
+                          Container(
+                            height: 75,
+                            alignment: Alignment.bottomCenter,
+                            child: PageView(
+                              controller: _controller,
+                              children: addsList
+                                  .map(
+                                    (model) => advertisement(model),
+                                  )
+                                  .toList(),
+                            ),
+                          ),
+                        ],
+                      ),
               ],
             ),
           ),

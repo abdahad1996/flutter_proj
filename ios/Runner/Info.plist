@@ -36,6 +36,8 @@
 	<string>390712682121434</string>
 	<key>FacebookDisplayName</key>
 	<string>Aspen Weather Test</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>

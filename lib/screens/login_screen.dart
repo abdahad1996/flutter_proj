@@ -391,51 +391,47 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> apiCallForAd(String accessToken) async {
-    getAd(
-        authToken: accessToken,
-        onSuccess: (BaseModel baseModel) {
-          if (baseModel.data != null) {
-            AdsModel adModel = AdsModel.fromJson(baseModel.data);
-            Prefs.setAdsUrl(adModel);
-            if (user.payment_status != null) {
-              Prefs.savePackageId(user.payment_status.package.id.toString());
-            }
-            Dialogs.hideDialog(context);
+    // getAd(
+    //     authToken: accessToken,
+    //     onSuccess: (BaseModel baseModel) {
+    //       if (baseModel.data != null) {
+    //         AdsModel adModel = AdsModel.fromJson(baseModel.data);
+    //         Prefs.setAdsUrl(adModel);
+    if (user.payment_status != null) {
+      Prefs.savePackageId(user.payment_status.package.id.toString());
+    }
+    Dialogs.hideDialog(context);
 
-            if ((user == null)) {
-              toast(
-                  'You need to buy package first to access application features.');
-              Prefs.clearPackageId();
-              Navigator.pushNamed(context, PackagesScreen.routeName);
-            } else if ((user.payment_status == null)) {
-              toast(
-                  'You need to buy package first to access application features.');
-              Prefs.clearPackageId();
-              Navigator.pushNamed(context, PackagesScreen.routeName);
-            } else {
-              if ((user.payment_status.package.status is bool &&
-                      user.payment_status.package.status == false) ||
-                  (user.payment_status.package.status is int &&
-                      user.payment_status.package.status == 0)) {
-                Navigator.pushNamed(context, PackagesScreen.routeName);
-              } else {
-                if (weatherType == Const.WEATHER_TYPE_SUMMER) {
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      SummerHomeScreen.routeName,
-                      (Route<dynamic> route) => false);
-                } else {
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      WinterHomeScreen.routeName,
-                      (Route<dynamic> route) => false);
-                }
-              }
-            }
-          }
-        },
-        onError: (String error, BaseModel baseModel) {
-          Dialogs.hideDialog(context);
-          toast(error);
-        });
+    if ((user == null)) {
+      toast('You need to buy package first to access application features.');
+      Prefs.clearPackageId();
+      Navigator.pushNamed(context, PackagesScreen.routeName);
+    } else if ((user.payment_status == null)) {
+      toast('You need to buy package first to access application features.');
+      Prefs.clearPackageId();
+      Navigator.pushNamed(context, PackagesScreen.routeName);
+    } else {
+      if ((user.payment_status.package.status is bool &&
+              user.payment_status.package.status == false) ||
+          (user.payment_status.package.status is int &&
+              user.payment_status.package.status == 0)) {
+        Navigator.pushNamed(context, PackagesScreen.routeName);
+      } else {
+        if (weatherType == Const.WEATHER_TYPE_SUMMER) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              SummerHomeScreen.routeName, (Route<dynamic> route) => false);
+        } else {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              WinterHomeScreen.routeName, (Route<dynamic> route) => false);
+        }
+      }
+    }
+
+    // },
+    // onError: (String error, BaseModel baseModel) {
+    //   Dialogs.hideDialog(context);
+    //   toast(error);
+    // });
   }
 
   Future<void> apiCallForFbGoogleSignIn(

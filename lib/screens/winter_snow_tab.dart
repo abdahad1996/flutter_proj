@@ -1,3 +1,4 @@
+import 'package:aspen_weather/models/active_ad_model.dart';
 import 'package:aspen_weather/models/snow_forecast_weekly.dart';
 import 'package:aspen_weather/models/user_model_response.dart';
 import 'package:aspen_weather/network/base_model.dart';
@@ -26,7 +27,7 @@ class _WinterSnowTabScreenState extends State<WinterSnowTabScreen> {
   bool checkedValue = false;
   User user;
   String accessToken = '';
-
+  List<AdsModel> adsList = [];
   String bmMon = 'N/A',
       bmTues = 'N/A',
       bmWed = 'N/A',
@@ -824,38 +825,74 @@ class _WinterSnowTabScreenState extends State<WinterSnowTabScreen> {
                           ),
                         ],
                       ),
+                      Device.get().isIphoneX
+                          ? Container()
+                          : Container(
+                              color: Color(0xffE1E1E6),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.pushNamed(context,
+                                          SnowCalendarScreen.routeName);
+                                    },
+                                    child: Image.asset(
+                                      'assets/images/snowfall_calendar_btn.png',
+                                      width: 155,
+                                      height: 80,
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.pushNamed(context,
+                                          CumulativeSnowScreen.routeName);
+                                    },
+                                    child: Image.asset(
+                                      'assets/images/cummulative_snowfall_btn.png',
+                                      width: 155,
+                                      height: 80,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                     ],
                   ),
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(
-                          context, SnowCalendarScreen.routeName);
-                    },
-                    child: Image.asset(
-                      'assets/images/snowfall_calendar_btn.png',
-                      width: 155,
-                      height: 80,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(
-                          context, CumulativeSnowScreen.routeName);
-                    },
-                    child: Image.asset(
-                      'assets/images/cummulative_snowfall_btn.png',
-                      width: 155,
-                      height: 80,
-                    ),
-                  ),
-                ],
-              ),
+              Device.get().isIphoneX
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context, SnowCalendarScreen.routeName);
+                          },
+                          child: Image.asset(
+                            'assets/images/snowfall_calendar_btn.png',
+                            width: 155,
+                            height: 80,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context, CumulativeSnowScreen.routeName);
+                          },
+                          child: Image.asset(
+                            'assets/images/cummulative_snowfall_btn.png',
+                            width: 155,
+                            height: 80,
+                          ),
+                        ),
+                      ],
+                    )
+                  : Container(),
             ],
           ),
         ),

@@ -2,10 +2,12 @@ import 'package:aspen_weather/models/packages_list_model.dart';
 import 'package:aspen_weather/models/themeModel.dart';
 import 'package:aspen_weather/models/user_model_response.dart';
 import 'package:aspen_weather/network/base_model.dart';
+import 'package:aspen_weather/network/rest_api.dart';
 import 'package:aspen_weather/screens/payment_packages.dart';
 import 'package:aspen_weather/screens/summer_home_screen.dart';
 import 'package:aspen_weather/screens/winter_home_screen.dart';
 import 'package:aspen_weather/service/webservices.dart';
+import 'package:aspen_weather/utils/Dialogs.dart';
 import 'package:aspen_weather/utils/ScreenConfig.dart';
 import 'package:aspen_weather/utils/const.dart';
 import 'package:aspen_weather/utils/prefs.dart';
@@ -69,12 +71,15 @@ class _SplashScreenState extends State<SplashScreen> {
         //   print("error is $error ");
         //   // toast(error);
         // });
+        // await checkForPackageExpiry(accessToken);
+
         setState(() {
           isLoading = false;
         });
         return;
       }
       //check for validity of package
+      await checkForPackageExpiry(accessToken);
 
       //get theme
       BaseModel baseModel =
@@ -92,6 +97,7 @@ class _SplashScreenState extends State<SplashScreen> {
         ThemeModel dataModel = ThemeModel.fromJson(baseModel.data);
         // title = dataModel.title;
         // content = dataModel.content;
+
         setState(() {
           isLoading = false;
           print("theme name is ${dataModel.name}");
@@ -110,31 +116,64 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future checkForPackageExpiry(String accessToken) async {
-    Prefs.getPackageId((String packageId) async {
-      existingPackageId = packageId;
-      print('existingPackageId ${existingPackageId}');
-    });
+    getUser(
+        authToken: accessToken,
+        onSuccess: (BaseModel baseModel) {
+          // Dialogs.hideDialog(context);
 
-    print(accessToken);
+          if (baseModel.data != null) {
+            try {
+              User user = User.fromJson(baseModel.data);
+              Prefs.setUser(user);
+            } catch (e) {
+              // toast(e);
+            }
 
-    //check if current pacakge id Exist then show selected pacakge
+            // toast(message);
 
-    BaseModel baseModel =
-        await getPackagesScreen(authToken: accessToken).catchError((error) {
-      print(error);
-    });
+            // if (weatherType == Const.WEATHER_TYPE_SUMMER) {
+            //   Navigator.of(context).pushNamedAndRemoveUntil(
+            //       SummerHomeScreen.routeName, (Route<dynamic> route) => false);
+            // } else {
+            //   Navigator.of(context).pushNamedAndRemoveUntil(
+            //       WinterHomeScreen.routeName, (Route<dynamic> route) => false);
+            // }
+          }
+        },
+        onError: (String error, BaseModel baseModel) {
+          // Dialogs.hideDialog(context);
+          // toast(error);
+        });
+    // Prefs.getPackageId((String packageId) async {
+    //   existingPackageId = packageId;
+    //   print('existingPackageId ${existingPackageId}');
+    // });
 
-    if (baseModel != null && baseModel.data != null) {
-      List list = baseModel.data as List;
-      if (list.length == 0) {
-        // toast('No records found');
-      } else {
-        for (var value in list) {
-          PackagesListModel model = PackagesListModel.fromJson(value);
-          packagesList.add(model);
-        }
-      }
-    }
+    // print(accessToken);
+
+    // //check if current pacakge id Exist then show selected pacakge
+
+    // BaseModel baseModel =
+    //     await getPackagesScreen(authToken: accessToken).catchError((error) {
+    //   print(error);
+    // });
+
+    // if (baseModel != null && baseModel.data != null) {
+    //   List list = baseModel.data as List;
+    //   if (list.length == 0) {
+    //     // toast('No records found');
+    //   } else {
+    //     for (var value in list) {
+    //       PackagesListModel model = PackagesListModel.fromJson(value);
+    //       packagesList.add(model);
+    //       print("package is ${model.id}");
+    //       print("package is ${model.name}");
+    //       print("package is ${model.no_of_days_validity}");
+    //       print("package is ${model.amount}");
+    //       print("package is ${model.status}");
+    //     }
+    //   }
+    // }
   }
 
   @override
@@ -155,61 +194,74 @@ class _SplashScreenState extends State<SplashScreen> {
               child: SafeArea(
                   child: Padding(
                 padding: const EdgeInsets.fromLTRB(25, 30, 25, 30),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 30),
-                    Text("Welcome to\nASPEN WEATHER",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xff31343D),
-                            fontSize: 32)),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                        "Lorem Ipsum is simply dummy text of the printing and typesetting",
-                        style: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            color: Color(0xff222222),
-                            fontSize: 18)),
-                    IconButton(
-                      icon: Image.asset('assets/images/ic_blue_next.png'),
-                      iconSize: 70,
-                      onPressed: () {
-                        Prefs.getAccessToken((String accessToken) {
-                          if (accessToken == null) {
-                            Navigator.pushReplacementNamed(
-                                context, LoginScreen.routeName);
-                          } else {
-                            Prefs.getUser((User userModel) async {
-                              user = userModel;
-                              if ((user == null) ||
-                                  (user.payment_status == null)) {
-                                Prefs.clearPackageId();
-                                Navigator.pushNamed(
-                                    context, PackagesScreen.routeName);
-                              } else {
-                                if (weatherType == Const.WEATHER_TYPE_SUMMER) {
-                                  Navigator.pushReplacementNamed(
-                                      context, SummerHomeScreen.routeName,
-                                      arguments: {
-                                        'user': user,
-                                      });
+                child: GestureDetector(
+                  onLongPress: () {
+                    print("object");
+                    if (baseUrl == Const.API_BASE_URL) {
+                      baseUrl = Const.API_BASE_URL_TEST;
+                      toast("changed to $baseUrl");
+                    } else {
+                      baseUrl = Const.API_BASE_URL;
+                      toast("changed to $baseUrl");
+                    }
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 30),
+                      Text("Welcome to\nASPEN WEATHER",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xff31343D),
+                              fontSize: 32)),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                          "Lorem Ipsum is simply dummy text of the printing and typesetting",
+                          style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              color: Color(0xff222222),
+                              fontSize: 18)),
+                      IconButton(
+                        icon: Image.asset('assets/images/ic_blue_next.png'),
+                        iconSize: 70,
+                        onPressed: () {
+                          Prefs.getAccessToken((String accessToken) {
+                            if (accessToken == null) {
+                              Navigator.pushReplacementNamed(
+                                  context, LoginScreen.routeName);
+                            } else {
+                              Prefs.getUser((User userModel) async {
+                                user = userModel;
+                                if ((user == null) ||
+                                    (user.payment_status == null)) {
+                                  Prefs.clearPackageId();
+                                  Navigator.pushNamed(
+                                      context, PackagesScreen.routeName);
                                 } else {
-                                  Navigator.pushReplacementNamed(
-                                      context, WinterHomeScreen.routeName,
-                                      arguments: {
-                                        'user': user,
-                                      });
+                                  if (weatherType ==
+                                      Const.WEATHER_TYPE_SUMMER) {
+                                    Navigator.pushReplacementNamed(
+                                        context, SummerHomeScreen.routeName,
+                                        arguments: {
+                                          'user': user,
+                                        });
+                                  } else {
+                                    Navigator.pushReplacementNamed(
+                                        context, WinterHomeScreen.routeName,
+                                        arguments: {
+                                          'user': user,
+                                        });
+                                  }
                                 }
-                              }
-                            });
-                          }
-                        });
-                      },
-                    )
-                  ],
+                              });
+                            }
+                          });
+                        },
+                      )
+                    ],
+                  ),
                 ),
               ))),
     );

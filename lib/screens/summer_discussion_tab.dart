@@ -7,6 +7,7 @@ import 'package:aspen_weather/utils/prefs.dart';
 import 'package:aspen_weather/utils/views.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_device_type/flutter_device_type.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html/style.dart';
 import 'package:intl/intl.dart';
@@ -58,6 +59,8 @@ class _SummerDiscussTabScreenState extends State<SummerDiscussTabScreen> {
       child: Container(
         color: Colors.white,
         width: double.infinity,
+        height: MediaQuery.of(context).size.height *
+            (Device.get().isIphoneX ? 1 : 1.5),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
           child: Column(

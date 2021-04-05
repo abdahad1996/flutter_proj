@@ -37,12 +37,12 @@ class _PayNowScreenState extends State<PayNowScreen> {
   void initState() {
     super.initState();
 
-    Prefs.getaddModel((AdsModel add) async {
-      setState(() {
-        bannerImageUrl = add.attachment_url;
-        ad = add;
-      });
-    });
+    // Prefs.getaddModel((AdsModel add) async {
+    //   setState(() {
+    //     bannerImageUrl = add.attachment_url;
+    //     ad = add;
+    //   });
+    // });
 
     Prefs.getAccessToken((String accessToken) async {
       print(accessToken);
@@ -62,18 +62,18 @@ class _PayNowScreenState extends State<PayNowScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        bottomNavigationBar: InkWell(
-          onTap: () {
-            launchURL(ad?.url);
-          },
-          child: Container(
-            child: Image.network(
-              bannerImageUrl,
-              height: 80,
-              width: double.infinity,
-            ),
-          ),
-        ),
+        // bottomNavigationBar: InkWell(
+        //   onTap: () {
+        //     launchURL(ad?.url);
+        //   },
+        //   child: Container(
+        //     child: Image.network(
+        //       bannerImageUrl,
+        //       height: 80,
+        //       width: double.infinity,
+        //     ),
+        //   ),
+        // ),
         body: SafeArea(
             child: Container(
           width: MediaQuery.of(context).size.width,

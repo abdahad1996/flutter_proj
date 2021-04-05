@@ -13,6 +13,16 @@ class PreferencesHelper {
     return p.setBool(key, value);
   }
 
+  static Future setList(String key, List value) async {
+    final p = await prefs;
+    return p.setStringList(key, value);
+  }
+
+  static Future<List> getList(String key) async {
+    final p = await prefs;
+    return p.getStringList(key) ?? 0;
+  }
+
   static Future<int> getInt(String key) async {
     final p = await prefs;
     return p.getInt(key) ?? 0;
